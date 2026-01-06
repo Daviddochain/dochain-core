@@ -4,8 +4,8 @@ import (
 	"bytes"
 	"io"
 
-	coretypes "github.com/classic-terra/core/v3/types"
-	storetypes "github.com/cosmos/cosmos-sdk/store/types"
+	storetypes "cosmossdk.io/store/types"
+	coretypes "github.com/classic-terra/core/v4/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
@@ -57,7 +57,7 @@ func (s *legacyWasmStore) getAddressLengthPrefix(body []byte) (byte, bool) {
 const (
 	wasmMigrationHeightMainnet int64 = 25619230
 	wasmMigrationHeightTestnet int64 = 26888496
-	wasmMigrationHeightLocal   int64 = 200
+	wasmMigrationHeightLocal   int64 = 0
 )
 
 func isPreWasmKeyMigration(chainID string, height int64) bool {

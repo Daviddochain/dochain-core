@@ -4,19 +4,19 @@
 FORK=${FORK:-"false"}
 
 # $(curl --silent "https://api.github.com/repos/classic-terra/core/releases/latest" | jq -r '.tag_name')
-OLD_VERSION=v3.6.0
-UPGRADE_WAIT=${UPGRADE_WAIT:-20}
+
+OLD_VERSION=v3.6.1
 HOME=mytestnet
 ROOT=$(pwd)
 DENOM=uluna
 CHAIN_ID=localterra
-SOFTWARE_UPGRADE_NAME="v13_1"
+SOFTWARE_UPGRADE_NAME="v14"
 ADDITIONAL_PRE_SCRIPTS=${ADDITIONAL_PRE_SCRIPTS:-""}
 ADDITIONAL_AFTER_SCRIPTS=${ADDITIONAL_AFTER_SCRIPTS:-""}
 GAS_PRICE=${GAS_PRICE:-"30uluna"}
 
 if [[ "$FORK" == "true" ]]; then
-    export TERRAD_HALT_HEIGHT=100
+    export TERRAD_HALT_HEIGHT=20
 fi
 
 # underscore so that go tool will not take gocache into account
@@ -53,7 +53,7 @@ else
     screen -L -Logfile $HOME/log-screen.txt -dmS node1 bash scripts/run-node.sh _build/old/terrad $DENOM
 fi
 
-sleep 20
+sleep 10
 
 # execute additional pre scripts
 if [ ! -z "$ADDITIONAL_PRE_SCRIPTS" ]; then
@@ -92,6 +92,7 @@ run_upgrade () {
 
     STATUS_INFO=($(./_build/old/terrad status --home $HOME | jq -r '.NodeInfo.network,.SyncInfo.latest_block_height'))
     UPGRADE_HEIGHT=$((STATUS_INFO[1] + 100))
+    echo "UPGRADE_HEIGHT = $UPGRADE_HEIGHT"
 
     tar -cf ./_build/new/terrad.tar -C ./_build/new terrad
     SUM=$(shasum -a 256 ./_build/new/terrad.tar | cut -d ' ' -f1)
@@ -106,24 +107,19 @@ run_upgrade () {
 
     ./_build/old/terrad tx gov submit-legacy-proposal software-upgrade "$SOFTWARE_UPGRADE_NAME" --upgrade-height $UPGRADE_HEIGHT --upgrade-info "$UPGRADE_INFO" --title "upgrade" --description "upgrade"  --from test1 --keyring-backend test --chain-id $CHAIN_ID --home $HOME --gas-prices $GAS_PRICE -y
 
-    sleep 5
+    sleep 2
 
     ./_build/old/terrad tx gov deposit 1 "20000000${DENOM}" --from test1 --keyring-backend test --chain-id $CHAIN_ID --home $HOME --gas-prices $GAS_PRICE -y
 
-
-    
-    sleep 5
+    sleep 2
 
     ./_build/old/terrad tx gov vote 1 yes --from test0 --keyring-backend test --chain-id $CHAIN_ID --home $HOME --gas-prices $GAS_PRICE -y
 
-    sleep 5
+    sleep 2
 
     ./_build/old/terrad tx gov vote 1 yes --from test1 --keyring-backend test --chain-id $CHAIN_ID --home $HOME --gas-prices $GAS_PRICE -y
 
-    sleep 5
-
-    ./_build/old/terrad tx gov vote 1 yes --from test2 --keyring-backend test --chain-id $CHAIN_ID --home $HOME --gas-prices $GAS_PRICE -y
-    
+    sleep 2
 
     # determine block_height to halt
     while true; do 
@@ -158,7 +154,7 @@ else
     CONTINUE="true" screen -L -Logfile $HOME/log-screen.txt -dmS node1 bash scripts/run-node.sh _build/new/terrad $DENOM
 fi
 
-sleep 20
+sleep 10
 
 # execute additional after scripts
 if [ ! -z "$ADDITIONAL_AFTER_SCRIPTS" ]; then
