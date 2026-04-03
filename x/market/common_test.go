@@ -4,9 +4,9 @@ import (
 	"testing"
 
 	sdkmath "cosmossdk.io/math"
-	core "github.com/Daviddochain/dochain-core/v4/types"
-	"github.com/Daviddochain/dochain-core/v4/x/market/keeper"
-	"github.com/Daviddochain/dochain-core/v4/x/market/types"
+	core "github.com/Daviddochain/do-core/v4/types"
+	"github.com/Daviddochain/do-core/v4/x/market/keeper"
+	"github.com/Daviddochain/do-core/v4/x/market/types"
 )
 
 var randomPrice = sdkmath.LegacyNewDec(1700)
@@ -22,6 +22,7 @@ func setup(t *testing.T) (keeper.TestInput, types.MsgServer) {
 
 	return input, h
 }
+
 
 
 

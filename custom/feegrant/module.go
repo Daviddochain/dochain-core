@@ -2,7 +2,7 @@ package feegrant
 
 import (
 	feegrant "cosmossdk.io/x/feegrant/module"
-	customtypes "github.com/Daviddochain/dochain-core/v4/custom/feegrant/types"
+	customtypes "github.com/Daviddochain/do-core/v4/custom/feegrant/types"
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/types/module"
 )
@@ -18,6 +18,7 @@ type AppModuleBasic struct {
 func (AppModuleBasic) RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
 	customtypes.RegisterLegacyAminoCodec(cdc)
 }
+
 
 
 

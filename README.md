@@ -1,37 +1,37 @@
 ## What is Do-Chain?
 
-**[dochain](https://dochain.money)** is a public, open-source blockchain protocol that provides fundamental infrastructure for a decentralized economy and enables open participation in the creation of new financial primitives to power the innovation of money.
+**[do](https://do.money)** is a public, open-source blockchain protocol that provides fundamental infrastructure for a decentralized economy and enables open participation in the creation of new financial primitives to power the innovation of money.
 
 
-**Classic** is the reference implementation of the dochain protocol, written in Golang. dochain Core is built atop [Cosmos SDK](https://github.com/cosmos/cosmos-sdk) and uses [Tendermint](https://github.com/tendermint/tendermint) BFT consensus. If you intend to work on dochain Core source, it is recommended that you familiarize yourself with the concepts in those projects.
+**Classic** is the reference implementation of the do protocol, written in Golang. do Core is built atop [Cosmos SDK](https://github.com/cosmos/cosmos-sdk) and uses [Tendermint](https://github.com/tendermint/tendermint) BFT consensus. If you intend to work on do Core source, it is recommended that you familiarize yourself with the concepts in those projects.
 
 ## Installation
 
 ### Binaries
 
-The easiest way to get started is by downloading a pre-built binary for your operating system. You can find the latest binaries on the [releases](https://github.com/classic-dochain/core/releases) page.
+The easiest way to get started is by downloading a pre-built binary for your operating system. You can find the latest binaries on the [releases](https://github.com/classic-do/core/releases) page.
 
 ### From Source
 
 **Step 1. Install Golang**
 
-Go v1.22 is required for dochain Core.
+Go v1.22 is required for do Core.
 
 If you haven't already, install Golang by following the [official docs](https://golang.org/doc/install). Make sure that your `GOPATH` and `GOBIN` environment variables are properly set up.
 
-**Step 2: Get dochain Core source code**
+**Step 2: Get do Core source code**
 
-Use `git` to retrieve dochain Core from the [official repo](https://github.com/dochain-money/core/) and checkout the `main` branch. This branch contains the latest stable release, which will install the `dochaind` binary.
+Use `git` to retrieve do Core from the [official repo](https://github.com/do-money/core/) and checkout the `main` branch. This branch contains the latest stable release, which will install the `dochaind` binary.
 
 ```bash
-git clone https://github.com/classic-dochain/core/
+git clone https://github.com/classic-do/core/
 cd core
 git checkout main
 ```
 
-**Step 3: Build dochain core**
+**Step 3: Build do core**
 
-Run the following command to install the executable `dochaind` to your `GOPATH` and build dochain Core. `dochaind` is the node daemon and CLI for interacting with a dochain node.
+Run the following command to install the executable `dochaind` to your `GOPATH` and build do Core. `dochaind` is the node daemon and CLI for interacting with a do node.
 
 ```bash
 # COSMOS_BUILD_OPTIONS=rocksdb make install
@@ -49,7 +49,7 @@ dochaind version --long
 If dochaind is installed correctly, the following information is returned:
 
 ```bash
-name: dochain
+name: do
 server_name: dochaind
 version: <version>
 commit: <git commit hash>
@@ -62,13 +62,13 @@ commit: <git commit hash>
 
 **NOTE:** `terracli` has been deprecated and all of its functionalities have been merged into `dochaind`.
 
-`dochaind` is the all-in-one command for operating and interacting with a running dochain node. For comprehensive coverage on each of the available functions, see [the dochaind reference information](https://docs.dochain.money/docs/develop/how-to/dochaind/README.html). To view various subcommands and their expected arguments, use the `$ dochaind --help` command:
+`dochaind` is the all-in-one command for operating and interacting with a running do node. For comprehensive coverage on each of the available functions, see [the dochaind reference information](https://docs.do.money/docs/develop/how-to/dochaind/README.html). To view various subcommands and their expected arguments, use the `$ dochaind --help` command:
 
 <pre>
         <div align="left">
         <b>$ dochaind --help</b>
 
-        Stargate dochain App
+        Stargate do App
 
         Usage:
           dochaind [command]
@@ -96,7 +96,7 @@ commit: <git commit hash>
 
         Flags:
           -h, --help                help for dochaind
-              --home string         directory for config and data (default "/Users/$HOME/.dochain")
+              --home string         directory for config and data (default "/Users/$HOME/.do")
               --log_format string   The logging format (json|plain) (default "plain")
               --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
               --trace               print out full stack trace on errors
@@ -118,13 +118,13 @@ The following requirements are recommended for running a `cookie-1` mainnet node
 - At least **100mbps** network bandwidth
 - An Linux distribution
 
-For configuration and migration instructions for setting up a cookie-1 mainnet node, visit [The mainnet repo](https://github.com/dochain-money/mainnet).
+For configuration and migration instructions for setting up a cookie-1 mainnet node, visit [The mainnet repo](https://github.com/do-money/mainnet).
 
-**dochain Node Quick Start**
+**do Node Quick Start**
 ```
 dochaind init nodename
-wget -O ~/.dochain/config/genesis.json https://cloudflare-ipfs.com/ipfs/QmZAMcdu85Qr8saFuNpL9VaxVqqLGWNAs72RVFhchL9jWs
-curl https://network.dochain.dev/addrbook.json > ~/.dochaind/config/addrbook.json
+wget -O ~/.do/config/genesis.json https://cloudflare-ipfs.com/ipfs/QmZAMcdu85Qr8saFuNpL9VaxVqqLGWNAs72RVFhchL9jWs
+curl https://network.do.dev/addrbook.json > ~/.dochaind/config/addrbook.json
 dochaind start
 ```
 
@@ -132,11 +132,11 @@ dochaind start
 
 Several testnets might exist simultaneously. Ensure that your version of `dochaind` is compatible with the network you want to join.
 
-To set up a node on the latest testnet, visit [the testnet repo](https://github.com/dochain-money/testnet).
+To set up a node on the latest testnet, visit [the testnet repo](https://github.com/do-money/testnet).
 
 ### Run a local testnet
 
-The easiest way to set up a local testing environment is to run [LocalTerra](https://github.com/dochain-money/LocalTerra), which automatically orchestrates a complete testing environment suited for development with zero configuration.
+The easiest way to set up a local testing environment is to run [LocalTerra](https://github.com/do-money/LocalTerra), which automatically orchestrates a complete testing environment suited for development with zero configuration.
 
 ### Run a single node testnet
 
@@ -151,7 +151,7 @@ First, initialize your genesis file to bootstrap your network. Create a name for
 dochaind init --chain-id=<testnet_name> <node_moniker>
 ```
 
-Next, create a dochain account by running the following command:
+Next, create a do account by running the following command:
 
 ```bash
 dochaind keys add <account_name>
@@ -162,14 +162,14 @@ dochaind keys add <account_name>
 Next, add your account to genesis and set an initial balance to start. Run the following commands to add your account and set the initial balance:
 
 ```bash
-dochaind add-genesis-account $(dochaind keys show <account_name> -a) 100000000uluna,1000usd
-dochaind gentx <account_name> 10000000uluna --chain-id=<testnet_name>
+dochaind add-genesis-account $(dochaind keys show <account_name> -a) 100000000udo,1000usd
+dochaind gentx <account_name> 10000000udo --chain-id=<testnet_name>
 dochaind collect-gentxs
 ```
 
-**Step 3. Run dochain daemon**
+**Step 3. Run do daemon**
 
-Now you can start your private dochain network:
+Now you can start your private do network:
 
 ```bash
 dochaind start
@@ -177,11 +177,11 @@ dochaind start
 
 Your `dochaind` node will be running a node on `tcp://localhost:26656`, listening for incoming transactions and signing blocks.
 
-Congratulations, you've successfully set up your local dochain network!
+Congratulations, you've successfully set up your local do network!
 
 ## Set up a production environment
 
-**NOTE**: This guide only covers general settings for a production-level full node. You can find further details on considerations for operating a validator node by visiting the [dochain validator guide](https://docs.dochain.money/docs/full-node/manage-a-dochain-validator/README.html).
+**NOTE**: This guide only covers general settings for a production-level full node. You can find further details on considerations for operating a validator node by visiting the [do validator guide](https://docs.do.money/docs/full-node/manage-a-do-validator/README.html).
 
 This guide has been tested against Linux distributions only. To ensure you successfully set up your production environment, consider setting it up on an Linux system.
 
@@ -208,7 +208,7 @@ It is recommended that you run `dochaind` as a normal user. Super-user accounts 
 
 - `26657`: The default port for the RPC protocol. This port is used for querying / sending transactions and must be open to serve queries from `dochaind`. **DO NOT** open this port to the public unless you are planning to run a public node.
 
-- `1317`: The default port for [Lite Client Daemon](https://docs.dochain.money/docs/develop/how-to/start-lcd.html) (LCD), which can be enabled in `~/.dochain/config/app.toml`. The LCD provides an HTTP RESTful API layer to allow applications and services to interact with your `dochaind` instance through RPC. Check the [dochain REST API](https://lcd.dochain.dev/swagger/#/) for usage examples. Don't open this port unless you need to use the LCD.
+- `1317`: The default port for [Lite Client Daemon](https://docs.do.money/docs/develop/how-to/start-lcd.html) (LCD), which can be enabled in `~/.do/config/app.toml`. The LCD provides an HTTP RESTful API layer to allow applications and services to interact with your `dochaind` instance through RPC. Check the [do REST API](https://lcd.do.dev/swagger/#/) for usage examples. Don't open this port unless you need to use the LCD.
 
 - `26660`: The default port for interacting with the [Prometheus](https://prometheus.io) database. You can use Promethues to monitor an environment. This port is closed by default.
 
@@ -227,13 +227,13 @@ First, create a service definition file in `/etc/systemd/system`.
 
 ```
 [Unit]
-Description=dochain Daemon
+Description=do Daemon
 After=network.target
 
 [Service]
 Type=simple
-User=dochain
-ExecStart=/data/dochain/go/bin/dochaind start
+User=do
+ExecStart=/data/do/go/bin/dochaind start
 Restart=on-abort
 
 [Install]
@@ -294,7 +294,7 @@ journalctl -t dochaind -f
 	docker compose exec node sh /keys-add.sh
 	```
 
-6. Copy your dochain wallet address and go to the dochain faucet here -> http://45.79.139.229:3000/ Put your address in and give yourself luna coins.
+6. Copy your do wallet address and go to the do faucet here -> http://45.79.139.229:3000/ Put your address in and give yourself luna coins.
 
 7. Start the validator
 	```bash
@@ -338,39 +338,39 @@ docker compose up -d
 #### Build from source
 
 ```sh
-make build-all -f contrib/dochain-operator/Makefile
+make build-all -f contrib/do-operator/Makefile
 ```
 
 ## Resources
 
 - Developer Tools
 
-  - dochain developer documentation(https://docs.dochain.money)
-  - [TerraWiki.org](https://terrawiki.org) - The dochain community wiki.
+  - do developer documentation(https://docs.do.money)
+  - [TerraWiki.org](https://terrawiki.org) - The do community wiki.
   - SDKs
-    - [dochain.js](https://www.github.com/dochain-money/dochain.js) for JavaScript
-    - [dochain-sdk-python](https://www.github.com/dochain-money/dochain-sdk-python) for Python
-  - [Faucet](https://faucet.dochain.money) can be used to get tokens for testnets
-  - [LocalTerra](https://www.github.com/dochain-money/LocalTerra) can be used to set up a private local testnet with configurable world state
+    - [do.js](https://www.github.com/do-money/do.js) for JavaScript
+    - [do-sdk-python](https://www.github.com/do-money/do-sdk-python) for Python
+  - [Faucet](https://faucet.do.money) can be used to get tokens for testnets
+  - [LocalTerra](https://www.github.com/do-money/LocalTerra) can be used to set up a private local testnet with configurable world state
 
 - Developer Forums
-  - [dochain Developer Discord](https://discord.com/channels/464241079042965516/591812948867940362)
-  - [dochain DEveloper Telegram room](https://t.me/+gCxCPohmVBkyNDRl)
+  - [do Developer Discord](https://discord.com/channels/464241079042965516/591812948867940362)
+  - [do DEveloper Telegram room](https://t.me/+gCxCPohmVBkyNDRl)
 
 
 - Block Explorers
 
-  - [dochain Finder](https://finder.dochain.money) - dochain's basic block explorer.
+  - [do Finder](https://finder.do.money) - do's basic block explorer.
   - [Terrascope](https://terrascope.info/) - A community-run block explorer with extra features.
-  - [Stake ID](https://dochain.stake.id) - A block explorer made by Staking Fund
-  - [Hubble](https://hubble.figment.network/dochain/chains/cookie-1) - by Figment
+  - [Stake ID](https://do.stake.id) - A block explorer made by Staking Fund
+  - [Hubble](https://hubble.figment.network/do/chains/cookie-1) - by Figment
 
 - Wallets
 
-  - [dochain Station](https://station.dochain.money) - The official dochain wallet.
-  - dochain Station Mobile
-    - [iOS](https://apps.apple.com/us/app/dochain-station/id1548434735)
-    - [Android](https://play.google.com/store/apps/details?id=money.dochain.station&hl=en_US&gl=US)
+  - [do Station](https://station.do.money) - The official do wallet.
+  - do Station Mobile
+    - [iOS](https://apps.apple.com/us/app/do-station/id1548434735)
+    - [Android](https://play.google.com/store/apps/details?id=money.do.station&hl=en_US&gl=US)
     
   - [Falcon Wallet](https://falconwallet.app/)
   - [Leap Wallet](https://chrome.google.com/webstore/detail/leap-wallet/aijcbedoijmgnlmjeegjaglmepbmpkpi/?utm_source=Leap&utm_medium=Bio&utm_campaign=Leap)
@@ -379,12 +379,12 @@ make build-all -f contrib/dochain-operator/Makefile
 
 - Research
 
-  - [Agora](https://agora.dochain.money) - Research forum
+  - [Agora](https://agora.do.money) - Research forum
   - [White Paper](https://assets.website-files.com/611153e7af981472d8da199c/618b02d13e938ae1f8ad1e45_Terra_White_paper.pdf)
 
 ## Community
 
-- [Offical Website](https://dochain.money)
+- [Offical Website](https://do.money)
 - [Discord](https://discord.gg/e29HWwC2Mz)
 - [Telegram](https://t.me/terra_announcements)
 - [Twitter](https://twitter.com/terra_money)
@@ -392,7 +392,7 @@ make build-all -f contrib/dochain-operator/Makefile
 
 ## Contributing
 
-If you are interested in contributing to dochain Core source, please review our [code of conduct](./CODE_OF_CONDUCT.md).
+If you are interested in contributing to do Core source, please review our [code of conduct](./CODE_OF_CONDUCT.md).
 
 ## License
 
@@ -404,11 +404,12 @@ This software is licensed under the Apache 2.0 license. Read more about it [here
 
 <p>&nbsp;</p>
 <p align="center">
-    <a href="https://dochain.money/"><img src="https://assets.website-files.com/611153e7af981472d8da199c/61794f2b6b1c7a1cb9444489_symbol-dochain-blue.svg" align="center" width=200/></a>
+    <a href="https://do.money/"><img src="https://assets.website-files.com/611153e7af981472d8da199c/61794f2b6b1c7a1cb9444489_symbol-do-blue.svg" align="center" width=200/></a>
 </p>
 <div align="center">
   <sub><em>Powering the innovation of money.</em></sub>
 </div>
+
 
 
 

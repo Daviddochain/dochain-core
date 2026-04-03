@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"cosmossdk.io/math"
-	"github.com/Daviddochain/dochain-core/v4/x/oracle/types"
+	"github.com/Daviddochain/do-core/v4/x/oracle/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 )
@@ -100,7 +100,7 @@ func (k Keeper) ApplyWhitelist(ctx sdk.Context, whitelist types.DenomList, voteT
 				display := base[1:]
 
 				k.bankKeeper.SetDenomMetaData(ctx, banktypes.Metadata{
-					Description: "The native stable token of the dochain Columbus.",
+					Description: "The native stable token of the do Columbus.",
 					DenomUnits: []*banktypes.DenomUnit{
 						{Denom: "u" + display, Exponent: uint32(0), Aliases: []string{"micro" + display}},
 						{Denom: "m" + display, Exponent: uint32(3), Aliases: []string{"milli" + display}},
@@ -108,13 +108,14 @@ func (k Keeper) ApplyWhitelist(ctx sdk.Context, whitelist types.DenomList, voteT
 					},
 					Base:    base,
 					Display: display,
-					Name:    fmt.Sprintf("%s dochain", strings.ToUpper(display)),
+					Name:    fmt.Sprintf("%s do", strings.ToUpper(display)),
 					Symbol:  fmt.Sprintf("%sT", strings.ToUpper(display[:len(display)-1])),
 				})
 			}
 		}
 	}
 }
+
 
 
 

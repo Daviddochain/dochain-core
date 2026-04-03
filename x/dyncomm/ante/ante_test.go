@@ -7,11 +7,11 @@ import (
 	"time"
 
 	sdkmath "cosmossdk.io/math"
-	"github.com/Daviddochain/dochain-core/v4/app"
-	appparams "github.com/Daviddochain/dochain-core/v4/app/params"
-	apptesting "github.com/Daviddochain/dochain-core/v4/app/testing"
-	core "github.com/Daviddochain/dochain-core/v4/types"
-	dyncommante "github.com/Daviddochain/dochain-core/v4/x/dyncomm/ante"
+	"github.com/Daviddochain/do-core/v4/app"
+	appparams "github.com/Daviddochain/do-core/v4/app/params"
+	apptesting "github.com/Daviddochain/do-core/v4/app/testing"
+	core "github.com/Daviddochain/do-core/v4/types"
+	dyncommante "github.com/Daviddochain/do-core/v4/x/dyncomm/ante"
 	abci "github.com/cometbft/cometbft/abci/types"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/tx"
@@ -345,7 +345,7 @@ func (suite *AnteTestSuite) TestAnte_EnsureDynCommissionIsMinCommICA() {
 	suite.Require().NoError(err)
 }
 
-// go test -v -run ^TestAnteTestSuite/TestAnte_EditValidatorAccountSequence$ github.com/Daviddochain/dochain-core/v4/x/dyncomm/ante
+// go test -v -run ^TestAnteTestSuite/TestAnte_EditValidatorAccountSequence$ github.com/Daviddochain/do-core/v4/x/dyncomm/ante
 // check that account keeper sequence no longer increases when editing validator unsuccessfully
 func (suite *AnteTestSuite) TestAnte_EditValidatorAccountSequence() {
 	suite.SetupTest() // setup
@@ -426,6 +426,7 @@ func (suite *AnteTestSuite) TestAnte_EditValidatorAccountSequence() {
 		suite.Require().Equal(uint64(1), deliverSeq)
 	}
 }
+
 
 
 

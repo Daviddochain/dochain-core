@@ -8,8 +8,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Daviddochain/dochain-core/v4/tests/e2e/containers"
-	"github.com/Daviddochain/dochain-core/v4/tests/e2e/initialization"
+	"github.com/Daviddochain/do-core/v4/tests/e2e/containers"
+	"github.com/Daviddochain/do-core/v4/tests/e2e/initialization"
 	rpchttp "github.com/cometbft/cometbft/rpc/client/http"
 	coretypes "github.com/cometbft/cometbft/rpc/core/types"
 	"github.com/stretchr/testify/require"
@@ -19,7 +19,7 @@ type NodeConfig struct {
 	initialization.Node
 
 	OperatorAddress  string
-	ConsensusAddress string // bech32 terravalcons... format
+	ConsensusAddress string // bech32 dovalcons... format
 	SnapshotInterval uint64
 	chainID          string
 	rpcClient        *rpchttp.HTTP
@@ -73,7 +73,7 @@ func (n *NodeConfig) Run() error {
 		},
 		initialization.TwoMin,
 		time.Second,
-		"dochain node failed to produce blocks",
+		"do node failed to produce blocks",
 	)
 
 	// Wait for 2 more blocks to confirm p2p connections are established.
@@ -89,7 +89,7 @@ func (n *NodeConfig) Run() error {
 			},
 			initialization.TwoMin,
 			time.Second,
-			"dochain node failed to advance blocks after start",
+			"do node failed to advance blocks after start",
 		)
 	}
 
@@ -138,7 +138,7 @@ func (n *NodeConfig) extractOperatorAddressIfValidator() error {
 	}
 	out := outBuf.String()
 
-	reOper := regexp.MustCompile("terravaloper(.{39})")
+	reOper := regexp.MustCompile("dovaloper(.{39})")
 	operAddr := fmt.Sprintf("%s\n", reOper.FindString(out))
 	n.OperatorAddress = strings.TrimSuffix(operAddr, "\n")
 
@@ -169,6 +169,7 @@ func (n *NodeConfig) LogActionF(msg string, args ...interface{}) {
 	s := fmt.Sprintf(msg, args...)
 	n.t.Logf("[%s] %s. From container %s", timeSinceStart, s, n.Name)
 }
+
 
 
 

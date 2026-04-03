@@ -1,10 +1,10 @@
 syntax = "proto3";
-package dochain.dyncomm.v1beta1;
+package do.dyncomm.v1beta1;
 
 import "cosmos_proto/cosmos.proto";
 import "gogoproto/gogo.proto";
 
-option go_package = "github.com/Daviddochain/dochain-core/v4/x/dyncomm/types";
+option go_package = "github.com/Daviddochain/do-core/v4/x/dyncomm/types";
 
 // Params defines the parameters for the dyncomm module.
 message Params {
@@ -39,6 +39,7 @@ message Params {
     (gogoproto.nullable)   = false
   ];
 }
+
 
 
 

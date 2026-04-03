@@ -4,7 +4,7 @@ services:
   terradnode0:
     container_name: terradnode0
     platform: linux/amd64
-    image: "classic-dochain/dochaind-upgrade-env"
+    image: "classic-do/dochaind-upgrade-env"
     ports:
       - "9090:9090"
       - "26656-26657:26656-26657"
@@ -23,7 +23,7 @@ services:
   terradnode1:
     container_name: terradnode1
     platform: linux/amd64
-    image: "classic-dochain/dochaind-upgrade-env"
+    image: "classic-do/dochaind-upgrade-env"
     ports:
       - "9091:9090"
       - "26659-26660:26656-26657"
@@ -42,7 +42,7 @@ services:
   terradnode2:
     container_name: terradnode2
     platform: linux/amd64
-    image: "classic-dochain/dochaind-upgrade-env"
+    image: "classic-do/dochaind-upgrade-env"
     environment:
       - ID=2
       - LOG=dochaind.log
@@ -61,7 +61,7 @@ services:
   terradnode3:
     container_name: terradnode3
     platform: linux/amd64
-    image: "classic-dochain/dochaind-upgrade-env"
+    image: "classic-do/dochaind-upgrade-env"
     environment:
       - ID=3
       - LOG=dochaind.log
@@ -79,7 +79,7 @@ services:
   terradnode4:
     container_name: terradnode4
     platform: linux/amd64
-    image: "classic-dochain/dochaind-upgrade-env"
+    image: "classic-do/dochaind-upgrade-env"
     environment:
       - ID=4
       - LOG=dochaind.log
@@ -98,7 +98,7 @@ services:
   terradnode5:
     container_name: terradnode5
     platform: linux/amd64
-    image: "classic-dochain/dochaind-upgrade-env"
+    image: "classic-do/dochaind-upgrade-env"
     environment:
       - ID=5
       - LOG=dochaind.log
@@ -117,7 +117,7 @@ services:
   terradnode6:
     container_name: terradnode6
     platform: linux/amd64
-    image: "classic-dochain/dochaind-upgrade-env"
+    image: "classic-do/dochaind-upgrade-env"
     environment:
       - ID=6
       - LOG=dochaind.log
@@ -140,6 +140,7 @@ networks:
       config:
       -
         subnet: 192.168.10.0/24
+
 
 
 

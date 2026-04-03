@@ -90,7 +90,7 @@ This function is called at the end of an epoch to compute seigniorage and forwar
 
 1. The seigniorage $\Sigma$ of the current epoch is calculated by taking the difference between the Luna supply at the start of the epoch ([Epoch Initial Issuance](./02_state.md#EpochInitialIssuance)) and the Luna supply at the time of calling.
 
-   Note that $\Sigma > 0$ when the current Luna supply is lower than at the start of the epoch, because the Luna had been burned from Luna swaps into dochain. See [here](../../market/spec/01_concepts.md#Seigniorage).
+   Note that $\Sigma > 0$ when the current Luna supply is lower than at the start of the epoch, because the Luna had been burned from Luna swaps into do. See [here](../../market/spec/01_concepts.md#Seigniorage).
 
 2. The Reward Weight $w$ is the percentage of the seigniorage designated for ballot rewards. Amount $S$ of new Luna is minted, and the [`Oracle`](../../oracle/spec/README.md) module receives $S = \Sigma * w$ of the seigniorage.
 
@@ -134,6 +134,7 @@ func (pc PolicyConstraints) Clamp(prevRate sdk.Dec, newRate sdk.Dec) (clampedRat
 	return newRate
 }
 ```
+
 
 
 

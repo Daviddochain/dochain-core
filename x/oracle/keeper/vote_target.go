@@ -24,3 +24,4 @@ func (k Keeper) GetVoteTargets(ctx sdk.Context) (voteTargets []string) {
 
 
 
+

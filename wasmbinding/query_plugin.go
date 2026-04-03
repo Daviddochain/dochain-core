@@ -6,11 +6,11 @@ import (
 
 	errorsmod "cosmossdk.io/errors"
 	wasmvmtypes "github.com/CosmWasm/wasmvm/v3/types"
-	"github.com/Daviddochain/dochain-core/v4/wasmbinding/bindings"
-	marketkeeper "github.com/Daviddochain/dochain-core/v4/x/market/keeper"
-	markettypes "github.com/Daviddochain/dochain-core/v4/x/market/types"
-	oracletypes "github.com/Daviddochain/dochain-core/v4/x/oracle/types"
-	treasurytypes "github.com/Daviddochain/dochain-core/v4/x/treasury/types"
+	"github.com/Daviddochain/do-core/v4/wasmbinding/bindings"
+	marketkeeper "github.com/Daviddochain/do-core/v4/x/market/keeper"
+	markettypes "github.com/Daviddochain/do-core/v4/x/market/types"
+	oracletypes "github.com/Daviddochain/do-core/v4/x/oracle/types"
+	treasurytypes "github.com/Daviddochain/do-core/v4/x/treasury/types"
 	abci "github.com/cometbft/cometbft/abci/types"
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/codec"
@@ -116,7 +116,7 @@ func CustomQuerier(qp *QueryPlugin) func(ctx sdk.Context, request json.RawMessag
 		normalized := normalizeLegacyRoutedQueryJSON(request)
 		var contractQuery bindings.TerraQuery
 		if err := json.Unmarshal(normalized, &contractQuery); err != nil {
-			return nil, errorsmod.Wrap(err, "dochain query")
+			return nil, errorsmod.Wrap(err, "do query")
 		}
 
 		switch {
@@ -188,10 +188,11 @@ func CustomQuerier(qp *QueryPlugin) func(ctx sdk.Context, request json.RawMessag
 			return bz, nil
 
 		default:
-			return nil, wasmvmtypes.UnsupportedRequest{Kind: "unknown dochain query variant"}
+			return nil, wasmvmtypes.UnsupportedRequest{Kind: "unknown do query variant"}
 		}
 	}
 }
+
 
 
 

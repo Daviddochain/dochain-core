@@ -6,7 +6,7 @@ import (
 	"math/rand"
 
 	"cosmossdk.io/math"
-	core "github.com/Daviddochain/dochain-core/v4/types"
+	core "github.com/Daviddochain/do-core/v4/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	"github.com/cosmos/cosmos-sdk/x/bank/types"
@@ -71,6 +71,7 @@ func RandomizedGenState(simState *module.SimulationState) {
 	fmt.Printf("Selected randomly generated bank parameters:\n%s\n", paramsBytes)
 	simState.GenState[types.ModuleName] = simState.Cdc.MustMarshalJSON(&bankGenesis)
 }
+
 
 
 

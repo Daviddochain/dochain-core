@@ -4,9 +4,9 @@ import (
 	"fmt"
 
 	"cosmossdk.io/math"
-	core "github.com/Daviddochain/dochain-core/v4/types"
-	"github.com/Daviddochain/dochain-core/v4/x/treasury/keeper"
-	"github.com/Daviddochain/dochain-core/v4/x/treasury/types"
+	core "github.com/Daviddochain/do-core/v4/types"
+	"github.com/Daviddochain/do-core/v4/x/treasury/keeper"
+	"github.com/Daviddochain/do-core/v4/x/treasury/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
@@ -86,6 +86,7 @@ func ExportGenesis(ctx sdk.Context, keeper keeper.Keeper) (data *types.GenesisSt
 	return types.NewGenesisState(params, taxRate, rewardWeight,
 		taxCaps, taxProceeds, epochInitialIssuance, epochStates)
 }
+
 
 
 

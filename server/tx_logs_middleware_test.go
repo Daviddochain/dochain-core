@@ -38,7 +38,7 @@ func TestTxLogsMiddleware(t *testing.T) {
 						{
 							"type": "transfer",
 							"attributes": [
-								{"key": "recipient", "value": "terra1abc", "msg_index": 0}
+								{"key": "recipient", "value": "do1abc", "msg_index": 0}
 							]
 						}
 					]
@@ -78,7 +78,7 @@ func TestTxLogsMiddleware(t *testing.T) {
 		},
 		{
 			name:   "non-tx endpoint - should not transform",
-			path:   "/cosmos/bank/v1beta1/balances/terra1abc",
+			path:   "/cosmos/bank/v1beta1/balances/do1abc",
 			method: http.MethodGet,
 			responseBody: `{
 				"balances": []
@@ -361,7 +361,7 @@ func TestIsTxQueryEndpoint(t *testing.T) {
 	}{
 		{"/cosmos/tx/v1beta1/txs/ABCD1234", true},
 		{"/cosmos/tx/v1beta1/txs", true},
-		{"/cosmos/bank/v1beta1/balances/terra1abc", false},
+		{"/cosmos/bank/v1beta1/balances/do1abc", false},
 		{"/cosmos/staking/v1beta1/validators", false},
 	}
 
@@ -386,8 +386,8 @@ func TestRealWasmExecuteTxLogsReconstruction(t *testing.T) {
 				"messages": [
 					{
 						"@type": "/cosmwasm.wasm.v1.MsgExecuteContract",
-						"sender": "terra1xnu72mn60yzcyr0fl8avgjy5wepfw85c0knfeh",
-						"contract": "terra16amw508yzhe8afshhgjp4kjz9wc20p8qhurg2dkmmc9tryeuflqsmjgrh2",
+						"sender": "do1xnu72mn60yzcyr0fl8avgjy5wepfw85c0knfeh",
+						"contract": "do16amw508yzhe8afshhgjp4kjz9wc20p8qhurg2dkmmc9tryeuflqsmjgrh2",
 						"msg": {"Trigger": {}},
 						"funds": []
 					}
@@ -432,7 +432,7 @@ func TestRealWasmExecuteTxLogsReconstruction(t *testing.T) {
 			"codespace": "",
 			"code": 0,
 			"data": "122E0A2C2F636F736D7761736D2E7761736D2E76312E4D736745786563757465436F6E7472616374526573706F6E7365",
-			"raw_log": "[{\"msg_index\":0,\"events\":[{\"type\":\"message\",\"attributes\":[{\"key\":\"action\",\"value\":\"/cosmwasm.wasm.v1.MsgExecuteContract\"},{\"key\":\"sender\",\"value\":\"terra1xnu72mn60yzcyr0fl8avgjy5wepfw85c0knfeh\"},{\"key\":\"module\",\"value\":\"wasm\"}]},{\"type\":\"execute\",\"attributes\":[{\"key\":\"_contract_address\",\"value\":\"terra16amw508yzhe8afshhgjp4kjz9wc20p8qhurg2dkmmc9tryeuflqsmjgrh2\"}]},{\"type\":\"wasm\",\"attributes\":[{\"key\":\"_contract_address\",\"value\":\"terra16amw508yzhe8afshhgjp4kjz9wc20p8qhurg2dkmmc9tryeuflqsmjgrh2\"},{\"key\":\"action\",\"value\":\"trigger\"},{\"key\":\"delegator\",\"value\":\"terra1765aqc7vyvxc7cch3t9vmaavj7534s2wnhzelp\"}]}]}]",
+			"raw_log": "[{\"msg_index\":0,\"events\":[{\"type\":\"message\",\"attributes\":[{\"key\":\"action\",\"value\":\"/cosmwasm.wasm.v1.MsgExecuteContract\"},{\"key\":\"sender\",\"value\":\"do1xnu72mn60yzcyr0fl8avgjy5wepfw85c0knfeh\"},{\"key\":\"module\",\"value\":\"wasm\"}]},{\"type\":\"execute\",\"attributes\":[{\"key\":\"_contract_address\",\"value\":\"do16amw508yzhe8afshhgjp4kjz9wc20p8qhurg2dkmmc9tryeuflqsmjgrh2\"}]},{\"type\":\"wasm\",\"attributes\":[{\"key\":\"_contract_address\",\"value\":\"do16amw508yzhe8afshhgjp4kjz9wc20p8qhurg2dkmmc9tryeuflqsmjgrh2\"},{\"key\":\"action\",\"value\":\"trigger\"},{\"key\":\"delegator\",\"value\":\"do1765aqc7vyvxc7cch3t9vmaavj7534s2wnhzelp\"}]}]}]",
 			"logs": [],
 			"info": "",
 			"gas_wanted": "232849",
@@ -442,42 +442,42 @@ func TestRealWasmExecuteTxLogsReconstruction(t *testing.T) {
 				{
 					"type": "coin_spent",
 					"attributes": [
-						{"key": "spender", "value": "terra1xnu72mn60yzcyr0fl8avgjy5wepfw85c0knfeh", "msg_index": 0},
-						{"key": "amount", "value": "6752621uluna", "msg_index": 0}
+						{"key": "spender", "value": "do1xnu72mn60yzcyr0fl8avgjy5wepfw85c0knfeh", "msg_index": 0},
+						{"key": "amount", "value": "6752621udo", "msg_index": 0}
 					]
 				},
 				{
 					"type": "coin_received",
 					"attributes": [
-						{"key": "receiver", "value": "terra17xpfvakm2amg962yls6f84z3kell8c5lkaeqfa", "msg_index": 0},
-						{"key": "amount", "value": "6752621uluna", "msg_index": 0}
+						{"key": "receiver", "value": "do17xpfvakm2amg962yls6f84z3kell8c5lkaeqfa", "msg_index": 0},
+						{"key": "amount", "value": "6752621udo", "msg_index": 0}
 					]
 				},
 				{
 					"type": "transfer",
 					"attributes": [
-						{"key": "recipient", "value": "terra17xpfvakm2amg962yls6f84z3kell8c5lkaeqfa", "msg_index": 0},
-						{"key": "sender", "value": "terra1xnu72mn60yzcyr0fl8avgjy5wepfw85c0knfeh", "msg_index": 0},
-						{"key": "amount", "value": "6752621uluna", "msg_index": 0}
+						{"key": "recipient", "value": "do17xpfvakm2amg962yls6f84z3kell8c5lkaeqfa", "msg_index": 0},
+						{"key": "sender", "value": "do1xnu72mn60yzcyr0fl8avgjy5wepfw85c0knfeh", "msg_index": 0},
+						{"key": "amount", "value": "6752621udo", "msg_index": 0}
 					]
 				},
 				{
 					"type": "message",
 					"attributes": [
-						{"key": "sender", "value": "terra1xnu72mn60yzcyr0fl8avgjy5wepfw85c0knfeh", "msg_index": 0}
+						{"key": "sender", "value": "do1xnu72mn60yzcyr0fl8avgjy5wepfw85c0knfeh", "msg_index": 0}
 					]
 				},
 				{
 					"type": "tx",
 					"attributes": [
-						{"key": "fee", "value": "6752621uluna", "msg_index": 0},
-						{"key": "fee_payer", "value": "terra1xnu72mn60yzcyr0fl8avgjy5wepfw85c0knfeh", "msg_index": 0}
+						{"key": "fee", "value": "6752621udo", "msg_index": 0},
+						{"key": "fee_payer", "value": "do1xnu72mn60yzcyr0fl8avgjy5wepfw85c0knfeh", "msg_index": 0}
 					]
 				},
 				{
 					"type": "tx",
 					"attributes": [
-						{"key": "acc_seq", "value": "terra1xnu72mn60yzcyr0fl8avgjy5wepfw85c0knfeh/51505", "msg_index": 0}
+						{"key": "acc_seq", "value": "do1xnu72mn60yzcyr0fl8avgjy5wepfw85c0knfeh/51505", "msg_index": 0}
 					]
 				},
 				{
@@ -490,22 +490,22 @@ func TestRealWasmExecuteTxLogsReconstruction(t *testing.T) {
 					"type": "message",
 					"attributes": [
 						{"key": "action", "value": "/cosmwasm.wasm.v1.MsgExecuteContract", "msg_index": 0},
-						{"key": "sender", "value": "terra1xnu72mn60yzcyr0fl8avgjy5wepfw85c0knfeh", "msg_index": 0},
+						{"key": "sender", "value": "do1xnu72mn60yzcyr0fl8avgjy5wepfw85c0knfeh", "msg_index": 0},
 						{"key": "module", "value": "wasm", "msg_index": 0}
 					]
 				},
 				{
 					"type": "execute",
 					"attributes": [
-						{"key": "_contract_address", "value": "terra16amw508yzhe8afshhgjp4kjz9wc20p8qhurg2dkmmc9tryeuflqsmjgrh2", "msg_index": 0}
+						{"key": "_contract_address", "value": "do16amw508yzhe8afshhgjp4kjz9wc20p8qhurg2dkmmc9tryeuflqsmjgrh2", "msg_index": 0}
 					]
 				},
 				{
 					"type": "wasm",
 					"attributes": [
-						{"key": "_contract_address", "value": "terra16amw508yzhe8afshhgjp4kjz9wc20p8qhurg2dkmmc9tryeuflqsmjgrh2", "msg_index": 0},
+						{"key": "_contract_address", "value": "do16amw508yzhe8afshhgjp4kjz9wc20p8qhurg2dkmmc9tryeuflqsmjgrh2", "msg_index": 0},
 						{"key": "action", "value": "trigger", "msg_index": 0},
-						{"key": "delegator", "value": "terra1765aqc7vyvxc7cch3t9vmaavj7534s2wnhzelp", "msg_index": 0}
+						{"key": "delegator", "value": "do1765aqc7vyvxc7cch3t9vmaavj7534s2wnhzelp", "msg_index": 0}
 					]
 				}
 			]
@@ -629,9 +629,9 @@ func TestRealWasmExecuteTxLogsReconstruction(t *testing.T) {
 		}
 	}
 
-	require.Equal(t, "terra16amw508yzhe8afshhgjp4kjz9wc20p8qhurg2dkmmc9tryeuflqsmjgrh2", attrMap["_contract_address"])
+	require.Equal(t, "do16amw508yzhe8afshhgjp4kjz9wc20p8qhurg2dkmmc9tryeuflqsmjgrh2", attrMap["_contract_address"])
 	require.Equal(t, "trigger", attrMap["action"])
-	require.Equal(t, "terra1765aqc7vyvxc7cch3t9vmaavj7534s2wnhzelp", attrMap["delegator"])
+	require.Equal(t, "do1765aqc7vyvxc7cch3t9vmaavj7534s2wnhzelp", attrMap["delegator"])
 }
 
 // TestRealBankSendWithTaxPaymentLogsReconstruction tests logs reconstruction with a real
@@ -647,8 +647,8 @@ func TestRealBankSendWithTaxPaymentLogsReconstruction(t *testing.T) {
 				"messages": [
 					{
 						"@type": "/cosmos.bank.v1beta1.MsgSend",
-						"from_address": "terra1j435gkgg8d0qadjcn09s73rtk5k3ftrx7mc4a8",
-						"to_address": "terra1ycnrw0uvwhchdw4zthsnwdsqgd5tyvtvx2pupm",
+						"from_address": "do1j435gkgg8d0qadjcn09s73rtk5k3ftrx7mc4a8",
+						"to_address": "do1ycnrw0uvwhchdw4zthsnwdsqgd5tyvtvx2pupm",
 						"amount": [
 							{
 								"denom": "udo",
@@ -697,7 +697,7 @@ func TestRealBankSendWithTaxPaymentLogsReconstruction(t *testing.T) {
 			"codespace": "",
 			"code": 0,
 			"data": "12260A242F636F736D6F732E62616E6B2E763162657461312E4D736753656E64526573706F6E7365",
-			"raw_log": "[{\"msg_index\":0,\"events\":[{\"type\":\"message\",\"attributes\":[{\"key\":\"action\",\"value\":\"/cosmos.bank.v1beta1.MsgSend\"},{\"key\":\"sender\",\"value\":\"terra1j435gkgg8d0qadjcn09s73rtk5k3ftrx7mc4a8\"},{\"key\":\"module\",\"value\":\"bank\"}]},{\"type\":\"tax_payment\",\"attributes\":[{\"key\":\"reverse_charge\",\"value\":\"false\"}]}]}]",
+			"raw_log": "[{\"msg_index\":0,\"events\":[{\"type\":\"message\",\"attributes\":[{\"key\":\"action\",\"value\":\"/cosmos.bank.v1beta1.MsgSend\"},{\"key\":\"sender\",\"value\":\"do1j435gkgg8d0qadjcn09s73rtk5k3ftrx7mc4a8\"},{\"key\":\"module\",\"value\":\"bank\"}]},{\"type\":\"tax_payment\",\"attributes\":[{\"key\":\"reverse_charge\",\"value\":\"false\"}]}]}]",
 			"logs": [],
 			"info": "",
 			"gas_wanted": "300000",
@@ -707,42 +707,42 @@ func TestRealBankSendWithTaxPaymentLogsReconstruction(t *testing.T) {
 				{
 					"type": "coin_spent",
 					"attributes": [
-						{"key": "spender", "value": "terra1j435gkgg8d0qadjcn09s73rtk5k3ftrx7mc4a8", "msg_index": 0},
-						{"key": "amount", "value": "10000001uluna", "msg_index": 0}
+						{"key": "spender", "value": "do1j435gkgg8d0qadjcn09s73rtk5k3ftrx7mc4a8", "msg_index": 0},
+						{"key": "amount", "value": "10000001udo", "msg_index": 0}
 					]
 				},
 				{
 					"type": "coin_received",
 					"attributes": [
-						{"key": "receiver", "value": "terra17xpfvakm2amg962yls6f84z3kell8c5lkaeqfa", "msg_index": 0},
-						{"key": "amount", "value": "10000001uluna", "msg_index": 0}
+						{"key": "receiver", "value": "do17xpfvakm2amg962yls6f84z3kell8c5lkaeqfa", "msg_index": 0},
+						{"key": "amount", "value": "10000001udo", "msg_index": 0}
 					]
 				},
 				{
 					"type": "transfer",
 					"attributes": [
-						{"key": "recipient", "value": "terra17xpfvakm2amg962yls6f84z3kell8c5lkaeqfa", "msg_index": 0},
-						{"key": "sender", "value": "terra1j435gkgg8d0qadjcn09s73rtk5k3ftrx7mc4a8", "msg_index": 0},
-						{"key": "amount", "value": "10000001uluna", "msg_index": 0}
+						{"key": "recipient", "value": "do17xpfvakm2amg962yls6f84z3kell8c5lkaeqfa", "msg_index": 0},
+						{"key": "sender", "value": "do1j435gkgg8d0qadjcn09s73rtk5k3ftrx7mc4a8", "msg_index": 0},
+						{"key": "amount", "value": "10000001udo", "msg_index": 0}
 					]
 				},
 				{
 					"type": "message",
 					"attributes": [
-						{"key": "sender", "value": "terra1j435gkgg8d0qadjcn09s73rtk5k3ftrx7mc4a8", "msg_index": 0}
+						{"key": "sender", "value": "do1j435gkgg8d0qadjcn09s73rtk5k3ftrx7mc4a8", "msg_index": 0}
 					]
 				},
 				{
 					"type": "tx",
 					"attributes": [
-						{"key": "fee", "value": "1751059457uluna", "msg_index": 0},
-						{"key": "fee_payer", "value": "terra1j435gkgg8d0qadjcn09s73rtk5k3ftrx7mc4a8", "msg_index": 0}
+						{"key": "fee", "value": "1751059457udo", "msg_index": 0},
+						{"key": "fee_payer", "value": "do1j435gkgg8d0qadjcn09s73rtk5k3ftrx7mc4a8", "msg_index": 0}
 					]
 				},
 				{
 					"type": "tx",
 					"attributes": [
-						{"key": "acc_seq", "value": "terra1j435gkgg8d0qadjcn09s73rtk5k3ftrx7mc4a8/95205", "msg_index": 0}
+						{"key": "acc_seq", "value": "do1j435gkgg8d0qadjcn09s73rtk5k3ftrx7mc4a8/95205", "msg_index": 0}
 					]
 				},
 				{
@@ -755,7 +755,7 @@ func TestRealBankSendWithTaxPaymentLogsReconstruction(t *testing.T) {
 					"type": "message",
 					"attributes": [
 						{"key": "action", "value": "/cosmos.bank.v1beta1.MsgSend", "msg_index": 0},
-						{"key": "sender", "value": "terra1j435gkgg8d0qadjcn09s73rtk5k3ftrx7mc4a8", "msg_index": 0},
+						{"key": "sender", "value": "do1j435gkgg8d0qadjcn09s73rtk5k3ftrx7mc4a8", "msg_index": 0},
 						{"key": "module", "value": "bank", "msg_index": 0}
 					]
 				},
@@ -768,29 +768,29 @@ func TestRealBankSendWithTaxPaymentLogsReconstruction(t *testing.T) {
 				{
 					"type": "coin_spent",
 					"attributes": [
-						{"key": "spender", "value": "terra1j435gkgg8d0qadjcn09s73rtk5k3ftrx7mc4a8", "msg_index": 0},
-						{"key": "amount", "value": "348211891260uluna", "msg_index": 0}
+						{"key": "spender", "value": "do1j435gkgg8d0qadjcn09s73rtk5k3ftrx7mc4a8", "msg_index": 0},
+						{"key": "amount", "value": "348211891260udo", "msg_index": 0}
 					]
 				},
 				{
 					"type": "coin_received",
 					"attributes": [
-						{"key": "receiver", "value": "terra1ycnrw0uvwhchdw4zthsnwdsqgd5tyvtvx2pupm", "msg_index": 0},
-						{"key": "amount", "value": "348211891260uluna", "msg_index": 0}
+						{"key": "receiver", "value": "do1ycnrw0uvwhchdw4zthsnwdsqgd5tyvtvx2pupm", "msg_index": 0},
+						{"key": "amount", "value": "348211891260udo", "msg_index": 0}
 					]
 				},
 				{
 					"type": "transfer",
 					"attributes": [
-						{"key": "recipient", "value": "terra1ycnrw0uvwhchdw4zthsnwdsqgd5tyvtvx2pupm", "msg_index": 0},
-						{"key": "sender", "value": "terra1j435gkgg8d0qadjcn09s73rtk5k3ftrx7mc4a8", "msg_index": 0},
-						{"key": "amount", "value": "348211891260uluna", "msg_index": 0}
+						{"key": "recipient", "value": "do1ycnrw0uvwhchdw4zthsnwdsqgd5tyvtvx2pupm", "msg_index": 0},
+						{"key": "sender", "value": "do1j435gkgg8d0qadjcn09s73rtk5k3ftrx7mc4a8", "msg_index": 0},
+						{"key": "amount", "value": "348211891260udo", "msg_index": 0}
 					]
 				},
 				{
 					"type": "message",
 					"attributes": [
-						{"key": "sender", "value": "terra1j435gkgg8d0qadjcn09s73rtk5k3ftrx7mc4a8", "msg_index": 0}
+						{"key": "sender", "value": "do1j435gkgg8d0qadjcn09s73rtk5k3ftrx7mc4a8", "msg_index": 0}
 					]
 				}
 			]
@@ -863,7 +863,7 @@ func TestRealBankSendWithTaxPaymentLogsReconstruction(t *testing.T) {
 	}
 	require.Greater(t, len(logEvents), 0, "should have events in the log")
 
-	// Verify specific event types are present (including dochain-specific tax_payment)
+	// Verify specific event types are present (including do-specific tax_payment)
 	eventTypes := make(map[string]bool)
 	for _, event := range logEvents {
 		if eventType, ok := event["type"].(string); ok {
@@ -873,7 +873,7 @@ func TestRealBankSendWithTaxPaymentLogsReconstruction(t *testing.T) {
 
 	// These event types should be present from the bank send tx with tax
 	require.True(t, eventTypes["message"], "should have 'message' event type")
-	require.True(t, eventTypes["tax_payment"], "should have 'tax_payment' event type (dochain-specific)")
+	require.True(t, eventTypes["tax_payment"], "should have 'tax_payment' event type (do-specific)")
 	require.True(t, eventTypes["coin_spent"], "should have 'coin_spent' event type")
 	require.True(t, eventTypes["coin_received"], "should have 'coin_received' event type")
 	require.True(t, eventTypes["transfer"], "should have 'transfer' event type")
@@ -930,20 +930,20 @@ func TestRealOracleMultiMessageTxLogsReconstruction(t *testing.T) {
 			"body": {
 				"messages": [
 					{
-						"@type": "/dochain.oracle.v1beta1.MsgAggregateExchangeRateVote",
-						"feeder": "terra19p69dm52exmhtyklgcpd2jrfwtv0awlp0ve63z",
-						"validator": "terravaloper1j5pj3n3m9nxmv9dgl4wnv2yq53k2jf2283j5zm",
+						"@type": "/do.oracle.v1beta1.MsgAggregateExchangeRateVote",
+						"feeder": "do19p69dm52exmhtyklgcpd2jrfwtv0awlp0ve63z",
+						"validator": "dovaloper1j5pj3n3m9nxmv9dgl4wnv2yq53k2jf2283j5zm",
 						"exchange_rates": "0.000066097941407884uaud,0.000061456692115652ucad,0.00003538288127528uchf,0.00030892650733513ucny,0.000283966498350392udkk,0.00003800111245669ueur,0.000032909024645851ugbp,0.000345525060444445uhkd,0.746825090789225464uidr,0.003995990890723461uinr,0.007034943470680445ujpy,0.065282105991835183ukrw,0.0umnt,0.00017969339697793umyr,0.000446742366801887unok,0.002633155589658828uphp,0.000032429987267087usdr,0.000407127883304437usek,0.00005702359065234usgd,0.001393924629462205uthb,0.0utwd,0.000044286727883801uusd",
 						"salt": "2c52"
 					},
 					{
-						"@type": "/dochain.oracle.v1beta1.MsgAggregateExchangeRatePrevote",
-						"feeder": "terra19p69dm52exmhtyklgcpd2jrfwtv0awlp0ve63z",
-						"validator": "terravaloper1j5pj3n3m9nxmv9dgl4wnv2yq53k2jf2283j5zm",
+						"@type": "/do.oracle.v1beta1.MsgAggregateExchangeRatePrevote",
+						"feeder": "do19p69dm52exmhtyklgcpd2jrfwtv0awlp0ve63z",
+						"validator": "dovaloper1j5pj3n3m9nxmv9dgl4wnv2yq53k2jf2283j5zm",
 						"hash": "0a15e0773b0819d71bcd74e2cf427f92597f85a7"
 					}
 				],
-				"memo": "@classic-dochain/oracle-feeder@3.1.5",
+				"memo": "@classic-do/oracle-feeder@3.1.5",
 				"timeout_height": "0",
 				"extension_options": [],
 				"non_critical_extension_options": []
@@ -978,7 +978,7 @@ func TestRealOracleMultiMessageTxLogsReconstruction(t *testing.T) {
 			"codespace": "",
 			"code": 0,
 			"data": "123C0A3A2F74657272612E6F7261636C652E763162657461312E4D736741676772656761746545786368616E676552617465566F7465526573706F6E7365123F0A3D2F74657272612E6F7261636C652E763162657461312E4D736741676772656761746545786368616E676552617465507265766F7465526573706F6E7365",
-			"raw_log": "[{\"msg_index\":0,\"events\":[{\"type\":\"message\",\"attributes\":[{\"key\":\"action\",\"value\":\"/dochain.oracle.v1beta1.MsgAggregateExchangeRateVote\"},{\"key\":\"sender\",\"value\":\"terra19p69dm52exmhtyklgcpd2jrfwtv0awlp0ve63z\"}]},{\"type\":\"aggregate_vote\",\"attributes\":[{\"key\":\"voter\",\"value\":\"terravaloper1j5pj3n3m9nxmv9dgl4wnv2yq53k2jf2283j5zm\"},{\"key\":\"exchange_rates\",\"value\":\"0.000066097941407884uaud,0.000061456692115652ucad,0.00003538288127528uchf,0.00030892650733513ucny,0.000283966498350392udkk,0.00003800111245669ueur,0.000032909024645851ugbp,0.000345525060444445uhkd,0.746825090789225464uidr,0.003995990890723461uinr,0.007034943470680445ujpy,0.065282105991835183ukrw,0.0umnt,0.00017969339697793umyr,0.000446742366801887unok,0.002633155589658828uphp,0.000032429987267087usdr,0.000407127883304437usek,0.00005702359065234usgd,0.001393924629462205uthb,0.0utwd,0.000044286727883801uusd\"}]},{\"type\":\"message\",\"attributes\":[{\"key\":\"module\",\"value\":\"oracle\"},{\"key\":\"sender\",\"value\":\"terra19p69dm52exmhtyklgcpd2jrfwtv0awlp0ve63z\"}]}]},{\"msg_index\":1,\"events\":[{\"type\":\"message\",\"attributes\":[{\"key\":\"action\",\"value\":\"/dochain.oracle.v1beta1.MsgAggregateExchangeRatePrevote\"},{\"key\":\"sender\",\"value\":\"terra19p69dm52exmhtyklgcpd2jrfwtv0awlp0ve63z\"}]},{\"type\":\"aggregate_prevote\",\"attributes\":[{\"key\":\"voter\",\"value\":\"terravaloper1j5pj3n3m9nxmv9dgl4wnv2yq53k2jf2283j5zm\"}]},{\"type\":\"message\",\"attributes\":[{\"key\":\"module\",\"value\":\"oracle\"},{\"key\":\"sender\",\"value\":\"terra19p69dm52exmhtyklgcpd2jrfwtv0awlp0ve63z\"}]}]}]",
+			"raw_log": "[{\"msg_index\":0,\"events\":[{\"type\":\"message\",\"attributes\":[{\"key\":\"action\",\"value\":\"/do.oracle.v1beta1.MsgAggregateExchangeRateVote\"},{\"key\":\"sender\",\"value\":\"do19p69dm52exmhtyklgcpd2jrfwtv0awlp0ve63z\"}]},{\"type\":\"aggregate_vote\",\"attributes\":[{\"key\":\"voter\",\"value\":\"dovaloper1j5pj3n3m9nxmv9dgl4wnv2yq53k2jf2283j5zm\"},{\"key\":\"exchange_rates\",\"value\":\"0.000066097941407884uaud,0.000061456692115652ucad,0.00003538288127528uchf,0.00030892650733513ucny,0.000283966498350392udkk,0.00003800111245669ueur,0.000032909024645851ugbp,0.000345525060444445uhkd,0.746825090789225464uidr,0.003995990890723461uinr,0.007034943470680445ujpy,0.065282105991835183ukrw,0.0umnt,0.00017969339697793umyr,0.000446742366801887unok,0.002633155589658828uphp,0.000032429987267087usdr,0.000407127883304437usek,0.00005702359065234usgd,0.001393924629462205uthb,0.0utwd,0.000044286727883801uusd\"}]},{\"type\":\"message\",\"attributes\":[{\"key\":\"module\",\"value\":\"oracle\"},{\"key\":\"sender\",\"value\":\"do19p69dm52exmhtyklgcpd2jrfwtv0awlp0ve63z\"}]}]},{\"msg_index\":1,\"events\":[{\"type\":\"message\",\"attributes\":[{\"key\":\"action\",\"value\":\"/do.oracle.v1beta1.MsgAggregateExchangeRatePrevote\"},{\"key\":\"sender\",\"value\":\"do19p69dm52exmhtyklgcpd2jrfwtv0awlp0ve63z\"}]},{\"type\":\"aggregate_prevote\",\"attributes\":[{\"key\":\"voter\",\"value\":\"dovaloper1j5pj3n3m9nxmv9dgl4wnv2yq53k2jf2283j5zm\"}]},{\"type\":\"message\",\"attributes\":[{\"key\":\"module\",\"value\":\"oracle\"},{\"key\":\"sender\",\"value\":\"do19p69dm52exmhtyklgcpd2jrfwtv0awlp0ve63z\"}]}]}]",
 			"logs": [],
 			"info": "",
 			"gas_wanted": "300000",
@@ -989,13 +989,13 @@ func TestRealOracleMultiMessageTxLogsReconstruction(t *testing.T) {
 					"type": "tx",
 					"attributes": [
 						{"key": "fee", "value": "", "msg_index": 0},
-						{"key": "fee_payer", "value": "terra19p69dm52exmhtyklgcpd2jrfwtv0awlp0ve63z", "msg_index": 0}
+						{"key": "fee_payer", "value": "do19p69dm52exmhtyklgcpd2jrfwtv0awlp0ve63z", "msg_index": 0}
 					]
 				},
 				{
 					"type": "tx",
 					"attributes": [
-						{"key": "acc_seq", "value": "terra19p69dm52exmhtyklgcpd2jrfwtv0awlp0ve63z/165214", "msg_index": 0}
+						{"key": "acc_seq", "value": "do19p69dm52exmhtyklgcpd2jrfwtv0awlp0ve63z/165214", "msg_index": 0}
 					]
 				},
 				{
@@ -1007,14 +1007,14 @@ func TestRealOracleMultiMessageTxLogsReconstruction(t *testing.T) {
 				{
 					"type": "message",
 					"attributes": [
-						{"key": "action", "value": "/dochain.oracle.v1beta1.MsgAggregateExchangeRateVote", "msg_index": 0},
-						{"key": "sender", "value": "terra19p69dm52exmhtyklgcpd2jrfwtv0awlp0ve63z", "msg_index": 0}
+						{"key": "action", "value": "/do.oracle.v1beta1.MsgAggregateExchangeRateVote", "msg_index": 0},
+						{"key": "sender", "value": "do19p69dm52exmhtyklgcpd2jrfwtv0awlp0ve63z", "msg_index": 0}
 					]
 				},
 				{
 					"type": "aggregate_vote",
 					"attributes": [
-						{"key": "voter", "value": "terravaloper1j5pj3n3m9nxmv9dgl4wnv2yq53k2jf2283j5zm", "msg_index": 0},
+						{"key": "voter", "value": "dovaloper1j5pj3n3m9nxmv9dgl4wnv2yq53k2jf2283j5zm", "msg_index": 0},
 						{"key": "exchange_rates", "value": "0.000066097941407884uaud,0.000061456692115652ucad,0.00003538288127528uchf,0.00030892650733513ucny,0.000283966498350392udkk,0.00003800111245669ueur,0.000032909024645851ugbp,0.000345525060444445uhkd,0.746825090789225464uidr,0.003995990890723461uinr,0.007034943470680445ujpy,0.065282105991835183ukrw,0.0umnt,0.00017969339697793umyr,0.000446742366801887unok,0.002633155589658828uphp,0.000032429987267087usdr,0.000407127883304437usek,0.00005702359065234usgd,0.001393924629462205uthb,0.0utwd,0.000044286727883801uusd", "msg_index": 0}
 					]
 				},
@@ -1022,27 +1022,27 @@ func TestRealOracleMultiMessageTxLogsReconstruction(t *testing.T) {
 					"type": "message",
 					"attributes": [
 						{"key": "module", "value": "oracle", "msg_index": 0},
-						{"key": "sender", "value": "terra19p69dm52exmhtyklgcpd2jrfwtv0awlp0ve63z", "msg_index": 0}
+						{"key": "sender", "value": "do19p69dm52exmhtyklgcpd2jrfwtv0awlp0ve63z", "msg_index": 0}
 					]
 				},
 				{
 					"type": "message",
 					"attributes": [
-						{"key": "action", "value": "/dochain.oracle.v1beta1.MsgAggregateExchangeRatePrevote", "msg_index": 1},
-						{"key": "sender", "value": "terra19p69dm52exmhtyklgcpd2jrfwtv0awlp0ve63z", "msg_index": 1}
+						{"key": "action", "value": "/do.oracle.v1beta1.MsgAggregateExchangeRatePrevote", "msg_index": 1},
+						{"key": "sender", "value": "do19p69dm52exmhtyklgcpd2jrfwtv0awlp0ve63z", "msg_index": 1}
 					]
 				},
 				{
 					"type": "aggregate_prevote",
 					"attributes": [
-						{"key": "voter", "value": "terravaloper1j5pj3n3m9nxmv9dgl4wnv2yq53k2jf2283j5zm", "msg_index": 1}
+						{"key": "voter", "value": "dovaloper1j5pj3n3m9nxmv9dgl4wnv2yq53k2jf2283j5zm", "msg_index": 1}
 					]
 				},
 				{
 					"type": "message",
 					"attributes": [
 						{"key": "module", "value": "oracle", "msg_index": 1},
-						{"key": "sender", "value": "terra19p69dm52exmhtyklgcpd2jrfwtv0awlp0ve63z", "msg_index": 1}
+						{"key": "sender", "value": "do19p69dm52exmhtyklgcpd2jrfwtv0awlp0ve63z", "msg_index": 1}
 					]
 				}
 			]
@@ -1181,7 +1181,7 @@ func TestRealOracleMultiMessageTxLogsReconstruction(t *testing.T) {
 		}
 	}
 
-	require.Equal(t, "terravaloper1j5pj3n3m9nxmv9dgl4wnv2yq53k2jf2283j5zm", voteAttrMap["voter"])
+	require.Equal(t, "dovaloper1j5pj3n3m9nxmv9dgl4wnv2yq53k2jf2283j5zm", voteAttrMap["voter"])
 	require.Contains(t, voteAttrMap["exchange_rates"], "uaud")
 	require.Contains(t, voteAttrMap["exchange_rates"], "uusd")
 
@@ -1215,7 +1215,7 @@ func TestRealOracleMultiMessageTxLogsReconstruction(t *testing.T) {
 		}
 	}
 
-	require.Equal(t, "terravaloper1j5pj3n3m9nxmv9dgl4wnv2yq53k2jf2283j5zm", prevoteAttrMap["voter"])
+	require.Equal(t, "dovaloper1j5pj3n3m9nxmv9dgl4wnv2yq53k2jf2283j5zm", prevoteAttrMap["voter"])
 }
 
 func TestTxLogsMiddleware_FailedTransaction(t *testing.T) {
@@ -1460,6 +1460,7 @@ func TestTxLogsMiddleware_SparseMsgIndex(t *testing.T) {
 		})
 	}
 }
+
 
 
 

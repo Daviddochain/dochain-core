@@ -4,7 +4,7 @@ import (
 	"context"
 	"strings"
 
-	"github.com/Daviddochain/dochain-core/v4/x/treasury/types"
+	"github.com/Daviddochain/do-core/v4/x/treasury/types"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/spf13/cobra"
@@ -305,6 +305,7 @@ func GetCmdQueryExemptlist() *cobra.Command {
 	flags.AddPaginationFlagsToCmd(cmd, "burn tax exemption list")
 	return cmd
 }
+
 
 
 

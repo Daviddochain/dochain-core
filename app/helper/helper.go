@@ -1,7 +1,7 @@
 package helper
 
 import (
-	oracleexported "github.com/Daviddochain/dochain-core/v4/x/oracle/exported"
+	oracleexported "github.com/Daviddochain/do-core/v4/x/oracle/exported"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
@@ -22,6 +22,7 @@ func IsOracleTx(msgs []sdk.Msg) bool {
 
 	return true
 }
+
 
 
 

@@ -1,7 +1,7 @@
 package keeper
 
 import (
-	"github.com/Daviddochain/dochain-core/v4/x/treasury/types"
+	"github.com/Daviddochain/do-core/v4/x/treasury/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 )
@@ -15,6 +15,7 @@ func (k Keeper) GetTreasuryModuleAccount(ctx sdk.Context) authtypes.ModuleAccoun
 func (k Keeper) GetBurnModuleAccount(ctx sdk.Context) authtypes.ModuleAccountI {
 	return k.accountKeeper.GetModuleAccount(ctx, types.BurnModuleName)
 }
+
 
 
 

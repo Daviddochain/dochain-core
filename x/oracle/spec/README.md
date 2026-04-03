@@ -1,8 +1,8 @@
 ## Abstract
 
-The Oracle module provides the dochain blockchain with an up-to-date and accurate price feed of exchange rates of Luna against various dochain pegs so that the [Market](../../market/spec/README.md) may provide fair exchanges between dochain<>dochain currency pairs, as well as dochain<>Luna.
+The Oracle module provides the do blockchain with an up-to-date and accurate price feed of exchange rates of Luna against various do pegs so that the [Market](../../market/spec/README.md) may provide fair exchanges between do<>do currency pairs, as well as do<>Luna.
 
-As price information is extrinsic to the blockchain, the dochain network relies on validators to periodically vote on the current Luna exchange rate, with the protocol tallying up the results once per `VotePeriod` and updating the on-chain exchange rate as the weighted median of the ballot.
+As price information is extrinsic to the blockchain, the do network relies on validators to periodically vote on the current Luna exchange rate, with the protocol tallying up the results once per `VotePeriod` and updating the on-chain exchange rate as the weighted median of the ballot.
 
 > Since the Oracle service is powered by validators, you may find it interesting to look at the [Staking](https://github.com/cosmos/cosmos-sdk/tree/master/x/staking/spec/README.md) module, which covers the logic for staking and validators.
 
@@ -34,6 +34,7 @@ As price information is extrinsic to the blockchain, the dochain network relies 
     - [EndBlocker](05_events.md#EndBlocker)
     - [Handlers](05_events.md#Handlers)
 6. **[Parameters](06_params.md)**
+
 
 
 

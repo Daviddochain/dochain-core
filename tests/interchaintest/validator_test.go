@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Daviddochain/dochain-core/v4/test/interchaintest/helpers"
+	"github.com/Daviddochain/do-core/v4/test/interchaintest/helpers"
 	"github.com/cosmos/cosmos-sdk/codec"
 	cryptotypes "github.com/cosmos/cosmos-sdk/crypto/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -36,7 +36,7 @@ func TestValidator(t *testing.T) {
 
 	cf := interchaintest.NewBuiltinChainFactory(zaptest.NewLogger(t), []*interchaintest.ChainSpec{
 		{
-			Name:          "dochain",
+			Name:          "do",
 			ChainConfig:   config,
 			NumValidators: &numVals,
 			NumFullNodes:  &numFullNodes,
@@ -47,10 +47,10 @@ func TestValidator(t *testing.T) {
 	chains, err := cf.Chains(t.Name())
 	require.NoError(t, err)
 
-	dochain := chains[0].(*cosmos.CosmosChain)
+	do := chains[0].(*cosmos.CosmosChain)
 
 	// Create a new Interchain object which describes the chains, relayers, and IBC connections we want to use
-	ic := interchaintest.NewInterchain().AddChain(dochain)
+	ic := interchaintest.NewInterchain().AddChain(do)
 
 	rep := testreporter.NewNopReporter()
 	eRep := rep.RelayerExecReporter(t)
@@ -72,20 +72,20 @@ func TestValidator(t *testing.T) {
 	})
 
 	// let chain produce some blocks
-	require.NoError(t, testutil.WaitForBlocks(ctx, 1, dochain))
+	require.NoError(t, testutil.WaitForBlocks(ctx, 1, do))
 
 	// stop one validator so it starts missing votes
-	require.NoError(t, dochain.Validators[1].StopContainer(ctx))
+	require.NoError(t, do.Validators[1].StopContainer(ctx))
 
-	stdout, _, err := dochain.Validators[1].ExecBin(ctx, "status")
+	stdout, _, err := do.Validators[1].ExecBin(ctx, "status")
 	require.Error(t, err)
 	require.Empty(t, stdout)
 
 	// wait long enough to trip slashing window
-	require.NoError(t, testutil.WaitForBlocks(ctx, 21, dochain))
+	require.NoError(t, testutil.WaitForBlocks(ctx, 21, do))
 
 	// --- Query all validators
-	stdout, _, err = dochain.Validators[0].ExecQuery(
+	stdout, _, err = do.Validators[0].ExecQuery(
 		ctx, "staking", "validators",
 		"--output", "json",
 	)
@@ -112,7 +112,7 @@ func TestValidator(t *testing.T) {
 	consAddrBytes := sdk.ConsAddress(val1PubKey.Address())
 
 	// --- Get Slashing Params ---
-	stdout, _, err = dochain.Validators[0].ExecQuery(ctx, "slashing", "params", "--output", "json")
+	stdout, _, err = do.Validators[0].ExecQuery(ctx, "slashing", "params", "--output", "json")
 	require.NoError(t, err)
 	require.NotEmpty(t, stdout)
 
@@ -121,7 +121,7 @@ func TestValidator(t *testing.T) {
 	require.Equal(t, int64(20), signedBlocksWindow)
 
 	// --- Get Signing Infos ---
-	stdout, _, err = dochain.Validators[0].ExecQuery(ctx, "slashing", "signing-infos", "--output", "json")
+	stdout, _, err = do.Validators[0].ExecQuery(ctx, "slashing", "signing-infos", "--output", "json")
 	require.NoError(t, err)
 	require.NotEmpty(t, stdout)
 
@@ -143,6 +143,7 @@ func TestValidator(t *testing.T) {
 	}
 	require.Equal(t, 1, count)
 }
+
 
 
 

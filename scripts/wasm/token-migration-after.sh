@@ -13,12 +13,12 @@ if [ -z "$PRE_UPGRADE_CONTRACT_ADDR" ]; then
 fi
 
 ### DEBUG ###
-#contract_addr="terra18vd8fpwxzck93qlwghaj6arh4p7c5n896xzem5"
+#contract_addr="do18vd8fpwxzck93qlwghaj6arh4p7c5n896xzem5"
 ### DEBUG ###
 addr2=$($BINARY keys show test1 -a --home $HOME --keyring-backend $KEYRING_BACKEND)
 
 echo "STORE DUMMY RECEIVER"
-res=$($BINARY tx wasm store $RECEIVERPATH --from test0 --output json --gas auto --gas-adjustment 2.3 --fees 100000000uluna --chain-id $CHAIN_ID --home $HOME --broadcast-mode block --keyring-backend $KEYRING_BACKEND -y)
+res=$($BINARY tx wasm store $RECEIVERPATH --from test0 --output json --gas auto --gas-adjustment 2.3 --fees 100000000udo --chain-id $CHAIN_ID --home $HOME --broadcast-mode block --keyring-backend $KEYRING_BACKEND -y)
 tx=$(echo $res | jq -r ."txhash")
 res=$($BINARY q tx --output json ${tx})
 code=$(echo "$res" | jq -r ."code")
@@ -31,7 +31,7 @@ echo "CODE = ${code_id}"
 echo ""
 
 echo "INSTANTIATE DUMMY RECEIVER"
-res=$($BINARY tx wasm instantiate $code_id '{}' --label "contract_${code_id}" --no-admin --from test0 --output json --gas auto --gas-adjustment 2.3 --fees 100000000uluna --chain-id $CHAIN_ID --home $HOME --broadcast-mode block --keyring-backend $KEYRING_BACKEND -y)
+res=$($BINARY tx wasm instantiate $code_id '{}' --label "contract_${code_id}" --no-admin --from test0 --output json --gas auto --gas-adjustment 2.3 --fees 100000000udo --chain-id $CHAIN_ID --home $HOME --broadcast-mode block --keyring-backend $KEYRING_BACKEND -y)
 code=$(echo $res | jq -r ."code")
 tx=$(echo $res | jq -r ."txhash")
 if [ "$code" != 0 ]; then
@@ -51,7 +51,7 @@ msg=$(jq -n '
 	}
 }')
 echo $msg
-res=$($BINARY tx wasm execute "$PRE_UPGRADE_CONTRACT_ADDR" "$msg" --from test0 --output json --gas auto --gas-adjustment 2.3 --fees 100000000uluna --chain-id $CHAIN_ID --home $HOME --keyring-backend $KEYRING_BACKEND -y)
+res=$($BINARY tx wasm execute "$PRE_UPGRADE_CONTRACT_ADDR" "$msg" --from test0 --output json --gas auto --gas-adjustment 2.3 --fees 100000000udo --chain-id $CHAIN_ID --home $HOME --keyring-backend $KEYRING_BACKEND -y)
 tx=$(echo $res | jq -r ."txhash")
 code=$(echo $res | jq -r ."code")
 if [ "$code" != "0" ]; then
@@ -73,7 +73,7 @@ msg=$(jq -n '
 	}
 }')
 echo $msg
-res=$($BINARY tx wasm execute "$PRE_UPGRADE_CONTRACT_ADDR" "$msg" --from test0 --output json --gas auto --gas-adjustment 2.3 --fees 100000000uluna --chain-id $CHAIN_ID --home $HOME --keyring-backend $KEYRING_BACKEND -y)
+res=$($BINARY tx wasm execute "$PRE_UPGRADE_CONTRACT_ADDR" "$msg" --from test0 --output json --gas auto --gas-adjustment 2.3 --fees 100000000udo --chain-id $CHAIN_ID --home $HOME --keyring-backend $KEYRING_BACKEND -y)
 tx=$(echo $res | jq -r ."txhash")
 code=$(echo $res | jq -r ."code")
 if [ "$code" != "0" ]; then
@@ -81,6 +81,7 @@ if [ "$code" != "0" ]; then
 	exit -1
 fi
 echo $res
+
 
 
 

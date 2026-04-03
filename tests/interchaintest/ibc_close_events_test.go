@@ -33,13 +33,13 @@ func TestIBCv2ChannelCloseEvents(t *testing.T) {
 
 	cf := interchaintest.NewBuiltinChainFactory(zaptest.NewLogger(t), []*interchaintest.ChainSpec{
 		{
-			Name:          "dochain",
+			Name:          "do",
 			ChainConfig:   cfg1,
 			NumValidators: &numVals,
 			NumFullNodes:  &numFullNodes,
 		},
 		{
-			Name:          "dochain",
+			Name:          "do",
 			ChainConfig:   cfg2,
 			NumValidators: &numVals,
 			NumFullNodes:  &numFullNodes,
@@ -52,7 +52,7 @@ func TestIBCv2ChannelCloseEvents(t *testing.T) {
 	terraB := chains[1].(*cosmos.CosmosChain)
 
 	r := interchaintest.NewBuiltinRelayerFactory(ibc.CosmosRly, zaptest.NewLogger(t)).Build(t, client, network)
-	const path = "dochain-terra2-close"
+	const path = "do-terra2-close"
 	ic := interchaintest.NewInterchain().
 		AddChain(terraA).
 		AddChain(terraB).
@@ -96,6 +96,7 @@ func TestIBCv2ChannelCloseEvents(t *testing.T) {
 	require.True(t, containsAnyEventInWindow(t, ctx, terraA, startA, ah, "channel_close_init"))
 	require.True(t, containsAnyEventInWindow(t, ctx, terraB, startB, bh, "channel_close_confirm"))
 }
+
 
 
 

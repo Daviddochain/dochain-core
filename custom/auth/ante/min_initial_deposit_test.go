@@ -2,8 +2,8 @@ package ante_test
 
 import (
 	sdkmath "cosmossdk.io/math"
-	"github.com/Daviddochain/dochain-core/v4/custom/auth/ante"
-	core "github.com/Daviddochain/dochain-core/v4/types"
+	"github.com/Daviddochain/do-core/v4/custom/auth/ante"
+	core "github.com/Daviddochain/do-core/v4/types"
 	cryptotypes "github.com/cosmos/cosmos-sdk/crypto/types"
 	"github.com/cosmos/cosmos-sdk/testutil/testdata"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -186,6 +186,7 @@ func (suite *AnteTestSuite) TestMinInitialDepositRatioWithInsufficientDeposit() 
 	_, err = antehandler(suite.ctx, txv1, false)
 	suite.Require().Error(err, "error: v1 proposal with insufficient initial deposit should have failed")
 }
+
 
 
 

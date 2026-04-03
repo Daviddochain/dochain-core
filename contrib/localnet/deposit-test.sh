@@ -10,8 +10,8 @@ NODE1_HOME=node1/dochaind
 dochaind="docker exec terradnode1 ./dochaind"
 echo "{\"title\":\"prop1\",\"description\":\"prop1\",\"changes\":[{\"subspace\":\"treasury\",\"key\":\"MinInitialDepositRatio\",\"value\":\"0.1\"}]}" > build/node1/dochaind/prop.json
 echo "{\"title\":\"prop2\",\"description\":\"prop2\",\"changes\":[{\"subspace\":\"treasury\",\"key\":\"MinInitialDepositRatio\",\"value\":\"0.0\"}]}" > build/node1/dochaind/prop2.json
-echo "{\"title\":\"prop2\",\"description\":\"prop2\",\"changes\":[{\"subspace\":\"treasury\",\"key\":\"MinInitialDepositRatio\",\"value\":\"0.0\"}],\"deposit\":\"100000uluna\"}" > build/node1/dochaind/prop3.json
-echo "{\"title\":\"prop2\",\"description\":\"prop2\",\"changes\":[{\"subspace\":\"treasury\",\"key\":\"MinInitialDepositRatio\",\"value\":\"0.0\"}],\"deposit\":\"1000000uluna\"}" > build/node1/dochaind/prop4.json
+echo "{\"title\":\"prop2\",\"description\":\"prop2\",\"changes\":[{\"subspace\":\"treasury\",\"key\":\"MinInitialDepositRatio\",\"value\":\"0.0\"}],\"deposit\":\"100000udo\"}" > build/node1/dochaind/prop3.json
+echo "{\"title\":\"prop2\",\"description\":\"prop2\",\"changes\":[{\"subspace\":\"treasury\",\"key\":\"MinInitialDepositRatio\",\"value\":\"0.0\"}],\"deposit\":\"1000000udo\"}" > build/node1/dochaind/prop4.json
 
 #
 # sleep to wait for localnet to come up
@@ -36,7 +36,7 @@ fi
 # provide deposit
 sleep 5
 echo "yproviding deposit"
-$dochaind tx gov deposit 1 10000000uluna --from node1 --keyring-backend test --chain-id $CHAIN_ID --home "node1/dochaind" -y
+$dochaind tx gov deposit 1 10000000udo --from node1 --keyring-backend test --chain-id $CHAIN_ID --home "node1/dochaind" -y
 
 #
 # loop from 0 to 5 to vote yes
@@ -96,6 +96,7 @@ fi
 echo "all good"
 
 exit 0
+
 
 
 

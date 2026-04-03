@@ -10,14 +10,14 @@ import (
 	sdkmath "cosmossdk.io/math"
 	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
 	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
-	"github.com/Daviddochain/dochain-core/v4/app"
-	appparams "github.com/Daviddochain/dochain-core/v4/app/params"
-	core "github.com/Daviddochain/dochain-core/v4/types"
-	dyncommtypes "github.com/Daviddochain/dochain-core/v4/x/dyncomm/types"
-	markettypes "github.com/Daviddochain/dochain-core/v4/x/market/types"
-	oracletypes "github.com/Daviddochain/dochain-core/v4/x/oracle/types"
-	taxtypes "github.com/Daviddochain/dochain-core/v4/x/tax/types"
-	treasurytypes "github.com/Daviddochain/dochain-core/v4/x/treasury/types"
+	"github.com/Daviddochain/do-core/v4/app"
+	appparams "github.com/Daviddochain/do-core/v4/app/params"
+	core "github.com/Daviddochain/do-core/v4/types"
+	dyncommtypes "github.com/Daviddochain/do-core/v4/x/dyncomm/types"
+	markettypes "github.com/Daviddochain/do-core/v4/x/market/types"
+	oracletypes "github.com/Daviddochain/do-core/v4/x/oracle/types"
+	taxtypes "github.com/Daviddochain/do-core/v4/x/tax/types"
+	treasurytypes "github.com/Daviddochain/do-core/v4/x/treasury/types"
 	abci "github.com/cometbft/cometbft/abci/types"
 	tmproto "github.com/cometbft/cometbft/proto/tendermint/types"
 	tmtypes "github.com/cometbft/cometbft/types"
@@ -101,7 +101,7 @@ func (s *KeeperTestHelper) Setup(_ *testing.T, chainID string) {
 	s.App.BankKeeper.SetParams(s.Ctx, bankParams)
 	s.App.BankKeeper.SetSendEnabled(s.Ctx, "udo", true)
 
-	// Explicitly set dochain module params to ensure they're available in paramSpace
+	// Explicitly set do module params to ensure they're available in paramSpace
 	// This is needed because modules using paramSpace.Get() require explicit initialization
 	stakingparams := stakingtypes.DefaultParams()
 	stakingparams.BondDenom = appparams.BondDenom
@@ -147,7 +147,7 @@ var DefaultConsensusParams = &tmproto.ConsensusParams{
 func SetupApp(t *testing.T, chainID string) *app.TerraApp {
 	t.Helper()
 
-	// Ensure dochain bech32 prefixes are set before keepers initialize address codecs
+	// Ensure do bech32 prefixes are set before keepers initialize address codecs
 	sdk.GetConfig().SetBech32PrefixForAccount(core.Bech32PrefixAccAddr, core.Bech32PrefixAccPub)
 	sdk.GetConfig().SetBech32PrefixForValidator(core.Bech32PrefixValAddr, core.Bech32PrefixValPub)
 	sdk.GetConfig().SetBech32PrefixForConsensusNode(core.Bech32PrefixConsAddr, core.Bech32PrefixConsPub)
@@ -392,6 +392,7 @@ func (s *KeeperTestHelper) NextBlock() {
 	s.Ctx = s.App.NewUncachedContext(false, hdr)
 	s.CheckCtx = s.App.NewUncachedContext(true, hdr)
 }
+
 
 
 

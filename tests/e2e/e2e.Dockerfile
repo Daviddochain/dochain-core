@@ -105,7 +105,7 @@ RUN --mount=type=cache,target=/root/.cache/go-build \
         -ldflags " \
             -w -s -linkmode=external -extldflags \
             '-L/go/src/mimalloc/build -lmimalloc -Wl,-z,muldefs -static' \
-            -X github.com/cosmos/cosmos-sdk/version.Name='dochain' \
+            -X github.com/cosmos/cosmos-sdk/version.Name='do' \
             -X github.com/cosmos/cosmos-sdk/version.AppName='dochaind' \
             -X github.com/cosmos/cosmos-sdk/version.Version=${GIT_VERSION} \
             -X github.com/cosmos/cosmos-sdk/version.Commit=${GIT_COMMIT} \
@@ -116,13 +116,13 @@ RUN --mount=type=cache,target=/root/.cache/go-build \
 
 ################################################################################
 
-FROM alpine AS dochain-core
+FROM alpine AS do-core
 
 RUN apk update && apk add wget lz4 aria2 curl jq gawk coreutils "zlib>1.2.12-r2" libssl3
 
 COPY --from=builder-stage-2 /go/bin/dochaind /usr/local/bin/dochaind
 
-ENV HOME=/dochain
+ENV HOME=/do
 WORKDIR $HOME
 
 # rest server
@@ -135,6 +135,7 @@ EXPOSE 26656
 EXPOSE 26657
 
 ENTRYPOINT ["dochaind"]
+
 
 
 

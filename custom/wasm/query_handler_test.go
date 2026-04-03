@@ -10,8 +10,8 @@ import (
 	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
 	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
 	wasmvmtypes "github.com/CosmWasm/wasmvm/v3/types"
-	legacytypes "github.com/Daviddochain/dochain-core/v4/custom/wasm/types/legacy"
-	coretypes "github.com/Daviddochain/dochain-core/v4/types"
+	legacytypes "github.com/Daviddochain/do-core/v4/custom/wasm/types/legacy"
+	coretypes "github.com/Daviddochain/do-core/v4/types"
 	tmproto "github.com/cometbft/cometbft/proto/tendermint/types"
 	dbm "github.com/cosmos/cosmos-db"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -465,9 +465,9 @@ func (suite *LegacyQueryHandlerTestSuite) TestLegacyStore_TranslatesLegacyMetada
 
 	oldContractKey := append([]byte{0x04, 0x14}, contractAddr...)
 	oldContractValue, err := (&legacytypes.LegacyContractInfo{
-		Address: "terra1legacycontract",
-		Creator: "terra1creator",
-		Admin:   "terra1admin",
+		Address: "do1legacycontract",
+		Creator: "do1creator",
+		Admin:   "do1admin",
 		CodeID:  codeID,
 		InitMsg: []byte(`{"count":1}`),
 	}).Marshal()
@@ -478,7 +478,7 @@ func (suite *LegacyQueryHandlerTestSuite) TestLegacyStore_TranslatesLegacyMetada
 	oldCodeValue, err := (&legacytypes.LegacyCodeInfo{
 		CodeID:   codeID,
 		CodeHash: []byte("legacy-hash"),
-		Creator:  "terra1creator",
+		Creator:  "do1creator",
 	}).Marshal()
 	require.NoError(suite.T(), err)
 	parent.Set(oldCodeKey, oldCodeValue)
@@ -490,8 +490,8 @@ func (suite *LegacyQueryHandlerTestSuite) TestLegacyStore_TranslatesLegacyMetada
 	var contractInfo wasmtypes.ContractInfo
 	require.NoError(suite.T(), contractInfo.Unmarshal(contractBz))
 	require.Equal(suite.T(), codeID, contractInfo.CodeID)
-	require.Equal(suite.T(), "terra1creator", contractInfo.Creator)
-	require.Equal(suite.T(), "terra1admin", contractInfo.Admin)
+	require.Equal(suite.T(), "do1creator", contractInfo.Creator)
+	require.Equal(suite.T(), "do1admin", contractInfo.Admin)
 	require.Empty(suite.T(), contractInfo.Label)
 
 	newCodeKey := append([]byte{0x01}, sdk.Uint64ToBigEndian(codeID)...)
@@ -501,7 +501,7 @@ func (suite *LegacyQueryHandlerTestSuite) TestLegacyStore_TranslatesLegacyMetada
 	var codeInfo wasmtypes.CodeInfo
 	require.NoError(suite.T(), codeInfo.Unmarshal(codeBz))
 	require.Equal(suite.T(), []byte("legacy-hash"), codeInfo.CodeHash)
-	require.Equal(suite.T(), "terra1creator", codeInfo.Creator)
+	require.Equal(suite.T(), "do1creator", codeInfo.Creator)
 }
 
 func (suite *LegacyQueryHandlerTestSuite) TestLegacyStore_IteratorTranslatesLegacyMetadataValues() {
@@ -516,8 +516,8 @@ func (suite *LegacyQueryHandlerTestSuite) TestLegacyStore_IteratorTranslatesLega
 
 	oldContractKey := append([]byte{0x04, 0x14}, contractAddr...)
 	oldContractValue, err := (&legacytypes.LegacyContractInfo{
-		Address: "terra1legacycontract",
-		Creator: "terra1creator",
+		Address: "do1legacycontract",
+		Creator: "do1creator",
 		CodeID:  9,
 	}).Marshal()
 	require.NoError(suite.T(), err)
@@ -532,7 +532,7 @@ func (suite *LegacyQueryHandlerTestSuite) TestLegacyStore_IteratorTranslatesLega
 	var contractInfo wasmtypes.ContractInfo
 	require.NoError(suite.T(), contractInfo.Unmarshal(iter.Value()))
 	require.Equal(suite.T(), uint64(9), contractInfo.CodeID)
-	require.Equal(suite.T(), "terra1creator", contractInfo.Creator)
+	require.Equal(suite.T(), "do1creator", contractInfo.Creator)
 	iter.Next()
 	require.False(suite.T(), iter.Valid())
 }
@@ -569,6 +569,7 @@ func (suite *LegacyQueryHandlerTestSuite) TestIsPreWasmKeyMigration() {
 		})
 	}
 }
+
 
 
 

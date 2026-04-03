@@ -1,6 +1,6 @@
 package legacy
 
-import core "github.com/Daviddochain/dochain-core/v4/types"
+import core "github.com/Daviddochain/do-core/v4/types"
 
 const (
 	MainnetUpgradeHeightV1 = int64(13215800) // cookie-1 mainnet upgrade height to v4
@@ -55,6 +55,7 @@ func GetLegacyHandling(chainID string, blockHeight int64) LegacyHandlingVersion 
 
 	return LegacyHandlingNone
 }
+
 
 
 

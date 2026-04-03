@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"cosmossdk.io/math"
-	oracle "github.com/Daviddochain/dochain-core/v4/x/oracle/types"
+	oracle "github.com/Daviddochain/do-core/v4/x/oracle/types"
 	cryptocodec "github.com/cosmos/cosmos-sdk/crypto/codec"
 	"github.com/cosmos/cosmos-sdk/types/module/testutil"
 	govv1 "github.com/cosmos/cosmos-sdk/x/gov/types/v1"
@@ -15,8 +15,8 @@ import (
 )
 
 var (
-	TerraClassicE2ERepo  = "dochain-classic/core-e2e"
-	TerraClassicMainRepo = "dochain-classic/core"
+	TerraClassicE2ERepo  = "do-classic/core-e2e"
+	TerraClassicMainRepo = "do-classic/core"
 
 	repo, version = GetDockerImageInfo()
 
@@ -26,8 +26,8 @@ var (
 		UIDGID:     "1025:1025",
 	}
 
-	pathTerraGaia        = "dochain-gaia"
-	pathTerraOsmo        = "dochain-osmo"
+	pathTerraGaia        = "do-gaia"
+	pathTerraOsmo        = "do-osmo"
 	pathGaiaOsmo         = "gaia-osmo"
 	genesisWalletAmount  = int64(10000000000)
 	genesisWalletBalance = math.NewInt(genesisWalletAmount)
@@ -43,9 +43,9 @@ func createConfig() (ibc.ChainConfig, error) {
 			ChainID:             "core-1",
 			Images:              []ibc.DockerImage{TerraClassicImage},
 			Bin:                 "dochaind",
-			Bech32Prefix:        "dochain",
+			Bech32Prefix:        "do",
 			Denom:               "udo",
-			GasPrices:           "28.325uluna",
+			GasPrices:           "28.325udo",
 			GasAdjustment:       2.5,
 			TrustingPeriod:      "112h",
 			NoHostMount:         false,
@@ -122,6 +122,7 @@ func ModifyGenesis() func(ibc.ChainConfig, []byte) ([]byte, error) {
 		return out, nil
 	}
 }
+
 
 
 

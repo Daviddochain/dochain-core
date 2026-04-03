@@ -1,8 +1,8 @@
 package util
 
 import (
-	terraApp "github.com/Daviddochain/dochain-core/v4/app"
-	"github.com/Daviddochain/dochain-core/v4/app/params"
+	terraApp "github.com/Daviddochain/do-core/v4/app"
+	"github.com/Daviddochain/do-core/v4/app/params"
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/crypto/keys/ed25519"
 	"github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
@@ -37,6 +37,7 @@ func initEncodingConfigAndCdc() (params.EncodingConfig, codec.Codec) {
 
 	return encodingConfig, cdc
 }
+
 
 
 

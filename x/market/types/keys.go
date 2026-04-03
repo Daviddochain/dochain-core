@@ -20,8 +20,9 @@ const (
 // - 0x01: sdk.Dec
 var (
 	// Keys for store prefixed
-	TerraPoolDeltaKey = []byte{0x01} // key for dochain pool delta which gap between MintPool from BasePool
+	TerraPoolDeltaKey = []byte{0x01} // key for do pool delta which gap between MintPool from BasePool
 )
+
 
 
 

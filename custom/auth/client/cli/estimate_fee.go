@@ -3,7 +3,7 @@ package cli
 import (
 	"strings"
 
-	feeutils "github.com/Daviddochain/dochain-core/v4/custom/auth/client/utils"
+	feeutils "github.com/Daviddochain/do-core/v4/custom/auth/client/utils"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	authclient "github.com/cosmos/cosmos-sdk/x/auth/client"
@@ -45,6 +45,7 @@ $ dochaind tx estimate-fee [file] --gas-adjustment 1.4 --gas-prices 0.015udo
 	flags.AddTxFlagsToCmd(cmd)
 	return cmd
 }
+
 
 
 

@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 
-	customtypes "github.com/Daviddochain/dochain-core/v4/custom/staking/types"
-	core "github.com/Daviddochain/dochain-core/v4/types"
+	customtypes "github.com/Daviddochain/do-core/v4/custom/staking/types"
+	core "github.com/Daviddochain/do-core/v4/types"
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	paramskeeper "github.com/cosmos/cosmos-sdk/x/params/keeper"
@@ -89,6 +89,7 @@ func (am AppModule) RegisterServices(cfg module.Configurator) {
 		panic(fmt.Sprintf("failed to migrate x/%s from version 4 to 5: %v", stakingtypes.ModuleName, err))
 	}
 }
+
 
 
 

@@ -9,13 +9,13 @@ import (
 	store "cosmossdk.io/store"
 	storemetrics "cosmossdk.io/store/metrics"
 	storetypes "cosmossdk.io/store/types"
-	customauth "github.com/Daviddochain/dochain-core/v4/custom/auth"
-	custombank "github.com/Daviddochain/dochain-core/v4/custom/bank"
-	customdistr "github.com/Daviddochain/dochain-core/v4/custom/distribution"
-	customparams "github.com/Daviddochain/dochain-core/v4/custom/params"
-	customstaking "github.com/Daviddochain/dochain-core/v4/custom/staking"
-	core "github.com/Daviddochain/dochain-core/v4/types"
-	"github.com/Daviddochain/dochain-core/v4/x/oracle/types"
+	customauth "github.com/Daviddochain/do-core/v4/custom/auth"
+	custombank "github.com/Daviddochain/do-core/v4/custom/bank"
+	customdistr "github.com/Daviddochain/do-core/v4/custom/distribution"
+	customparams "github.com/Daviddochain/do-core/v4/custom/params"
+	customstaking "github.com/Daviddochain/do-core/v4/custom/staking"
+	core "github.com/Daviddochain/do-core/v4/types"
+	"github.com/Daviddochain/do-core/v4/x/oracle/types"
 	"github.com/cometbft/cometbft/crypto"
 	"github.com/cometbft/cometbft/crypto/secp256k1"
 	tmproto "github.com/cometbft/cometbft/proto/tendermint/types"
@@ -133,7 +133,7 @@ type TestInput struct {
 }
 
 func CreateTestInput(t *testing.T) TestInput {
-	// Ensure dochain bech32 prefixes are set for address codecs used by keepers
+	// Ensure do bech32 prefixes are set for address codecs used by keepers
 	sdk.GetConfig().SetBech32PrefixForAccount(core.Bech32PrefixAccAddr, core.Bech32PrefixAccPub)
 	sdk.GetConfig().SetBech32PrefixForValidator(core.Bech32PrefixValAddr, core.Bech32PrefixValPub)
 	sdk.GetConfig().SetBech32PrefixForConsensusNode(core.Bech32PrefixConsAddr, core.Bech32PrefixConsPub)
@@ -300,6 +300,7 @@ func FundAccount(input TestInput, addr sdk.AccAddress, amounts sdk.Coins) error 
 
 	return input.BankKeeper.SendCoinsFromModuleToAccount(input.Ctx, faucetAccountName, addr, amounts)
 }
+
 
 
 

@@ -1,11 +1,11 @@
 syntax = "proto3";
-package dochain.oracle.v1beta1;
+package do.oracle.v1beta1;
 
 import "cosmos_proto/cosmos.proto";
 import "gogoproto/gogo.proto";
-import "dochain/oracle/v1beta1/oracle.proto";
+import "do/oracle/v1beta1/oracle.proto";
 
-option go_package = "github.com/Daviddochain/dochain-core/v4/x/oracle/types";
+option go_package = "github.com/Daviddochain/do-core/v4/x/oracle/types";
 
 // GenesisState defines the oracle module's genesis state.
 message GenesisState {
@@ -44,6 +44,7 @@ message TobinTax {
     (gogoproto.nullable)   = false
   ];
 }
+
 
 
 

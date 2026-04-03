@@ -4,14 +4,14 @@ import (
 	"fmt"
 
 	"cosmossdk.io/math"
-	core "github.com/Daviddochain/dochain-core/v4/types"
+	core "github.com/Daviddochain/do-core/v4/types"
 	paramstypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	"gopkg.in/yaml.v2"
 )
 
 // Parameter keys
 var (
-	// dochain liquidity pool(usdr unit) made available per ${PoolRecoveryPeriod} (usdr unit)
+	// do liquidity pool(usdr unit) made available per ${PoolRecoveryPeriod} (usdr unit)
 	KeyBasePool = []byte("BasePool")
 	// The period required to recover BasePool
 	KeyPoolRecoveryPeriod = []byte("PoolRecoveryPeriod")
@@ -115,6 +115,7 @@ func validateMinStabilitySpread(i interface{}) error {
 
 	return nil
 }
+
 
 
 

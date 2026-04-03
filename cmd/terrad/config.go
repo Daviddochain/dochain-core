@@ -16,7 +16,7 @@ const (
 	IavlDisablefastNodeDefault = true
 )
 
-// TerraAppConfig dochain specify app config
+// TerraAppConfig do specify app config
 type TerraAppConfig struct {
 	serverconfig.Config
 	Wasm wasmtypes.NodeConfig `mapstructure:"wasm"`
@@ -88,6 +88,7 @@ func initAppConfig() (string, interface{}) {
 
 	return terraAppTemplate, terraAppConfig
 }
+
 
 
 

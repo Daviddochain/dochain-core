@@ -5,8 +5,8 @@ import (
 	"testing"
 
 	sdkmath "cosmossdk.io/math"
-	"github.com/Daviddochain/dochain-core/v4/x/oracle"
-	"github.com/Daviddochain/dochain-core/v4/x/oracle/types"
+	"github.com/Daviddochain/do-core/v4/x/oracle"
+	"github.com/Daviddochain/do-core/v4/x/oracle/types"
 	"github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	fuzz "github.com/google/gofuzz"
@@ -133,6 +133,7 @@ func TestFuzz_PickReferenceTerra(t *testing.T) {
 		oracle.PickReferenceTerra(input.Ctx, input.OracleKeeper, voteTargets, voteMap)
 	})
 }
+
 
 
 

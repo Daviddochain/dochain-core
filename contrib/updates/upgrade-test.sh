@@ -32,7 +32,7 @@ $BINARY_OLD tx gov submit-legacy-proposal software-upgrade "$SOFTWARE_UPGRADE_NA
 
 sleep 5
 
-$BINARY_OLD tx gov deposit 1 "20000000uluna" --from node1 --keyring-backend test --chain-id $CHAIN_ID --home $NODE1_HOME -y
+$BINARY_OLD tx gov deposit 1 "20000000udo" --from node1 --keyring-backend test --chain-id $CHAIN_ID --home $NODE1_HOME -y
 
 sleep 5
 
@@ -109,6 +109,7 @@ for (( i=0; i<$TESTNET_NVAL; i++ )); do
         exit 1
     fi
 done
+
 
 
 

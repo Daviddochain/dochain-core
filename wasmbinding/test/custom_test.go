@@ -1,7 +1,7 @@
 package wasmbinding_test
 
 import (
-	"github.com/Daviddochain/dochain-core/v4/wasmbinding/bindings"
+	"github.com/Daviddochain/do-core/v4/wasmbinding/bindings"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
@@ -11,7 +11,7 @@ const (
 	TerraStargateQueryPath     = "../testdata/stargate_tester.wasm"
 )
 
-// go test -v -run ^TestWasmTestSuite/TestExecuteBindingsAll$ github.com/Daviddochain/dochain-core/v4/wasmbinding/test
+// go test -v -run ^TestWasmTestSuite/TestExecuteBindingsAll$ github.com/Daviddochain/do-core/v4/wasmbinding/test
 func (s *WasmTestSuite) TestExecuteBindingsAll() {
 	cases := []struct {
 		name        string
@@ -20,13 +20,13 @@ func (s *WasmTestSuite) TestExecuteBindingsAll() {
 		queryFunc   func(contract sdk.AccAddress, request bindings.TerraQuery, response interface{})
 	}{
 		{
-			name:        "dochain",
+			name:        "do",
 			path:        TerraBindingsPath,
 			executeFunc: s.executeCustom,
 			queryFunc:   s.queryCustom,
 		},
 		{
-			name:        "Old dochain bindings",
+			name:        "Old do bindings",
 			path:        TerraRenovatedBindingsPath,
 			executeFunc: s.executeOldBindings,
 			queryFunc:   s.queryOldBindings,
@@ -46,7 +46,7 @@ func (s *WasmTestSuite) TestExecuteBindingsAll() {
 	}
 }
 
-// go test -v -run ^TestWasmTestSuite/TestQueryBindingsAll$ github.com/Daviddochain/dochain-core/v4/wasmbinding/test
+// go test -v -run ^TestWasmTestSuite/TestQueryBindingsAll$ github.com/Daviddochain/do-core/v4/wasmbinding/test
 func (s *WasmTestSuite) TestQueryBindingsAll() {
 	cases := []struct {
 		name        string
@@ -55,19 +55,19 @@ func (s *WasmTestSuite) TestQueryBindingsAll() {
 		queryFunc   func(contract sdk.AccAddress, request bindings.TerraQuery, response interface{})
 	}{
 		{
-			name:        "dochain",
+			name:        "do",
 			path:        TerraBindingsPath,
 			executeFunc: s.executeCustom,
 			queryFunc:   s.queryCustom,
 		},
 		{
-			name:        "Old dochain bindings",
+			name:        "Old do bindings",
 			path:        TerraRenovatedBindingsPath,
 			executeFunc: s.executeOldBindings,
 			queryFunc:   s.queryOldBindings,
 		},
 		{
-			name:        "dochain Stargate",
+			name:        "do Stargate",
 			path:        TerraStargateQueryPath,
 			executeFunc: nil,
 			queryFunc:   s.queryStargate,
@@ -92,6 +92,7 @@ func (s *WasmTestSuite) TestQueryBindingsAll() {
 		})
 	}
 }
+
 
 
 

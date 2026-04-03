@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/Daviddochain/dochain-core/v4/x/tax/types"
+	"github.com/Daviddochain/do-core/v4/x/tax/types"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/spf13/cobra"
@@ -85,6 +85,7 @@ func GetCmdBurnTaxRate() *cobra.Command {
 
 	return cmd
 }
+
 
 
 

@@ -1,9 +1,9 @@
 syntax = "proto3";
-package dochain.wasm.v1beta1;
+package do.wasm.v1beta1;
 
 import "gogoproto/gogo.proto";
 
-option go_package = "github.com/Daviddochain/dochain-core/v4/custom/wasm/types/legacy";
+option go_package = "github.com/Daviddochain/do-core/v4/custom/wasm/types/legacy";
 
 // CodeInfo is data for the uploaded contract WASM code
 message LegacyCodeInfo {
@@ -30,6 +30,7 @@ message LegacyContractInfo {
   // InitMsg is the raw message used when instantiating a contract
   bytes init_msg = 5 [(gogoproto.moretags) = "yaml:\"init_msg\"", (gogoproto.casttype) = "encoding/json.RawMessage"];
 }
+
 
 
 

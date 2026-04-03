@@ -7,7 +7,7 @@ import (
 	"testing"
 
 	sdkmath "cosmossdk.io/math"
-	"github.com/Daviddochain/dochain-core/v4/test/interchaintest/helpers"
+	"github.com/Daviddochain/do-core/v4/test/interchaintest/helpers"
 	"github.com/cosmos/interchaintest/v10"
 	"github.com/cosmos/interchaintest/v10/chain/cosmos"
 	"github.com/cosmos/interchaintest/v10/ibc"
@@ -32,7 +32,7 @@ func TestOracle(t *testing.T) {
 
 	cf := interchaintest.NewBuiltinChainFactory(zaptest.NewLogger(t), []*interchaintest.ChainSpec{
 		{
-			Name:          "dochain",
+			Name:          "do",
 			ChainConfig:   config,
 			NumValidators: &numVals,
 			NumFullNodes:  &numFullNodes,
@@ -42,9 +42,9 @@ func TestOracle(t *testing.T) {
 	chains, err := cf.Chains(t.Name())
 	require.NoError(t, err)
 
-	dochain := chains[0].(*cosmos.CosmosChain)
+	do := chains[0].(*cosmos.CosmosChain)
 
-	ic := interchaintest.NewInterchain().AddChain(dochain)
+	ic := interchaintest.NewInterchain().AddChain(do)
 
 	rep := testreporter.NewNopReporter()
 	eRep := rep.RelayerExecReporter(t)
@@ -64,22 +64,22 @@ func TestOracle(t *testing.T) {
 		_ = ic.Close()
 	})
 
-	require.NoError(t, testutil.WaitForBlocks(ctx, 1, dochain))
+	require.NoError(t, testutil.WaitForBlocks(ctx, 1, do))
 
 	// Fund for 8 users
-	users := interchaintest.GetAndFundTestUsers(t, ctx, "default", sdkmath.NewInt(genesisWalletAmount), dochain, dochain, dochain, dochain, dochain, dochain, dochain, dochain, dochain)
+	users := interchaintest.GetAndFundTestUsers(t, ctx, "default", sdkmath.NewInt(genesisWalletAmount), do, do, do, do, do, do, do, do, do)
 
-	require.NoError(t, testutil.WaitForBlocks(ctx, 5, dochain))
+	require.NoError(t, testutil.WaitForBlocks(ctx, 5, do))
 
-	height1, err := dochain.Height(ctx)
+	height1, err := do.Height(ctx)
 	require.NoError(t, err)
 
 	// Create error channels for operations
-	oracleErrCh := make(chan error, len(dochain.Validators))
+	oracleErrCh := make(chan error, len(do.Validators))
 	var wg sync.WaitGroup
 
-	wg.Add(len(dochain.Validators))
-	for _, val := range dochain.Validators {
+	wg.Add(len(do.Validators))
+	for _, val := range do.Validators {
 		val := val
 		go func(validator *cosmos.ChainNode) {
 			defer wg.Done()
@@ -88,7 +88,7 @@ func TestOracle(t *testing.T) {
 					oracleErrCh <- err
 					return
 				}
-				if err := testutil.WaitForBlocks(ctx, 1, dochain); err != nil {
+				if err := testutil.WaitForBlocks(ctx, 1, do); err != nil {
 					oracleErrCh <- err
 					return
 				}
@@ -102,13 +102,13 @@ func TestOracle(t *testing.T) {
 		go func() {
 			defer wg.Done()
 			for j := 0; j < 5; j++ {
-				err := dochain.SendFunds(ctx, users[i].KeyName(), ibc.WalletAmount{
+				err := do.SendFunds(ctx, users[i].KeyName(), ibc.WalletAmount{
 					Address: users[0].FormattedAddress(),
-					Denom:   dochain.Config().Denom,
+					Denom:   do.Config().Denom,
 					Amount:  sdkmath.OneInt(),
 				})
 				require.NoError(t, err)
-				require.NoError(t, testutil.WaitForBlocks(ctx, 1, dochain))
+				require.NoError(t, testutil.WaitForBlocks(ctx, 1, do))
 			}
 		}()
 	}
@@ -122,11 +122,11 @@ func TestOracle(t *testing.T) {
 		require.NoError(t, err)
 	}
 
-	height2, err := dochain.Height(ctx)
+	height2, err := do.Height(ctx)
 	require.NoError(t, err)
 
 	for h := height1; h <= height2; h++ {
-		txs, err := dochain.Validators[2].FindTxs(ctx, h)
+		txs, err := do.Validators[2].FindTxs(ctx, h)
 		convertedTxs := make([]Tx, len(txs))
 		for i, tx := range txs {
 			convertedEvents := make([]Event, len(tx.Events))
@@ -164,7 +164,7 @@ func TestOracle(t *testing.T) {
 	}
 
 	// // Verify final validator state
-	// stdout, _, err := dochain.Validators[0].ExecQuery(ctx, "staking", "validators")
+	// stdout, _, err := do.Validators[0].ExecQuery(ctx, "staking", "validators")
 	// require.NoError(t, err)
 	// require.NotEmpty(t, stdout)
 
@@ -227,6 +227,7 @@ func isOracleTx(tx Tx) bool {
 	}
 	return false
 }
+
 
 
 

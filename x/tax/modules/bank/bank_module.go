@@ -3,10 +3,10 @@ package bank
 import (
 	"fmt"
 
-	"github.com/Daviddochain/dochain-core/v4/x/tax/handlers"
-	taxkeeper "github.com/Daviddochain/dochain-core/v4/x/tax/keeper"
-	taxexemptionkeeper "github.com/Daviddochain/dochain-core/v4/x/taxexemption/keeper"
-	treasurykeeper "github.com/Daviddochain/dochain-core/v4/x/treasury/keeper"
+	"github.com/Daviddochain/do-core/v4/x/tax/handlers"
+	taxkeeper "github.com/Daviddochain/do-core/v4/x/tax/keeper"
+	taxexemptionkeeper "github.com/Daviddochain/do-core/v4/x/taxexemption/keeper"
+	treasurykeeper "github.com/Daviddochain/do-core/v4/x/treasury/keeper"
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	"github.com/cosmos/cosmos-sdk/x/bank"
@@ -72,6 +72,7 @@ func (am AppModule) RegisterServices(cfg module.Configurator) {
 		panic(fmt.Sprintf("failed to migrate x/bank from version 3 to 4: %v", err))
 	}
 }
+
 
 
 

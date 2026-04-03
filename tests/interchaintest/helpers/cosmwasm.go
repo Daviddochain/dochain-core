@@ -140,3 +140,4 @@ func QueryContract(ctx context.Context, chain *cosmos.CosmosChain, contractAddre
 
 
 
+

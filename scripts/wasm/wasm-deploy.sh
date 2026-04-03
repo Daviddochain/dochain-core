@@ -20,7 +20,7 @@ for j in $(seq 0 1); do
 	# stores contract
 	echo "... stores a wasm"
 	addr=$($BINARY keys show test$j -a --home $HOME --keyring-backend $KEYRING_BACKEND)
-	out=$($BINARY tx wasm store ${CONTRACTPATH} --from test$j --output json --gas auto --gas-adjustment 2.3 --fees 1000000000uluna --chain-id $CHAIN_ID --home $HOME --keyring-backend $KEYRING_BACKEND -y )
+	out=$($BINARY tx wasm store ${CONTRACTPATH} --from test$j --output json --gas auto --gas-adjustment 2.3 --fees 1000000000udo --chain-id $CHAIN_ID --home $HOME --keyring-backend $KEYRING_BACKEND -y )
 	code=$(echo $out | jq -r '.code')
 	if [ "$code" != "0" ]; then
 		echo "... Could not store NFT binary" >&2
@@ -35,7 +35,7 @@ for j in $(seq 0 1); do
 	# instantiates contract
 	echo "... instantiates contract"
 	msg='{"name":"BaseNFT","symbol":"BASE","minter":"'$addr'"}'
-	out=$($BINARY tx wasm instantiate $id "$msg" --from test$j --output json --gas auto --gas-adjustment 2.3 --fees 20000000uluna --chain-id $CHAIN_ID --home $HOME --keyring-backend $KEYRING_BACKEND -y --label mynft --admin $addr)
+	out=$($BINARY tx wasm instantiate $id "$msg" --from test$j --output json --gas auto --gas-adjustment 2.3 --fees 20000000udo --chain-id $CHAIN_ID --home $HOME --keyring-backend $KEYRING_BACKEND -y --label mynft --admin $addr)
 	code=$(echo $out | jq -r '.code')
 	if [ "$code" != "0" ]; then
 		echo "... Could not instantiate NFT contract" >&2
@@ -55,7 +55,7 @@ for j in $(seq 0 1); do
 	for i in $(seq 0 2); do
 		echo "	- token id: "$i
 		msg='{"mint":{"token_id":"'$i'","owner":"'$addr'"}}'
-		out=$($BINARY tx wasm execute $contract_addr "$msg" --from test$j --output json --gas auto --gas-adjustment 2.3 --fees 20000000uluna --chain-id $CHAIN_ID --home $HOME --keyring-backend $KEYRING_BACKEND -y)
+		out=$($BINARY tx wasm execute $contract_addr "$msg" --from test$j --output json --gas auto --gas-adjustment 2.3 --fees 20000000udo --chain-id $CHAIN_ID --home $HOME --keyring-backend $KEYRING_BACKEND -y)
 		code=$(echo $out | jq -r '.code')
 		if [ "$code" != "0" ]; then
 			echo "... Could not mint tokens from contract" $contract_addr >&2
@@ -76,7 +76,7 @@ for j in $(seq 0 1); do
 			continue
 		fi
 		msg='{"transfer_nft":{"recipient":"'$peer_addr'","token_id":"'$i'"}}'
-		out=$($BINARY tx wasm execute $contract_addr "$msg" --from test$j --output json --gas auto --gas-adjustment 2.3 --fees 20000000uluna --chain-id $CHAIN_ID --home $HOME --keyring-backend $KEYRING_BACKEND -y)
+		out=$($BINARY tx wasm execute $contract_addr "$msg" --from test$j --output json --gas auto --gas-adjustment 2.3 --fees 20000000udo --chain-id $CHAIN_ID --home $HOME --keyring-backend $KEYRING_BACKEND -y)
 		code=$(echo $out | jq -r '.code')
 		if [ "$code" != "0" ]; then
 			echo "... Could not transfer NFT id $i from $addr to $peer_addr (contract: $contract_addr)" >&2
@@ -105,6 +105,7 @@ echo "CONTRACT_ADDRESSES = $CONTRACT_ADDRESSES_STRING"
 
 export TXHASH_STRING
 export CONTRACT_ADDRESSES_STRING
+
 
 
 

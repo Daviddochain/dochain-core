@@ -1,7 +1,7 @@
 package keeper
 
 import (
-	"github.com/Daviddochain/dochain-core/v4/x/treasury/types"
+	"github.com/Daviddochain/do-core/v4/x/treasury/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
@@ -23,6 +23,7 @@ func HandleRemoveBurnTaxExemptionAddressProposal(ctx sdk.Context, k Keeper, p *t
 
 	return nil
 }
+
 
 
 

@@ -7,9 +7,9 @@ import (
 	"time"
 
 	sdkmath "cosmossdk.io/math"
-	"github.com/Daviddochain/dochain-core/v4/tests/e2e/util"
-	taxtypes "github.com/Daviddochain/dochain-core/v4/x/tax/types"
-	treasurytypes "github.com/Daviddochain/dochain-core/v4/x/treasury/types"
+	"github.com/Daviddochain/do-core/v4/tests/e2e/util"
+	taxtypes "github.com/Daviddochain/do-core/v4/x/tax/types"
+	treasurytypes "github.com/Daviddochain/do-core/v4/x/treasury/types"
 	tmjson "github.com/cometbft/cometbft/libs/json"
 	tmtypes "github.com/cometbft/cometbft/types"
 	"github.com/cosmos/cosmos-sdk/server"
@@ -48,19 +48,19 @@ const (
 	IbcSendAmount       = 3300000000
 	ValidatorWalletName = "val"
 	// chainA
-	ChainAID      = "dochain-test-a"
+	ChainAID      = "do-test-a"
 	TerraBalanceA = 20000000000000
 	StakeBalanceA = 110000000000
 	StakeAmountA  = 100000000000
 	// chainB
-	ChainBID          = "dochain-test-b"
+	ChainBID          = "do-test-b"
 	TerraBalanceB     = 500000000000
 	StakeBalanceB     = 440000000000
 	StakeAmountB      = 400000000000
 	GenesisFeeBalance = 100000000000
 	WalletFeeBalance  = 100000000
 	// // chainC
-	// ChainCID      = "dochain-test-c"
+	// ChainCID      = "do-test-c"
 	// TerraBalanceC = 500000000000
 	// StakeBalanceC = 440000000000
 	// StakeAmountC  = 400000000000
@@ -392,6 +392,7 @@ func setDenomMetadata(genState *banktypes.GenesisState, denom string) {
 		},
 	})
 }
+
 
 
 

@@ -120,3 +120,4 @@ func (h *AggregateVoteHash) UnmarshalJSON(data []byte) error {
 
 
 
+

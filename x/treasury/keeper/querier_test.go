@@ -4,8 +4,8 @@ import (
 	"testing"
 
 	sdkmath "cosmossdk.io/math"
-	core "github.com/Daviddochain/dochain-core/v4/types"
-	"github.com/Daviddochain/dochain-core/v4/x/treasury/types"
+	core "github.com/Daviddochain/do-core/v4/types"
+	"github.com/Daviddochain/do-core/v4/x/treasury/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	stakingkeeper "github.com/cosmos/cosmos-sdk/x/staking/keeper"
 	"github.com/stretchr/testify/require"
@@ -163,6 +163,7 @@ func TestQueryIndicators(t *testing.T) {
 	require.NoError(t, err)
 	require.Equal(t, targetIndicators, res)
 }
+
 
 
 

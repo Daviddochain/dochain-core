@@ -9,7 +9,7 @@ LEDGER_ENABLED ?= true
 BINDIR ?= $(GOPATH)/bin
 BUILDDIR ?= $(CURDIR)/build
 SIMAPP = ./app
-HTTPS_GIT := https://github.com/classic-dochain/core.git
+HTTPS_GIT := https://github.com/classic-do/core.git
 DOCKER := $(shell which docker)
 DOCKER_BUF := $(DOCKER) run --rm -v $(CURDIR):/workspace --workdir /workspace bufbuild/buf
 GO_VERSION := $(shell cat go.mod | grep -E 'go [0-9].[0-9]+' | cut -d ' ' -f 2)
@@ -72,7 +72,7 @@ build_tags_comma_sep := $(subst $(whitespace),$(comma),$(build_tags))
 
 # process linker flags
 
-ldflags = -X github.com/cosmos/cosmos-sdk/version.Name=dochain \
+ldflags = -X github.com/cosmos/cosmos-sdk/version.Name=do \
 		  -X github.com/cosmos/cosmos-sdk/version.AppName=dochaind \
 		  -X github.com/cosmos/cosmos-sdk/version.Version=$(VERSION) \
 		  -X github.com/cosmos/cosmos-sdk/version.Commit=$(COMMIT) \
@@ -125,15 +125,15 @@ endif
 
 build-linux:
 	mkdir -p $(BUILDDIR)
-	docker build --platform linux/amd64 --no-cache --tag classic-dochain/core ./
-	docker create --platform linux/amd64 --name temp classic-dochain/core:latest
+	docker build --platform linux/amd64 --no-cache --tag classic-do/core ./
+	docker create --platform linux/amd64 --name temp classic-do/core:latest
 	docker cp temp:/usr/local/bin/dochaind $(BUILDDIR)/
 	docker rm temp
 
 build-linux-with-shared-library:
 	mkdir -p $(BUILDDIR)
-	docker build --platform linux/amd64 --no-cache --tag classic-dochain/core-shared ./ -f ./shared.Dockerfile
-	docker create --platform linux/amd64 --name temp classic-dochain/core-shared:latest
+	docker build --platform linux/amd64 --no-cache --tag classic-do/core-shared ./ -f ./shared.Dockerfile
+	docker create --platform linux/amd64 --name temp classic-do/core-shared:latest
 	docker cp temp:/usr/local/bin/dochaind $(BUILDDIR)/
 	docker cp temp:/lib/libwasmvm.so $(BUILDDIR)/
 	docker rm temp
@@ -269,7 +269,7 @@ ictest-ibc-hooks: ictest-build
 ictest-ibc-pfm: ictest-build
 	@cd tests/interchaintest && go test -race -v -run TestTerraGaiaOsmoPFM .
 
-ictest-ibc-pfm-dochain: ictest-build
+ictest-ibc-pfm-do: ictest-build
 	@cd tests/interchaintest && go test -race -v -run TestTerraPFM .
 
 ictest-oracle: ictest-build
@@ -280,7 +280,7 @@ ictest-ibc-v2: ictest-build
 
 ictest-upgrade-ibc: ictest-build
 	@cd tests/interchaintest && go test -race -v -run TestTerraClassicUpgradeIBC .
-ictest-all: ictest-start ictest-validator ictest-ibc ictest-ibc-hooks ictest-ibc-pfm ictest-ibc-pfm-dochain ictest-oracle ictest-ibc-v2 ictest-upgrade-ibc		
+ictest-all: ictest-start ictest-validator ictest-ibc ictest-ibc-hooks ictest-ibc-pfm ictest-ibc-pfm-do ictest-oracle ictest-ibc-v2 ictest-upgrade-ibc		
 
 ictest-build: 
 	@DOCKER_BUILDKIT=1 docker build -t core:local -f ictest.Dockerfile .
@@ -339,20 +339,20 @@ proto-check-breaking:
 
 # Run a 7-node testnet locally by default
 localnet-start: localnet-stop build-linux
-	$(if $(shell $(DOCKER) inspect -f '{{ .Id }}' classic-dochain/dochaind-env 2>/dev/null),$(info found image classic-dochain/dochaind-env),$(MAKE) -C contrib/localnet dochaind-env)
+	$(if $(shell $(DOCKER) inspect -f '{{ .Id }}' classic-do/dochaind-env 2>/dev/null),$(info found image classic-do/dochaind-env),$(MAKE) -C contrib/localnet dochaind-env)
 	if ! [ -f build/node0/dochaind/config/genesis.json ]; then $(DOCKER) run --platform linux/amd64 --rm \
 		--user $(shell id -u):$(shell id -g) \
 		-v $(BUILDDIR):/dochaind:Z \
 		-v /etc/group:/etc/group:ro \
 		-v /etc/passwd:/etc/passwd:ro \
 		-v /etc/shadow:/etc/shadow:ro \
-		classic-dochain/dochaind-env testnet --chain-id ${TESTNET_CHAINID} --v ${TESTNET_NVAL} -o . --starting-ip-address 192.168.10.2 --keyring-backend=test; \
+		classic-do/dochaind-env testnet --chain-id ${TESTNET_CHAINID} --v ${TESTNET_NVAL} -o . --starting-ip-address 192.168.10.2 --keyring-backend=test; \
 	fi
 	docker compose up -d
 
 localnet-start-upgrade: localnet-upgrade-stop build-linux
 	$(MAKE) -C contrib/updates build-cosmovisor-linux BUILDDIR=$(BUILDDIR)
-	$(if $(shell $(DOCKER) inspect -f '{{ .Id }}' classic-dochain/dochaind-upgrade-env 2>/dev/null),$(info found image classic-dochain/dochaind-upgrade-env),$(MAKE) -C contrib/localnet dochaind-upgrade-env)
+	$(if $(shell $(DOCKER) inspect -f '{{ .Id }}' classic-do/dochaind-upgrade-env 2>/dev/null),$(info found image classic-do/dochaind-upgrade-env),$(MAKE) -C contrib/localnet dochaind-upgrade-env)
 	bash contrib/updates/prepare_cosmovisor.sh $(BUILDDIR) ${TESTNET_NVAL} ${TESTNET_CHAINID}
 	docker compose -f ./contrib/updates/docker-compose.yml up -d
 
@@ -375,13 +375,14 @@ localnet-stop:
 build-operator-img-all: build-operator-img-core build-operator-img-node
 
 build-operator-img-core:
-	docker compose -f contrib/dochain-operator/docker-compose.build.yml build core --no-cache
+	docker compose -f contrib/do-operator/docker-compose.build.yml build core --no-cache
 
 build-operator-img-node:
-	@if ! docker image inspect public.ecr.aws/classic-dochain/core:${NODE_VERSION} &>/dev/null ; then make build-operator-img-core ; fi
-	docker compose -f contrib/dochain-operator/docker-compose.build.yml build node --no-cache
+	@if ! docker image inspect public.ecr.aws/classic-do/core:${NODE_VERSION} &>/dev/null ; then make build-operator-img-core ; fi
+	docker compose -f contrib/do-operator/docker-compose.build.yml build node --no-cache
 
 .PHONY: build-operator-img-all build-operator-img-core build-operator-img-node
+
 
 
 

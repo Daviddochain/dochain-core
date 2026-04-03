@@ -21,7 +21,7 @@ Initializes and starts a single-validator `dochaind` node for local testing.
 | `TERRAD_HALT_HEIGHT` | — | If set, passes `--halt-height` to dochaind (used in fork-mode upgrades) |
 | `SELF_DELEGATION` | `900000000000` | Validator self-delegation amount |
 
-The script creates three test accounts (`test0`, `test1`, `test2`), each funded with `1000000000000uluna`, configures 30s voting period and 500ms block commit timeout.
+The script creates three test accounts (`test0`, `test1`, `test2`), each funded with `1000000000000udo`, configures 30s voting period and 500ms block commit timeout.
 
 ---
 
@@ -40,7 +40,7 @@ Tests a **single** upgrade from an old binary to the current codebase.
 | `FORK_HALT_HEIGHT` | — | Custom halt height for fork mode |
 | `ADDITIONAL_PRE_SCRIPTS` | — | Comma-separated scripts to run before upgrade |
 | `ADDITIONAL_AFTER_SCRIPTS` | — | Comma-separated scripts to run after upgrade |
-| `GAS_PRICE` | `30uluna` | Gas price for transactions |
+| `GAS_PRICE` | `30udo` | Gas price for transactions |
 
 **Flow:**
 1. Downloads and builds old binary → `_build/old/dochaind`
@@ -78,7 +78,7 @@ Tests a **chain of sequential upgrades**, simulating the full upgrade history fr
 | `ADDITIONAL_PRE_SCRIPTS` | — | Comma-separated scripts to run before first upgrade |
 | `ADDITIONAL_AFTER_SCRIPTS` | — | Comma-separated scripts to run after all upgrades |
 | `CW20_TOKEN_WASM` | `./scripts/cw20_token.wasm` | Path to CW20 wasm file for contract state tests |
-| `GAS_PRICE` | `30uluna` | Gas price for transactions |
+| `GAS_PRICE` | `30udo` | Gas price for transactions |
 | `FORK` | `false` | Set to `true` for fork-style upgrade |
 
 `OLD_VERSIONS` and `UPGRADE_NAMES` must have the same length. `OLD_VERSIONS[i]` is the binary running before upgrade `UPGRADE_NAMES[i]` is applied. The **last** upgrade always transitions to the current codebase (`_build/new/`).
@@ -110,6 +110,7 @@ OLD_VERSIONS="v3.6.0-rc.0,v4.0.0-rc.5,v4.0.0-rc.6" \
 UPGRADE_NAMES="v14,v14rc4,v14_1" \
 bash scripts/upgrade-test-multi.sh
 ```
+
 
 
 

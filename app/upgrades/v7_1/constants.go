@@ -2,7 +2,7 @@ package v71
 
 import (
 	store "cosmossdk.io/store/types"
-	"github.com/Daviddochain/dochain-core/v4/app/upgrades"
+	"github.com/Daviddochain/do-core/v4/app/upgrades"
 )
 
 const UpgradeName = "v7_1"
@@ -12,6 +12,7 @@ var Upgrade = upgrades.Upgrade{
 	CreateUpgradeHandler: CreateV7_1UpgradeHandler,
 	StoreUpgrades:        store.StoreUpgrades{},
 }
+
 
 
 

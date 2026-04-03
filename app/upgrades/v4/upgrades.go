@@ -4,8 +4,8 @@ import (
 	"context"
 
 	upgradetypes "cosmossdk.io/x/upgrade/types"
-	"github.com/Daviddochain/dochain-core/v4/app/keepers"
-	"github.com/Daviddochain/dochain-core/v4/app/upgrades"
+	"github.com/Daviddochain/do-core/v4/app/keepers"
+	"github.com/Daviddochain/do-core/v4/app/upgrades"
 	"github.com/cosmos/cosmos-sdk/types/module"
 )
 
@@ -24,6 +24,7 @@ func CreateV4UpgradeHandler(
 		return mm.RunMigrations(ctx, cfg, fromVM)
 	}
 }
+
 
 
 

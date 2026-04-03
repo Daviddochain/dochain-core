@@ -30,7 +30,7 @@ const (
 
 var (
 	defaultErrRegex  = regexp.MustCompile(`(E|e)rror`)
-	txDefaultGasArgs = []string{fmt.Sprintf("--gas=%d", GasLimit), "--fees=0uluna"}
+	txDefaultGasArgs = []string{fmt.Sprintf("--gas=%d", GasLimit), "--fees=0udo"}
 )
 
 // Manager is a wrapper around all Docker instances, and the Docker API.
@@ -71,7 +71,7 @@ func NewManager(isDebugLogEnabled bool) (docker *Manager, err error) {
 	if err != nil {
 		return nil, err
 	}
-	docker.network, err = docker.pool.CreateNetwork("dochain-testnet")
+	docker.network, err = docker.pool.CreateNetwork("do-testnet")
 	if err != nil {
 		return nil, err
 	}
@@ -353,8 +353,8 @@ func (m *Manager) RunNodeResource(containerName, valCondifDir string) (*dockerte
 		User:       "root:root",
 		Cmd:        []string{"start"},
 		Mounts: []string{
-			fmt.Sprintf("%s/:/dochain/.dochain", valCondifDir),
-			fmt.Sprintf("%s/scripts:/dochain", pwd),
+			fmt.Sprintf("%s/:/do/.do", valCondifDir),
+			fmt.Sprintf("%s/scripts:/do", pwd),
 		},
 	}
 
@@ -493,6 +493,7 @@ func parseTxResponse(outStr string) (txResponse TxResponse, err error) {
 	}
 	return txResponse, err
 }
+
 
 
 

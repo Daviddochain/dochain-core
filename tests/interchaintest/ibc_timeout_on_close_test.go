@@ -35,7 +35,7 @@ func TestIBCv2TimeoutOnClose(t *testing.T) {
 
 	cf := interchaintest.NewBuiltinChainFactory(zaptest.NewLogger(t), []*interchaintest.ChainSpec{
 		{
-			Name:          "dochain",
+			Name:          "do",
 			ChainConfig:   cfg,
 			NumValidators: &numVals,
 			NumFullNodes:  &numFullNodes,
@@ -51,16 +51,16 @@ func TestIBCv2TimeoutOnClose(t *testing.T) {
 
 	chains, err := cf.Chains(t.Name())
 	require.NoError(t, err)
-	dochain := chains[0].(*cosmos.CosmosChain)
+	do := chains[0].(*cosmos.CosmosChain)
 	gaia := chains[1].(*cosmos.CosmosChain)
 
 	r := interchaintest.NewBuiltinRelayerFactory(ibc.CosmosRly, zaptest.NewLogger(t)).Build(t, client, network)
-	const path = "dochain-gaia-timeout-close"
+	const path = "do-gaia-timeout-close"
 	ic := interchaintest.NewInterchain().
-		AddChain(dochain).
+		AddChain(do).
 		AddChain(gaia).
 		AddRelayer(r, "relayer").
-		AddLink(interchaintest.InterchainLink{Chain1: dochain, Chain2: gaia, Relayer: r, Path: path})
+		AddLink(interchaintest.InterchainLink{Chain1: do, Chain2: gaia, Relayer: r, Path: path})
 
 	rep := testreporter.NewNopReporter()
 	eRep := rep.RelayerExecReporter(t)
@@ -69,38 +69,38 @@ func TestIBCv2TimeoutOnClose(t *testing.T) {
 
 	// Start and stop relayer so channel/connection are created but packets won't relay
 	require.NoError(t, r.StartRelayer(ctx, eRep, path))
-	require.NoError(t, testutil.WaitForBlocks(ctx, 5, dochain, gaia))
+	require.NoError(t, testutil.WaitForBlocks(ctx, 5, do, gaia))
 	require.NoError(t, r.StopRelayer(ctx, eRep))
 
 	// Fund users and get channel
-	users := interchaintest.GetAndFundTestUsers(t, ctx, "default", math.NewInt(genesisWalletAmount), dochain, gaia)
+	users := interchaintest.GetAndFundTestUsers(t, ctx, "default", math.NewInt(genesisWalletAmount), do, gaia)
 	terraUser := users[0]
 	gaiaUser := users[1]
-	require.NoError(t, testutil.WaitForBlocks(ctx, 3, dochain, gaia))
+	require.NoError(t, testutil.WaitForBlocks(ctx, 3, do, gaia))
 
-	ch, err := ibc.GetTransferChannel(ctx, r, eRep, dochain.Config().ChainID, gaia.Config().ChainID)
+	ch, err := ibc.GetTransferChannel(ctx, r, eRep, do.Config().ChainID, gaia.Config().ChainID)
 	require.NoError(t, err)
 
 	// Compute ibc denom on Gaia for assertion
-	pref := transfertypes.GetPrefixedDenom(ch.Counterparty.PortID, ch.Counterparty.ChannelID, dochain.Config().Denom)
+	pref := transfertypes.GetPrefixedDenom(ch.Counterparty.PortID, ch.Counterparty.ChannelID, do.Config().Denom)
 	dt := transfertypes.ParseDenomTrace(pref)
 	gaiaIBCDenom := dt.IBCDenom()
 
-	terraBefore, err := dochain.GetBalance(ctx, terraUser.FormattedAddress(), dochain.Config().Denom)
+	terraBefore, err := do.GetBalance(ctx, terraUser.FormattedAddress(), do.Config().Denom)
 	require.NoError(t, err)
 	gaiaBefore, err := gaia.GetBalance(ctx, gaiaUser.FormattedAddress(), gaiaIBCDenom)
 	require.NoError(t, err)
 
 	amount := math.NewInt(7777)
-	amountStr := fmt.Sprintf("%d%s", amount.Int64(), dochain.Config().Denom)
+	amountStr := fmt.Sprintf("%d%s", amount.Int64(), do.Config().Denom)
 	// Use absolute timestamp timeout in nanoseconds (now + 6s). Height-based relative timeouts are not supported by this CLI.
 	timeoutNs := time.Now().Add(6 * time.Second).UnixNano()
 	// dochaind tx ibc-transfer transfer transfer <channel-id> <receiver> <amountDenom> --packet-timeout-timestamp <unix-ns> --absolute-timeouts
-	_, err = dochain.Validators[0].ExecTx(ctx, terraUser.KeyName(), "ibc-transfer", "transfer", "transfer", ch.ChannelID, gaiaUser.FormattedAddress(), amountStr, "--packet-timeout-timestamp", fmt.Sprintf("%d", timeoutNs), "--absolute-timeouts")
+	_, err = do.Validators[0].ExecTx(ctx, terraUser.KeyName(), "ibc-transfer", "transfer", "transfer", ch.ChannelID, gaiaUser.FormattedAddress(), amountStr, "--packet-timeout-timestamp", fmt.Sprintf("%d", timeoutNs), "--absolute-timeouts")
 	require.NoError(t, err)
-	require.NoError(t, testutil.WaitForBlocks(ctx, 3, dochain, gaia))
+	require.NoError(t, testutil.WaitForBlocks(ctx, 3, do, gaia))
 
-	terraAfterSend, err := dochain.GetBalance(ctx, terraUser.FormattedAddress(), dochain.Config().Denom)
+	terraAfterSend, err := do.GetBalance(ctx, terraUser.FormattedAddress(), do.Config().Denom)
 	require.NoError(t, err)
 	// Balance should have dropped by at least amount (plus gas)
 	require.Less(t, terraAfterSend.Int64(), terraBefore.Sub(amount).Int64())
@@ -110,15 +110,15 @@ func TestIBCv2TimeoutOnClose(t *testing.T) {
 
 	// Start relayer to relay timeout-on-close
 	require.NoError(t, r.StartRelayer(ctx, eRep, path))
-	require.NoError(t, testutil.WaitForBlocks(ctx, 8, dochain, gaia))
+	require.NoError(t, testutil.WaitForBlocks(ctx, 8, do, gaia))
 
 	// Assert timeout_packet observed on source
-	terraH, _ := dochain.Height(ctx)
+	terraH, _ := do.Height(ctx)
 	start := terraH - 40
 	if start < 1 {
 		start = 1
 	}
-	require.True(t, containsAnyEventInWindow(t, ctx, dochain, start, terraH, "timeout_packet"))
+	require.True(t, containsAnyEventInWindow(t, ctx, do, start, terraH, "timeout_packet"))
 
 	// Gaia should not have received funds
 	gaiaAfter, err := gaia.GetBalance(ctx, gaiaUser.FormattedAddress(), gaiaIBCDenom)
@@ -126,10 +126,11 @@ func TestIBCv2TimeoutOnClose(t *testing.T) {
 	require.Equal(t, gaiaBefore, gaiaAfter)
 
 	// Source balance should be refunded by at least 'amount' relative to post-send balance
-	terraAfterTimeout, err := dochain.GetBalance(ctx, terraUser.FormattedAddress(), dochain.Config().Denom)
+	terraAfterTimeout, err := do.GetBalance(ctx, terraUser.FormattedAddress(), do.Config().Denom)
 	require.NoError(t, err)
 	require.GreaterOrEqual(t, terraAfterTimeout.Int64(), terraAfterSend.Add(amount).Int64())
 }
+
 
 
 

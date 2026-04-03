@@ -1,12 +1,12 @@
 syntax = "proto3";
-package dochain.market.v1beta1;
+package do.market.v1beta1;
 
 import "cosmos/base/v1beta1/coin.proto";
 import "cosmos/msg/v1/msg.proto";
 import "cosmos_proto/cosmos.proto";
 import "gogoproto/gogo.proto";
 
-option go_package = "github.com/Daviddochain/dochain-core/v4/x/market/types";
+option go_package = "github.com/Daviddochain/do-core/v4/x/market/types";
 
 // Msg defines the market Msg service.
 service Msg {
@@ -54,6 +54,7 @@ message MsgSwapSendResponse {
   cosmos.base.v1beta1.Coin swap_coin = 1 [(gogoproto.moretags) = "yaml:\"swap_coin\"", (gogoproto.nullable) = false];
   cosmos.base.v1beta1.Coin swap_fee  = 2 [(gogoproto.moretags) = "yaml:\"swap_fee\"", (gogoproto.nullable) = false];
 }
+
 
 
 

@@ -8,8 +8,8 @@ import (
 	"math/rand"
 
 	"cosmossdk.io/math"
-	core "github.com/Daviddochain/dochain-core/v4/types"
-	customvestingtypes "github.com/Daviddochain/dochain-core/v4/x/vesting/types"
+	core "github.com/Daviddochain/do-core/v4/types"
+	customvestingtypes "github.com/Daviddochain/do-core/v4/x/vesting/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	"github.com/cosmos/cosmos-sdk/types/simulation"
@@ -151,6 +151,7 @@ func RandomizedGenState(simState *module.SimulationState, randGenAccountsFn type
 	fmt.Printf("Selected randomly generated auth parameters:\n%s\n", bz)
 	simState.GenState[types.ModuleName] = simState.Cdc.MustMarshalJSON(authGenesis)
 }
+
 
 
 

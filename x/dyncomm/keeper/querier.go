@@ -3,7 +3,7 @@ package keeper
 import (
 	"context"
 
-	"github.com/Daviddochain/dochain-core/v4/x/dyncomm/types"
+	"github.com/Daviddochain/do-core/v4/x/dyncomm/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
@@ -33,6 +33,7 @@ func (q querier) Rate(c context.Context, req *types.QueryRateRequest) (*types.Qu
 	target := q.GetTargetCommissionRate(ctx, req.ValidatorAddr)
 	return &types.QueryRateResponse{Rate: &rate, Target: &target}, nil
 }
+
 
 
 

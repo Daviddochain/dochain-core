@@ -1,22 +1,22 @@
 syntax = "proto3";
-package dochain.dyncomm.v1beta1;
+package do.dyncomm.v1beta1;
 
 import "cosmos_proto/cosmos.proto";
 import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
-import "dochain/dyncomm/v1beta1/dyncomm.proto";
+import "do/dyncomm/v1beta1/dyncomm.proto";
 
-option go_package = "github.com/Daviddochain/dochain-core/v4/x/dyncomm/types";
+option go_package = "github.com/Daviddochain/do-core/v4/x/dyncomm/types";
 
 // Query defines the gRPC querier service.
 service Query {
   // Params queries all parameters.
   rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
-    option (google.api.http).get = "/dochain/dyncomm/v1beta1/params";
+    option (google.api.http).get = "/do/dyncomm/v1beta1/params";
   }
 
   rpc Rate(QueryRateRequest) returns (QueryRateResponse) {
-    option (google.api.http).get = "/dochain/dyncomm/v1beta1/rate/{validator_addr}";
+    option (google.api.http).get = "/do/dyncomm/v1beta1/rate/{validator_addr}";
   }
 }
 
@@ -40,6 +40,7 @@ message QueryRateResponse {
   string rate   = 1 [(cosmos_proto.scalar) = "cosmos.Dec", (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec"];
   string target = 2 [(cosmos_proto.scalar) = "cosmos.Dec", (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec"];
 }
+
 
 
 

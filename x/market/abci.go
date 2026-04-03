@@ -1,7 +1,7 @@
 package market
 
 import (
-	"github.com/Daviddochain/dochain-core/v4/x/market/keeper"
+	"github.com/Daviddochain/do-core/v4/x/market/keeper"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
@@ -10,6 +10,7 @@ func EndBlocker(ctx sdk.Context, k keeper.Keeper) {
 	// Replenishes each pools towards equilibrium
 	k.ReplenishPools(ctx)
 }
+
 
 
 

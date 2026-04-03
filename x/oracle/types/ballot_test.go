@@ -8,8 +8,8 @@ import (
 	"testing"
 
 	sdkmath "cosmossdk.io/math"
-	core "github.com/Daviddochain/dochain-core/v4/types"
-	"github.com/Daviddochain/dochain-core/v4/x/oracle/types"
+	core "github.com/Daviddochain/do-core/v4/types"
+	"github.com/Daviddochain/do-core/v4/x/oracle/types"
 	"github.com/cometbft/cometbft/crypto/secp256k1"
 	tmproto "github.com/cometbft/cometbft/proto/tendermint/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -334,6 +334,7 @@ func TestNewClaim(t *testing.T) {
 		Recipient: addr,
 	}, claim)
 }
+
 
 
 

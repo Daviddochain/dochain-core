@@ -10,10 +10,10 @@ import (
 	"strings"
 
 	sdkmath "cosmossdk.io/math"
-	app "github.com/Daviddochain/dochain-core/v4/app"
-	"github.com/Daviddochain/dochain-core/v4/tests/e2e/containers"
-	"github.com/Daviddochain/dochain-core/v4/tests/e2e/initialization"
-	"github.com/Daviddochain/dochain-core/v4/types/assets"
+	app "github.com/Daviddochain/do-core/v4/app"
+	"github.com/Daviddochain/do-core/v4/tests/e2e/containers"
+	"github.com/Daviddochain/do-core/v4/tests/e2e/initialization"
+	"github.com/Daviddochain/do-core/v4/types/assets"
 	"github.com/cometbft/cometbft/libs/bytes"
 	"github.com/cometbft/cometbft/p2p"
 	coretypes "github.com/cometbft/cometbft/rpc/core/types"
@@ -106,7 +106,7 @@ func (n *NodeConfig) SubmitParamChangeProposal(proposalJSON, from string) {
 	err = f.Close()
 	require.NoError(n.t, err)
 
-	cmd := []string{"dochaind", "tx", "gov", "submit-proposal", "/dochain/param_change_proposal.json", fmt.Sprintf("--from=%s", from)}
+	cmd := []string{"dochaind", "tx", "gov", "submit-proposal", "/do/param_change_proposal.json", fmt.Sprintf("--from=%s", from)}
 
 	_, _, err = n.containerManager.ExecTxCmd(n.t, n.chainID, n.Name, cmd)
 	require.NoError(n.t, err)
@@ -126,7 +126,7 @@ func (n *NodeConfig) SubmitAddBurnTaxExemptionAddressProposalV1(addresses []stri
 			map[string]any{
 				"@type": "/cosmos.gov.v1.MsgExecLegacyContent",
 				"content": map[string]any{
-					"@type":       "/dochain.treasury.v1beta1.AddBurnTaxExemptionAddressProposal",
+					"@type":       "/do.treasury.v1beta1.AddBurnTaxExemptionAddressProposal",
 					"title":       "burn tax exemption address",
 					"description": "burn tax exemption address",
 					"addresses":   addresses,
@@ -150,7 +150,7 @@ func (n *NodeConfig) SubmitAddBurnTaxExemptionAddressProposalV1(addresses []stri
 	require.NoError(n.t, err)
 	require.NoError(n.t, f.Close())
 
-	cmd := []string{"dochaind", "tx", "gov", "submit-proposal", "/dochain/taxexemption_proposal.json", fmt.Sprintf("--from=%s", walletName)}
+	cmd := []string{"dochaind", "tx", "gov", "submit-proposal", "/do/taxexemption_proposal.json", fmt.Sprintf("--from=%s", walletName)}
 	resp, _, err := n.containerManager.ExecTxCmd(n.t, n.chainID, n.Name, cmd)
 	require.NoError(n.t, err)
 	proposalID, err := extractProposalIDFromResponse(resp.String())
@@ -167,7 +167,7 @@ func (n *NodeConfig) SubmitAddTaxExemptionZoneProposal(zone string, addresses []
 	proposal := map[string]any{
 		"messages": []any{
 			map[string]any{
-				"@type":      "/dochain.taxexemption.v1.MsgAddTaxExemptionZone",
+				"@type":      "/do.taxexemption.v1.MsgAddTaxExemptionZone",
 				"zone":       zone,
 				"outgoing":   exemptOutgoing,
 				"incoming":   exemptIncoming,
@@ -192,7 +192,7 @@ func (n *NodeConfig) SubmitAddTaxExemptionZoneProposal(zone string, addresses []
 	require.NoError(n.t, err)
 	require.NoError(n.t, f.Close())
 
-	cmd := []string{"dochaind", "tx", "gov", "submit-proposal", "/dochain/taxexemption_proposal.json", fmt.Sprintf("--from=%s", walletName)}
+	cmd := []string{"dochaind", "tx", "gov", "submit-proposal", "/do/taxexemption_proposal.json", fmt.Sprintf("--from=%s", walletName)}
 	resp, _, err := n.containerManager.ExecTxCmd(n.t, n.chainID, n.Name, cmd)
 	require.NoError(n.t, err)
 	proposalID, err := extractProposalIDFromResponse(resp.String())
@@ -209,7 +209,7 @@ func (n *NodeConfig) SubmitModifyTaxExemptionZoneProposal(zone string, exemptInc
 	proposal := map[string]any{
 		"messages": []any{
 			map[string]any{
-				"@type":      "/dochain.taxexemption.v1.MsgModifyTaxExemptionZone",
+				"@type":      "/do.taxexemption.v1.MsgModifyTaxExemptionZone",
 				"zone":       zone,
 				"outgoing":   exemptOutgoing,
 				"incoming":   exemptIncoming,
@@ -233,7 +233,7 @@ func (n *NodeConfig) SubmitModifyTaxExemptionZoneProposal(zone string, exemptInc
 	require.NoError(n.t, err)
 	require.NoError(n.t, f.Close())
 
-	cmd := []string{"dochaind", "tx", "gov", "submit-proposal", "/dochain/taxexemption_proposal.json", fmt.Sprintf("--from=%s", walletName)}
+	cmd := []string{"dochaind", "tx", "gov", "submit-proposal", "/do/taxexemption_proposal.json", fmt.Sprintf("--from=%s", walletName)}
 	resp, _, err := n.containerManager.ExecTxCmd(n.t, n.chainID, n.Name, cmd)
 	require.NoError(n.t, err)
 	proposalID, err := extractProposalIDFromResponse(resp.String())
@@ -250,7 +250,7 @@ func (n *NodeConfig) SubmitRemoveTaxExemptionZoneProposal(zone string, walletNam
 	proposal := map[string]any{
 		"messages": []any{
 			map[string]any{
-				"@type":     "/dochain.taxexemption.v1.MsgRemoveTaxExemptionZone",
+				"@type":     "/do.taxexemption.v1.MsgRemoveTaxExemptionZone",
 				"zone":      zone,
 				"authority": authority,
 			},
@@ -271,7 +271,7 @@ func (n *NodeConfig) SubmitRemoveTaxExemptionZoneProposal(zone string, walletNam
 	require.NoError(n.t, err)
 	require.NoError(n.t, f.Close())
 
-	cmd := []string{"dochaind", "tx", "gov", "submit-proposal", "/dochain/taxexemption_proposal.json", fmt.Sprintf("--from=%s", walletName)}
+	cmd := []string{"dochaind", "tx", "gov", "submit-proposal", "/do/taxexemption_proposal.json", fmt.Sprintf("--from=%s", walletName)}
 	resp, _, err := n.containerManager.ExecTxCmd(n.t, n.chainID, n.Name, cmd)
 	require.NoError(n.t, err)
 	proposalID, err := extractProposalIDFromResponse(resp.String())
@@ -288,7 +288,7 @@ func (n *NodeConfig) SubmitAddTaxExemptionAddressProposal(zone string, addresses
 	proposal := map[string]any{
 		"messages": []any{
 			map[string]any{
-				"@type":     "/dochain.taxexemption.v1.MsgAddTaxExemptionAddress",
+				"@type":     "/do.taxexemption.v1.MsgAddTaxExemptionAddress",
 				"zone":      zone,
 				"addresses": addresses,
 				"authority": authority,
@@ -310,7 +310,7 @@ func (n *NodeConfig) SubmitAddTaxExemptionAddressProposal(zone string, addresses
 	require.NoError(n.t, err)
 	require.NoError(n.t, f.Close())
 
-	cmd := []string{"dochaind", "tx", "gov", "submit-proposal", "/dochain/taxexemption_proposal.json", fmt.Sprintf("--from=%s", walletName)}
+	cmd := []string{"dochaind", "tx", "gov", "submit-proposal", "/do/taxexemption_proposal.json", fmt.Sprintf("--from=%s", walletName)}
 	resp, _, err := n.containerManager.ExecTxCmd(n.t, n.chainID, n.Name, cmd)
 	require.NoError(n.t, err)
 	proposalID, err := extractProposalIDFromResponse(resp.String())
@@ -327,7 +327,7 @@ func (n *NodeConfig) SubmitRemoveTaxExemptionAddressProposal(zone string, addres
 	proposal := map[string]any{
 		"messages": []any{
 			map[string]any{
-				"@type":     "/dochain.taxexemption.v1.MsgRemoveTaxExemptionAddress",
+				"@type":     "/do.taxexemption.v1.MsgRemoveTaxExemptionAddress",
 				"zone":      zone,
 				"addresses": addresses,
 				"authority": authority,
@@ -349,7 +349,7 @@ func (n *NodeConfig) SubmitRemoveTaxExemptionAddressProposal(zone string, addres
 	require.NoError(n.t, err)
 	require.NoError(n.t, f.Close())
 
-	cmd := []string{"dochaind", "tx", "gov", "submit-proposal", "/dochain/taxexemption_proposal.json", fmt.Sprintf("--from=%s", walletName)}
+	cmd := []string{"dochaind", "tx", "gov", "submit-proposal", "/do/taxexemption_proposal.json", fmt.Sprintf("--from=%s", walletName)}
 	resp, _, err := n.containerManager.ExecTxCmd(n.t, n.chainID, n.Name, cmd)
 	require.NoError(n.t, err)
 	proposalID, err := extractProposalIDFromResponse(resp.String())
@@ -493,7 +493,7 @@ func (n *NodeConfig) CreateWallet(walletName string) string {
 	cmd := []string{"dochaind", "keys", "add", walletName, "--keyring-backend=test"}
 	outBuf, _, err := n.containerManager.ExecCmd(n.t, n.Name, cmd, "", false)
 	require.NoError(n.t, err)
-	re := regexp.MustCompile("terra1(.{38})")
+	re := regexp.MustCompile("do1(.{38})")
 	walletAddr := fmt.Sprintf("%s\n", re.FindString(outBuf.String()))
 	walletAddr = strings.TrimSuffix(walletAddr, "\n")
 	n.LogActionF("created wallet %s, waller address - %s", walletName, walletAddr)
@@ -505,7 +505,7 @@ func (n *NodeConfig) GetWallet(walletName string) string {
 	cmd := []string{"dochaind", "keys", "show", walletName, "--keyring-backend=test"}
 	outBuf, _, err := n.containerManager.ExecCmd(n.t, n.Name, cmd, "", false)
 	require.NoError(n.t, err)
-	re := regexp.MustCompile("terra1(.{38})")
+	re := regexp.MustCompile("do1(.{38})")
 	walletAddr := fmt.Sprintf("%s\n", re.FindString(outBuf.String()))
 	walletAddr = strings.TrimSuffix(walletAddr, "\n")
 	n.LogActionF("wallet %s found, waller address - %s", walletName, walletAddr)
@@ -555,7 +555,7 @@ func (n *NodeConfig) Unjail(walletName string) error {
 		fmt.Sprintf("--from=%s", walletName),
 		fmt.Sprintf("--chain-id=%s", n.chainID),
 		"--yes", "--keyring-backend=test", "--log_format=json",
-		fmt.Sprintf("--gas=%d", containers.GasLimit), "--fees=0uluna",
+		fmt.Sprintf("--gas=%d", containers.GasLimit), "--fees=0udo",
 	}
 	_, _, err := n.containerManager.ExecCmd(n.t, n.Name, cmd, "txhash", false)
 	if err != nil {
@@ -589,6 +589,7 @@ func (n *NodeConfig) SubmitOracleAggregateVote(salt string, amount string) {
 	require.NoError(n.t, err)
 	n.LogActionF("successfully submitted oracle aggregate vote")
 }
+
 
 
 

@@ -8,8 +8,8 @@ import (
 	"math/rand"
 
 	"cosmossdk.io/math"
-	core "github.com/Daviddochain/dochain-core/v4/types"
-	"github.com/Daviddochain/dochain-core/v4/x/oracle/types"
+	core "github.com/Daviddochain/do-core/v4/types"
+	"github.com/Daviddochain/do-core/v4/x/oracle/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 )
 
@@ -134,6 +134,7 @@ func RandomizedGenState(simState *module.SimulationState) {
 	fmt.Printf("Selected randomly generated oracle parameters:\n%s\n", bz)
 	simState.GenState[types.ModuleName] = simState.Cdc.MustMarshalJSON(oracleGenesis)
 }
+
 
 
 

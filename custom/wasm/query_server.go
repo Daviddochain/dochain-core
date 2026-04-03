@@ -7,7 +7,7 @@ import (
 	storetypes "cosmossdk.io/store/types"
 	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
 	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
-	legacyupgrade "github.com/Daviddochain/dochain-core/v4/custom/upgrade/legacy"
+	legacyupgrade "github.com/Daviddochain/do-core/v4/custom/upgrade/legacy"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
@@ -146,6 +146,7 @@ func (q *LegacyQueryServer) Params(ctx context.Context, req *wasmtypes.QueryPara
 	ctx, _, _ = q.ensureLegacyWasm(ctx, "Params")
 	return q.QueryServer.Params(ctx, req)
 }
+
 
 
 

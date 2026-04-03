@@ -6,11 +6,11 @@ import (
 	sdkmath "cosmossdk.io/math"
 	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
 	wasmvmtypes "github.com/CosmWasm/wasmvm/v3/types"
-	core "github.com/Daviddochain/dochain-core/v4/types"
+	core "github.com/Daviddochain/do-core/v4/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
-// go test -v -run ^TestWasmTestSuite/TestTax$ github.com/Daviddochain/dochain-core/v4/wasmbinding/test
+// go test -v -run ^TestWasmTestSuite/TestTax$ github.com/Daviddochain/do-core/v4/wasmbinding/test
 func (s *WasmTestSuite) TestTax() {
 	s.SetupTest()
 	taxRate := sdkmath.LegacyNewDecWithPrec(11, 2)  // 11%
@@ -56,6 +56,7 @@ func (s *WasmTestSuite) TestTax() {
 	res := s.App.BankKeeper.GetAllBalances(s.Ctx, payer)
 	s.Require().Equal(sdkmath.NewInt(1000000000).Sub(updateAmt), res.AmountOf(core.MicroLunaDenom))
 }
+
 
 
 

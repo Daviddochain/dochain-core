@@ -1,8 +1,8 @@
 package dyncomm
 
 import (
-	"github.com/Daviddochain/dochain-core/v4/x/dyncomm/keeper"
-	"github.com/Daviddochain/dochain-core/v4/x/dyncomm/types"
+	"github.com/Daviddochain/do-core/v4/x/dyncomm/keeper"
+	"github.com/Daviddochain/do-core/v4/x/dyncomm/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 )
@@ -40,6 +40,7 @@ func ExportGenesis(ctx sdk.Context, keeper keeper.Keeper) (data *types.GenesisSt
 
 	return types.NewGenesisState(params, rates)
 }
+
 
 
 

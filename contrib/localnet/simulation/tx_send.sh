@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# randomly pick two addresses in keyring and send 100000000uluna
+# randomly pick two addresses in keyring and send 100000000udo
 addresses=($(dochaind keys list -n --keyring-backend $KEYRING_BACKEND --home $NODE_HOME))
 length=${#addresses[@]}
 
@@ -25,12 +25,13 @@ while true; do
         continue
     fi
 
-    dochaind tx bank send $addr1 $addr2 1000000uluna --chain-id $CHAIN_ID --home $NODE_HOME --gas auto --gas-adjustment 2.3 --fees 20000000uluna --keyring-backend $KEYRING_BACKEND --node $(sh $SIMULATION_FOLDER/next_node.sh) -y
+    dochaind tx bank send $addr1 $addr2 1000000udo --chain-id $CHAIN_ID --home $NODE_HOME --gas auto --gas-adjustment 2.3 --fees 20000000udo --keyring-backend $KEYRING_BACKEND --node $(sh $SIMULATION_FOLDER/next_node.sh) -y
     if [ $? -eq 0 ]; then
         success=$((success+1))
     fi
     sleep 10
 done
+
 
 
 

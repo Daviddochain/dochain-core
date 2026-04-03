@@ -58,9 +58,9 @@ $BINARY keys add $KEY2 --keyring-backend $KEYRING --home $HOME_DIR
 
 # Allocate genesis accounts (cosmos formatted addresses)
 # Fund each account with both udo and uusd so native-native pools have sufficient liquidity
-$BINARY add-genesis-account $KEY  "100000000000000000uluna,100000000000000000uusd" --keyring-backend $KEYRING --home $HOME_DIR
-$BINARY add-genesis-account $KEY1 "100000000000000000uluna,100000000000000000uusd" --keyring-backend $KEYRING --home $HOME_DIR
-$BINARY add-genesis-account $KEY2 "100000000000000000uluna,100000000000000000uusd" --keyring-backend $KEYRING --home $HOME_DIR
+$BINARY add-genesis-account $KEY  "100000000000000000udo,100000000000000000uusd" --keyring-backend $KEYRING --home $HOME_DIR
+$BINARY add-genesis-account $KEY1 "100000000000000000udo,100000000000000000uusd" --keyring-backend $KEYRING --home $HOME_DIR
+$BINARY add-genesis-account $KEY2 "100000000000000000udo,100000000000000000uusd" --keyring-backend $KEYRING --home $HOME_DIR
 
 update_test_genesis '.app_state["gov"]["voting_params"]["voting_period"]="10s"'
 update_test_genesis '.app_state["mint"]["params"]["mint_denom"]="'$DENOM'"'
@@ -93,6 +93,7 @@ $BINARY collect-gentxs --home $HOME_DIR
 $BINARY validate-genesis --home $HOME_DIR
 
 $BINARY start --home $HOME_DIR >> /tmp/node_logs 2>&1
+
 
 
 

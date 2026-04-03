@@ -15,9 +15,9 @@ type ImageConfig struct {
 
 //nolint:deadcode
 const (
-	// Current Git branch dochain repo/version. It is meant to be built locally.
+	// Current Git branch do repo/version. It is meant to be built locally.
 	// This image should be pre-built with `make docker-build-debug` either in CI or locally.
-	CurrentBranchTerraRepository = "dochain"
+	CurrentBranchTerraRepository = "do"
 	CurrentBranchTerraTag        = "debug"
 	// Hermes repo/version for relayer
 	relayerRepository = "informalsystems/hermes"
@@ -35,6 +35,7 @@ func NewImageConfig() ImageConfig {
 	config.TerraTag = CurrentBranchTerraTag
 	return config
 }
+
 
 
 

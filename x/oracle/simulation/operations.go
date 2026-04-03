@@ -7,9 +7,9 @@ import (
 	"strings"
 
 	"cosmossdk.io/math"
-	core "github.com/Daviddochain/dochain-core/v4/types"
-	"github.com/Daviddochain/dochain-core/v4/x/oracle/keeper"
-	"github.com/Daviddochain/dochain-core/v4/x/oracle/types"
+	core "github.com/Daviddochain/do-core/v4/types"
+	"github.com/Daviddochain/do-core/v4/x/oracle/keeper"
+	"github.com/Daviddochain/do-core/v4/x/oracle/types"
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/codec"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
@@ -277,6 +277,7 @@ func SimulateMsgDelegateFeedConsent(ak types.AccountKeeper, bk types.BankKeeper,
 		return simtypes.NewOperationMsg(msg, true, ""), nil, nil
 	}
 }
+
 
 
 

@@ -6,7 +6,7 @@ import (
 	"time"
 
 	sdkmath "cosmossdk.io/math"
-	"github.com/Daviddochain/dochain-core/v4/tests/e2e/initialization"
+	"github.com/Daviddochain/do-core/v4/tests/e2e/initialization"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
@@ -36,7 +36,7 @@ func (s *IntegrationTestSuite) TestIBCWasmHooks() {
 
 	transferAmount := sdkmath.NewInt(10000000)
 	validatorAddr := nodeB.GetWallet(initialization.ValidatorWalletName)
-	nodeB.SendIBCTransfer(validatorAddr, contractAddr, fmt.Sprintf("%duluna", transferAmount.Int64()),
+	nodeB.SendIBCTransfer(validatorAddr, contractAddr, fmt.Sprintf("%dudo", transferAmount.Int64()),
 		fmt.Sprintf(`{"wasm":{"contract":"%s","msg": {"increment": {}} }}`, contractAddr))
 
 	// check the balance of the contract
@@ -52,7 +52,7 @@ func (s *IntegrationTestSuite) TestIBCWasmHooks() {
 		10*time.Millisecond)
 
 	// sender wasm addr
-	// senderBech32, err := ibchookskeeper.DeriveIntermediateSender("channel-0", validatorAddr, "dochain")
+	// senderBech32, err := ibchookskeeper.DeriveIntermediateSender("channel-0", validatorAddr, "do")
 	var response interface{}
 	response, err = nodeA.QueryWasmSmart(contractAddr, `{"get_total_funds": {}}`)
 	s.Require().NoError(err)
@@ -217,7 +217,7 @@ func (s *IntegrationTestSuite) TestFeeTaxWasm() {
 	testAddr := node.CreateWallet("test")
 	transferAmount := sdkmath.NewInt(100000000)
 	transferCoin := sdk.NewCoin(initialization.TerraDenom, transferAmount)
-	node.BankSend(fmt.Sprintf("%suluna", transferAmount.Mul(sdkmath.NewInt(4))), initialization.ValidatorWalletName, testAddr)
+	node.BankSend(fmt.Sprintf("%sudo", transferAmount.Mul(sdkmath.NewInt(4))), initialization.ValidatorWalletName, testAddr)
 	node.StoreWasmCode("counter.wasm", initialization.ValidatorWalletName)
 	chain.LatestCodeID = int(node.QueryLatestWasmCodeID())
 
@@ -226,7 +226,7 @@ func (s *IntegrationTestSuite) TestFeeTaxWasm() {
 	taxAmount := initialization.BurnTaxRate.MulInt(transferAmount.Mul(sdkmath.NewInt(4))).TruncateInt()
 	s.Require().Equal(balance0.Amount, transferAmount.Mul(sdkmath.NewInt(4)).Sub(taxAmount))
 
-	// instantiate contract and transfer 100000000uluna
+	// instantiate contract and transfer 100000000udo
 	node.InstantiateWasmContract(
 		strconv.Itoa(chain.LatestCodeID),
 		`{"count": "0"}`, transferCoin.String(),
@@ -248,7 +248,7 @@ func (s *IntegrationTestSuite) TestFeeTaxWasm() {
 		strconv.Itoa(chain.LatestCodeID),
 		`{"count": "0"}`, "salt",
 		transferCoin.String(),
-		fmt.Sprintf("%duluna", stabilityFee), "300000", "test")
+		fmt.Sprintf("%dudo", stabilityFee), "300000", "test")
 
 	contracts, err = node.QueryContractsFromID(chain.LatestCodeID)
 	s.Require().NoError(err)
@@ -263,7 +263,7 @@ func (s *IntegrationTestSuite) TestFeeTaxWasm() {
 	s.Require().Equal(balance2.Amount, balance1.Amount.Sub(transferAmount))
 
 	contractAddr := contracts[0]
-	node.WasmExecute(contractAddr, `{"donate": {}}`, transferCoin.String(), fmt.Sprintf("%duluna", stabilityFee), "test")
+	node.WasmExecute(contractAddr, `{"donate": {}}`, transferCoin.String(), fmt.Sprintf("%dudo", stabilityFee), "test")
 
 	balance3, err := node.QuerySpecificBalance(testAddr, initialization.TerraDenom)
 	s.Require().NoError(err)
@@ -276,13 +276,13 @@ func (s *IntegrationTestSuite) TestFeeTaxWasm() {
 
 // TestOracleDelegateFeedConsent verifies that MsgDelegateFeedConsent can be
 // simulated and broadcast without the bech32 prefix mismatch error:
-// "hrp does not match bech32 prefix: expected 'dochain' got 'terravaloper'"
+// "hrp does not match bech32 prefix: expected 'do' got 'dovaloper'"
 func (s *IntegrationTestSuite) TestOracleDelegateFeedConsent() {
 	chain := s.configurer.GetChainConfig(0)
 	node, err := chain.GetDefaultNode()
 	s.Require().NoError(err)
 
-	// The validator's operator address (terravaloper...) is the signer of MsgDelegateFeedConsent.
+	// The validator's operator address (dovaloper...) is the signer of MsgDelegateFeedConsent.
 	// Before the fix, x/tx signer extraction would fail to decode it using the account codec.
 	operatorAddr := node.OperatorAddress
 	s.Require().NotEmpty(operatorAddr, "validator operator address must be set")
@@ -378,6 +378,7 @@ func (s *IntegrationTestSuite) TestSlashingUnjail() {
 	}, initialization.FiveMin, 5*time.Second,
 		"jailed_until should be cleared after unjail")
 }
+
 
 
 

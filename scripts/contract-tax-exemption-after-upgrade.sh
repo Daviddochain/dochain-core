@@ -18,7 +18,7 @@ addr=$($BINARY keys show $KEY -a --home $HOME --keyring-backend $KEYRING_BACKEND
 addr1=$($BINARY keys show $KEY1 -a --home $HOME --keyring-backend $KEYRING_BACKEND)
 addr2=$($BINARY keys show $KEY1 -a --home $HOME --keyring-backend $KEYRING_BACKEND)
 
-out=$($BINARY tx wasm store ${HACK_ATOM} --from $KEY --output json --gas auto --gas-adjustment 2.3 --fees 100000000uluna --chain-id $CHAIN_ID --home $HOME --keyring-backend $KEYRING_BACKEND -y)
+out=$($BINARY tx wasm store ${HACK_ATOM} --from $KEY --output json --gas auto --gas-adjustment 2.3 --fees 100000000udo --chain-id $CHAIN_ID --home $HOME --keyring-backend $KEYRING_BACKEND -y)
 code=$(echo $out | jq -r '.code')
 if [ "$code" != "0" ]; then
     echo "... Could not store contract" >&2
@@ -39,7 +39,7 @@ msg=$(jq -n '
    "beneficiary":"'$addr'"
 }')
 echo $msg
-out=$($BINARY tx wasm instantiate $code_id "$msg" --from $KEY --output json --gas auto --gas-adjustment 2.3 --label "hackatom" --fees 20000000uluna --no-admin --chain-id $CHAIN_ID --home $HOME --keyring-backend $KEYRING_BACKEND -y)
+out=$($BINARY tx wasm instantiate $code_id "$msg" --from $KEY --output json --gas auto --gas-adjustment 2.3 --label "hackatom" --fees 20000000udo --no-admin --chain-id $CHAIN_ID --home $HOME --keyring-backend $KEYRING_BACKEND -y)
 code=$(echo $out | jq -r '.code')
 if [ "$code" != "0" ]; then
     echo "... Could not instantiate contract" >&2
@@ -66,7 +66,7 @@ msg=$(jq -n '
    "nothing":{}
 }')
 echo $msg
-out=$($BINARY tx wasm execute $contract_addr "$msg" --from $KEY --amount 1000000uluna --output json --gas auto --fees 400000000uluna --gas-adjustment 2.3 --chain-id $CHAIN_ID --home $HOME --keyring-backend $KEYRING_BACKEND -y -o json)
+out=$($BINARY tx wasm execute $contract_addr "$msg" --from $KEY --amount 1000000udo --output json --gas auto --fees 400000000udo --gas-adjustment 2.3 --chain-id $CHAIN_ID --home $HOME --keyring-backend $KEYRING_BACKEND -y -o json)
 echo $out
 txhash=$(echo $out | jq -r '.txhash')
 echo $txhash
@@ -132,6 +132,7 @@ echo "... print tax-proceeds before adding to tax exemption list"
 echo $tax_proceeds_0
 echo "... query tax-proceeds after adding to tax exemption list, should be the same as before"
 $BINARY q treasury tax-proceeds
+
 
 
 

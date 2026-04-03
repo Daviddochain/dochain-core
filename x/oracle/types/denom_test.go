@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	sdkmath "cosmossdk.io/math"
-	"github.com/Daviddochain/dochain-core/v4/x/oracle/types"
+	"github.com/Daviddochain/do-core/v4/x/oracle/types"
 	"github.com/stretchr/testify/require"
 )
 
@@ -31,6 +31,7 @@ func Test_DenomList(t *testing.T) {
 	require.Equal(t, "name: denom3\ntobin_tax: \"300.000000000000000000\"\n", denoms[2].String())
 	require.Equal(t, "name: denom1\ntobin_tax: \"100.000000000000000000\"\n\nname: denom2\ntobin_tax: \"200.000000000000000000\"\n\nname: denom3\ntobin_tax: \"300.000000000000000000\"", denoms.String())
 }
+
 
 
 

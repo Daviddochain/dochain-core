@@ -1,4 +1,4 @@
-ARG base_image=classic-dochain/core
+ARG base_image=classic-do/core
 ARG version=latest
 
 FROM ${base_image}:${version}
@@ -8,7 +8,7 @@ ARG new_network=false
 ARG enable_lcd=true
 ARG validator_keyname=local
 ARG validator_mnenomic="torch swamp cancel lift never october child harsh rib aspect luxury word peanut length bamboo hawk material vehicle glue above west random sketch author"
-ARG validator_amount=1uluna
+ARG validator_amount=1udo
 ARG validator_commission_rate=0.2
 ARG validator_commission_rate_max=1
 ARG validator_commission_rate_max_change=0.01
@@ -32,6 +32,7 @@ COPY ./test-node-setup.sh /test-node-setup.sh
 COPY ./keys.json /keys.json
 
 CMD ["/entrypoint.sh"]
+
 
 
 

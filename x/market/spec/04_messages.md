@@ -6,7 +6,7 @@ order: 4
 
 ## MsgSwap
 
-A MsgSwap transaction denotes the Trader's intent to swap their balance of `OfferCoin` for new denomination `AskDenom`, for both dochain<>dochain and dochain<>Luna swaps.
+A MsgSwap transaction denotes the Trader's intent to swap their balance of `OfferCoin` for new denomination `AskDenom`, for both do<>do and do<>Luna swaps.
 
 ```go
 type MsgSwap struct {
@@ -41,7 +41,7 @@ This function detects the swap type from the offer and ask denominations and ret
 
 1. The amount of asked coins that should be returned for a given `offerCoin`. This is achieved by first spot-converting `offerCoin` to µSDR and then from µSDR to the desired `askDenom` with the proper exchange rate reported from by the Oracle.
 
-2. The spread % that should be taken as a swap fee given the swap type. dochain<>dochain swaps simply have the Tobin Tax spread fee. dochain<>Luna spreads are the greater of `MinSpread` and spread from Constant Product pricing.
+2. The spread % that should be taken as a swap fee given the swap type. do<>do swaps simply have the Tobin Tax spread fee. do<>Luna spreads are the greater of `MinSpread` and spread from Constant Product pricing.
 
 If the offerCoin's denomination is the same as `askDenom`, this will raise ErrRecursiveSwap.
 
@@ -51,14 +51,15 @@ If the offerCoin's denomination is the same as `askDenom`, this will raise ErrRe
 func (k Keeper) ApplySwapToPool(ctx sdk.Context, offerCoin sdk.Coin, askCoin sdk.DecCoin) error
 ```
 
-This function is called during the swap to update the blockchain's measure of , `TerraPoolDelta`, when the balances of the dochain and Luna liquidity pools have changed.
+This function is called during the swap to update the blockchain's measure of , `TerraPoolDelta`, when the balances of the do and Luna liquidity pools have changed.
 
-dochain currencies share the same liquidity pool, so `TerraPoolDelta` remains unaltered during dochain<>dochain swaps.
+do currencies share the same liquidity pool, so `TerraPoolDelta` remains unaltered during do<>do swaps.
 
-For dochain<>Luna swaps, the relative sizes of the pools will be different after the swap, and `delta` will be updated with the following formulas:
+For do<>Luna swaps, the relative sizes of the pools will be different after the swap, and `delta` will be updated with the following formulas:
 
-For dochain to Luna, `delta = delta + offerAmount`
-For Luna to dochain, `delta = delta - askAmount`
+For do to Luna, `delta = delta + offerAmount`
+For Luna to do, `delta = delta - askAmount`
+
 
 
 

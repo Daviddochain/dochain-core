@@ -92,7 +92,7 @@ func TestIBCv2HandshakeEvents(t *testing.T) {
 
 	cf := interchaintest.NewBuiltinChainFactory(zaptest.NewLogger(t), []*interchaintest.ChainSpec{
 		{
-			Name:          "dochain",
+			Name:          "do",
 			ChainConfig:   config,
 			NumValidators: &numVals,
 			NumFullNodes:  &numFullNodes,
@@ -108,17 +108,17 @@ func TestIBCv2HandshakeEvents(t *testing.T) {
 
 	chains, err := cf.Chains(t.Name())
 	require.NoError(t, err)
-	dochain, gaia := chains[0].(*cosmos.CosmosChain), chains[1].(*cosmos.CosmosChain)
+	do, gaia := chains[0].(*cosmos.CosmosChain), chains[1].(*cosmos.CosmosChain)
 
 	r := interchaintest.NewBuiltinRelayerFactory(ibc.CosmosRly, zaptest.NewLogger(t)).Build(t, client, network)
 
 	const path = "ibcv2-handshake"
 
 	ic := interchaintest.NewInterchain().
-		AddChain(dochain).
+		AddChain(do).
 		AddChain(gaia).
 		AddRelayer(r, "relayer").
-		AddLink(interchaintest.InterchainLink{Chain1: dochain, Chain2: gaia, Relayer: r, Path: path})
+		AddLink(interchaintest.InterchainLink{Chain1: do, Chain2: gaia, Relayer: r, Path: path})
 
 	rep := testreporter.NewNopReporter()
 	eRep := rep.RelayerExecReporter(t)
@@ -126,8 +126,8 @@ func TestIBCv2HandshakeEvents(t *testing.T) {
 	t.Cleanup(func() { _ = ic.Close() })
 
 	// After build, handshake should have completed. Capture current heights and scan a recent window.
-	require.NoError(t, testutil.WaitForBlocks(ctx, 3, dochain, gaia))
-	terraH, err := dochain.Height(ctx)
+	require.NoError(t, testutil.WaitForBlocks(ctx, 3, do, gaia))
+	terraH, err := do.Height(ctx)
 	require.NoError(t, err)
 	gaiaH, err := gaia.Height(ctx)
 	require.NoError(t, err)
@@ -154,7 +154,7 @@ func TestIBCv2HandshakeEvents(t *testing.T) {
 	}
 
 	for _, ev := range handshakeEvents {
-		found := containsAnyEventInWindow(t, ctx, dochain, startTerra, terraH, ev) ||
+		found := containsAnyEventInWindow(t, ctx, do, startTerra, terraH, ev) ||
 			containsAnyEventInWindow(t, ctx, gaia, startGaia, gaiaH, ev)
 		require.Truef(t, found, "expected to find event %s in recent handshake window", ev)
 	}
@@ -179,7 +179,7 @@ func TestIBCv2TransferEvents(t *testing.T) {
 
 	cf := interchaintest.NewBuiltinChainFactory(zaptest.NewLogger(t), []*interchaintest.ChainSpec{
 		{
-			Name:          "dochain",
+			Name:          "do",
 			ChainConfig:   config,
 			NumValidators: &numVals,
 			NumFullNodes:  &numFullNodes,
@@ -195,14 +195,14 @@ func TestIBCv2TransferEvents(t *testing.T) {
 
 	chains, err := cf.Chains(t.Name())
 	require.NoError(t, err)
-	dochain, gaia := chains[0].(*cosmos.CosmosChain), chains[1].(*cosmos.CosmosChain)
+	do, gaia := chains[0].(*cosmos.CosmosChain), chains[1].(*cosmos.CosmosChain)
 
 	r := interchaintest.NewBuiltinRelayerFactory(ibc.CosmosRly, zaptest.NewLogger(t)).Build(t, client, network)
 	ic := interchaintest.NewInterchain().
-		AddChain(dochain).
+		AddChain(do).
 		AddChain(gaia).
 		AddRelayer(r, "relayer").
-		AddLink(interchaintest.InterchainLink{Chain1: dochain, Chain2: gaia, Relayer: r, Path: pathTerraGaia})
+		AddLink(interchaintest.InterchainLink{Chain1: do, Chain2: gaia, Relayer: r, Path: pathTerraGaia})
 
 	rep := testreporter.NewNopReporter()
 	eRep := rep.RelayerExecReporter(t)
@@ -213,26 +213,26 @@ func TestIBCv2TransferEvents(t *testing.T) {
 	t.Cleanup(func() { _ = r.StopRelayer(ctx, eRep) })
 
 	// Fund users
-	users := interchaintest.GetAndFundTestUsers(t, ctx, "default", math.NewInt(genesisWalletAmount), dochain, gaia)
+	users := interchaintest.GetAndFundTestUsers(t, ctx, "default", math.NewInt(genesisWalletAmount), do, gaia)
 	terraUser, gaiaUser := users[0], users[1]
-	require.NoError(t, testutil.WaitForBlocks(ctx, 5, dochain, gaia))
+	require.NoError(t, testutil.WaitForBlocks(ctx, 5, do, gaia))
 
-	channel, err := ibc.GetTransferChannel(ctx, r, eRep, dochain.Config().ChainID, gaia.Config().ChainID)
+	channel, err := ibc.GetTransferChannel(ctx, r, eRep, do.Config().ChainID, gaia.Config().ChainID)
 	require.NoError(t, err)
 
-	transfer := ibc.WalletAmount{Address: gaiaUser.FormattedAddress(), Denom: dochain.Config().Denom, Amount: math.NewInt(1000)}
-	transferTx, err := dochain.SendIBCTransfer(ctx, channel.ChannelID, terraUser.KeyName(), transfer, ibc.TransferOptions{})
+	transfer := ibc.WalletAmount{Address: gaiaUser.FormattedAddress(), Denom: do.Config().Denom, Amount: math.NewInt(1000)}
+	transferTx, err := do.SendIBCTransfer(ctx, channel.ChannelID, terraUser.KeyName(), transfer, ibc.TransferOptions{})
 	require.NoError(t, err)
-	terraH, err := dochain.Height(ctx)
+	terraH, err := do.Height(ctx)
 	require.NoError(t, err)
 
-	_, err = testutil.PollForAck(ctx, dochain, terraH-5, terraH+25, transferTx.Packet)
+	_, err = testutil.PollForAck(ctx, do, terraH-5, terraH+25, transferTx.Packet)
 	require.NoError(t, err)
 	// give relayer time to relay ack
-	require.NoError(t, testutil.WaitForBlocks(ctx, 3, dochain, gaia))
+	require.NoError(t, testutil.WaitForBlocks(ctx, 3, do, gaia))
 
 	// Scan recent window for events
-	terraH2, _ := dochain.Height(ctx)
+	terraH2, _ := do.Height(ctx)
 	gaiaH2, _ := gaia.Height(ctx)
 	startTerra := terraH - 10
 	if startTerra < 1 {
@@ -243,13 +243,14 @@ func TestIBCv2TransferEvents(t *testing.T) {
 		startGaia = 1
 	}
 
-	require.True(t, containsAnyEventInWindow(t, ctx, dochain, startTerra, terraH2, "send_packet"))
+	require.True(t, containsAnyEventInWindow(t, ctx, do, startTerra, terraH2, "send_packet"))
 	// recv and write_ack occur on destination
 	require.True(t, containsAnyEventInWindow(t, ctx, gaia, startGaia, gaiaH2, "recv_packet"))
 	require.True(t, containsAnyEventInWindow(t, ctx, gaia, startGaia, gaiaH2, "write_acknowledgement"))
 	// acknowledge_packet occurs on source when ack is relayed back
-	require.True(t, containsAnyEventInWindow(t, ctx, dochain, startTerra, terraH2, "acknowledge_packet"))
+	require.True(t, containsAnyEventInWindow(t, ctx, do, startTerra, terraH2, "acknowledge_packet"))
 }
+
 
 
 

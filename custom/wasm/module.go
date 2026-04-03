@@ -6,8 +6,8 @@ import (
 	"github.com/CosmWasm/wasmd/x/wasm/keeper"
 	"github.com/CosmWasm/wasmd/x/wasm/simulation"
 	types "github.com/CosmWasm/wasmd/x/wasm/types"
-	customcli "github.com/Daviddochain/dochain-core/v4/custom/wasm/client/cli"
-	customtypes "github.com/Daviddochain/dochain-core/v4/custom/wasm/types/legacy"
+	customcli "github.com/Daviddochain/do-core/v4/custom/wasm/client/cli"
+	customtypes "github.com/Daviddochain/do-core/v4/custom/wasm/types/legacy"
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/codec"
 	cdctypes "github.com/cosmos/cosmos-sdk/codec/types"
@@ -91,6 +91,7 @@ func (am AppModule) RegisterServices(cfg module.Configurator) {
 		panic(err)
 	}
 }
+
 
 
 

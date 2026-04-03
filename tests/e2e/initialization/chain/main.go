@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/Daviddochain/dochain-core/v4/tests/e2e/initialization"
+	"github.com/Daviddochain/do-core/v4/tests/e2e/initialization"
 )
 
 func main() {
@@ -49,6 +49,7 @@ func main() {
 		panic(err)
 	}
 }
+
 
 
 

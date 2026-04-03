@@ -1,10 +1,10 @@
 syntax = "proto3";
-package dochain.taxexemption.v1;
+package do.taxexemption.v1;
 
 import "gogoproto/gogo.proto";
 import "cosmos_proto/cosmos.proto";
 
-option go_package = "github.com/Daviddochain/dochain-core/v4/x/taxexemption/types";
+option go_package = "github.com/Daviddochain/do-core/v4/x/taxexemption/types";
 
 message Zone {
   string name       = 1 [(gogoproto.moretags) = "yaml:\"name\""];
@@ -92,6 +92,7 @@ message RemoveTaxExemptionAddressProposal {
   repeated string addresses   = 4 [(gogoproto.moretags) = "yaml:\"addresses\""];
   string          authority   = 5 [(gogoproto.moretags) = "yaml:\"authority\""];
 }
+
 
 
 

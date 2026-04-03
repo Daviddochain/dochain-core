@@ -68,3 +68,4 @@ func NewQueryBurnTaxExemptionListParams(page, limit int) QueryBurnTaxExemptionLi
 
 
 
+

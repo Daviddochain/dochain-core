@@ -15,21 +15,21 @@ import (
 	wasm "github.com/CosmWasm/wasmd/x/wasm"
 	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
 	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
-	customstaking "github.com/Daviddochain/dochain-core/v4/custom/staking"
-	customwasmkeeper "github.com/Daviddochain/dochain-core/v4/custom/wasm/keeper"
-	terrawasm "github.com/Daviddochain/dochain-core/v4/wasmbinding"
-	dyncommkeeper "github.com/Daviddochain/dochain-core/v4/x/dyncomm/keeper"
-	dyncommtypes "github.com/Daviddochain/dochain-core/v4/x/dyncomm/types"
-	marketkeeper "github.com/Daviddochain/dochain-core/v4/x/market/keeper"
-	markettypes "github.com/Daviddochain/dochain-core/v4/x/market/types"
-	oraclekeeper "github.com/Daviddochain/dochain-core/v4/x/oracle/keeper"
-	oracletypes "github.com/Daviddochain/dochain-core/v4/x/oracle/types"
-	taxkeeper "github.com/Daviddochain/dochain-core/v4/x/tax/keeper"
-	taxtypes "github.com/Daviddochain/dochain-core/v4/x/tax/types"
-	taxexemptionkeeper "github.com/Daviddochain/dochain-core/v4/x/taxexemption/keeper"
-	taxexemptiontypes "github.com/Daviddochain/dochain-core/v4/x/taxexemption/types"
-	treasurykeeper "github.com/Daviddochain/dochain-core/v4/x/treasury/keeper"
-	treasurytypes "github.com/Daviddochain/dochain-core/v4/x/treasury/types"
+	customstaking "github.com/Daviddochain/do-core/v4/custom/staking"
+	customwasmkeeper "github.com/Daviddochain/do-core/v4/custom/wasm/keeper"
+	terrawasm "github.com/Daviddochain/do-core/v4/wasmbinding"
+	dyncommkeeper "github.com/Daviddochain/do-core/v4/x/dyncomm/keeper"
+	dyncommtypes "github.com/Daviddochain/do-core/v4/x/dyncomm/types"
+	marketkeeper "github.com/Daviddochain/do-core/v4/x/market/keeper"
+	markettypes "github.com/Daviddochain/do-core/v4/x/market/types"
+	oraclekeeper "github.com/Daviddochain/do-core/v4/x/oracle/keeper"
+	oracletypes "github.com/Daviddochain/do-core/v4/x/oracle/types"
+	taxkeeper "github.com/Daviddochain/do-core/v4/x/tax/keeper"
+	taxtypes "github.com/Daviddochain/do-core/v4/x/tax/types"
+	taxexemptionkeeper "github.com/Daviddochain/do-core/v4/x/taxexemption/keeper"
+	taxexemptiontypes "github.com/Daviddochain/do-core/v4/x/taxexemption/types"
+	treasurykeeper "github.com/Daviddochain/do-core/v4/x/treasury/keeper"
+	treasurytypes "github.com/Daviddochain/do-core/v4/x/treasury/types"
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/codec/address"
@@ -317,7 +317,7 @@ func NewAppKeepers(
 	// If evidence needs to be handled for the appKeepers, set routes in router here and seal
 	appKeepers.EvidenceKeeper = *evidenceKeeper
 
-	// Initialize dochain module keepers
+	// Initialize do module keepers
 	appKeepers.OracleKeeper = oraclekeeper.NewKeeper(
 		appCodec, appKeepers.keys[oracletypes.StoreKey], appKeepers.GetSubspace(oracletypes.ModuleName),
 		appKeepers.AccountKeeper, appKeepers.BankKeeper, appKeepers.DistrKeeper, appKeepers.StakingKeeper, distrtypes.ModuleName,
@@ -433,7 +433,7 @@ func NewAppKeepers(
 		wasmDir,                                                  // homeDir
 		wasmNodeConfig,                                           // NodeConfig
 		wasmVMConfig,                                             // VMConfig
-		append(wasmkeeper.BuiltInCapabilities(), "dochain"),        // availableCapabilities
+		append(wasmkeeper.BuiltInCapabilities(), "do"),        // availableCapabilities
 		authtypes.NewModuleAddress(govtypes.ModuleName).String(), // authority
 		wasmOpts..., // Options
 	)
@@ -562,6 +562,7 @@ func (appKeepers *AppKeepers) BlacklistedAccAddrs(
 
 	return blacklistedAddrs
 }
+
 
 
 

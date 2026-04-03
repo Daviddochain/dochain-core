@@ -6,7 +6,7 @@ import (
 	"cosmossdk.io/log"
 	"cosmossdk.io/math"
 	storetypes "cosmossdk.io/store/types"
-	"github.com/Daviddochain/dochain-core/v4/x/market/types"
+	"github.com/Daviddochain/do-core/v4/x/market/types"
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	paramstypes "github.com/cosmos/cosmos-sdk/x/params/types"
@@ -77,7 +77,7 @@ func (k Keeper) SetTerraPoolDelta(ctx sdk.Context, delta math.LegacyDec) {
 	store.Set(types.TerraPoolDeltaKey, bz)
 }
 
-// ReplenishPools replenishes each pool(dochain,Luna) to BasePool
+// ReplenishPools replenishes each pool(do,Luna) to BasePool
 func (k Keeper) ReplenishPools(ctx sdk.Context) {
 	poolDelta := k.GetTerraPoolDelta(ctx)
 
@@ -90,6 +90,7 @@ func (k Keeper) ReplenishPools(ctx sdk.Context) {
 
 	k.SetTerraPoolDelta(ctx, poolDelta)
 }
+
 
 
 

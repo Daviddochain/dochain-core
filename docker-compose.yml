@@ -4,7 +4,7 @@ services:
   terradnode0:
     platform: linux/amd64
     container_name: terradnode0
-    image: classic-dochain/dochaind-env
+    image: classic-do/dochaind-env
     restart: always
     ports:
       - "1317:1317"
@@ -22,7 +22,7 @@ services:
   terradnode1:
     platform: linux/amd64
     container_name: terradnode1
-    image: classic-dochain/dochaind-env
+    image: classic-do/dochaind-env
     restart: always
     ports:
       - "1318:1317"
@@ -40,7 +40,7 @@ services:
   terradnode2:
     platform: linux/amd64
     container_name: terradnode2
-    image: classic-dochain/dochaind-env
+    image: classic-do/dochaind-env
     restart: always
     environment:
       - ID=2
@@ -58,7 +58,7 @@ services:
   terradnode3:
     platform: linux/amd64
     container_name: terradnode3
-    image: classic-dochain/dochaind-env
+    image: classic-do/dochaind-env
     restart: always
     environment:
       - ID=3
@@ -76,7 +76,7 @@ services:
   terradnode4:
     platform: linux/amd64
     container_name: terradnode4
-    image: classic-dochain/dochaind-env
+    image: classic-do/dochaind-env
     restart: always
     environment:
       - ID=4
@@ -94,7 +94,7 @@ services:
   terradnode5:
     platform: linux/amd64
     container_name: terradnode5
-    image: classic-dochain/dochaind-env
+    image: classic-do/dochaind-env
     restart: always
     environment:
       - ID=5
@@ -112,7 +112,7 @@ services:
   terradnode6:
     platform: linux/amd64
     container_name: terradnode6
-    image: classic-dochain/dochaind-env
+    image: classic-do/dochaind-env
     restart: always
     environment:
       - ID=6
@@ -135,6 +135,7 @@ networks:
       config:
       -
         subnet: 192.168.10.0/24
+
 
 
 

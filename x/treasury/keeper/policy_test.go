@@ -4,9 +4,9 @@ import (
 	"testing"
 
 	sdkmath "cosmossdk.io/math"
-	core "github.com/Daviddochain/dochain-core/v4/types"
-	oracletypes "github.com/Daviddochain/dochain-core/v4/x/oracle/types"
-	"github.com/Daviddochain/dochain-core/v4/x/treasury/types"
+	core "github.com/Daviddochain/do-core/v4/types"
+	oracletypes "github.com/Daviddochain/do-core/v4/x/oracle/types"
+	"github.com/Daviddochain/do-core/v4/x/treasury/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	stakingkeeper "github.com/cosmos/cosmos-sdk/x/staking/keeper"
 	"github.com/stretchr/testify/require"
@@ -102,6 +102,7 @@ func TestUpdateTaxCap(t *testing.T) {
 	sdrCapAmt := input.TreasuryKeeper.GetParams(input.Ctx).TaxPolicy.Cap.Amount
 	require.Equal(t, krwCap, krwPrice.Quo(sdrPrice).MulInt(sdrCapAmt).TruncateInt())
 }
+
 
 
 

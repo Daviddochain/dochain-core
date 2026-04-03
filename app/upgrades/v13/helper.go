@@ -7,7 +7,7 @@ import (
 )
 
 // GetContractByCreatedSecondaryIndexKeyLegacy returns the key for the contract's created secondary index.
-// It is classic-dochain forked version https://github.com/classic-dochain/wasmd/blob/release/v0.46.x-classic/x/wasm/types/keys.go#L64
+// It is classic-do forked version https://github.com/classic-do/wasmd/blob/release/v0.46.x-classic/x/wasm/types/keys.go#L64
 func GetContractByCreatedSecondaryIndexKeyLegacy(contractAddr sdk.AccAddress, c wasmtypes.ContractCodeHistoryEntry) []byte {
 	prefix := GetContractByCodeIDSecondaryIndexPrefixLegacy(c.CodeID)
 	prefixLen := len(prefix)
@@ -20,7 +20,7 @@ func GetContractByCreatedSecondaryIndexKeyLegacy(contractAddr sdk.AccAddress, c 
 }
 
 // GetContractByCodeIDSecondaryIndexPrefixLegacy returns the prefix for the second index: `<prefix><codeID>`
-// https://github.com/classic-dochain/wasmd/blob/release/v0.46.x-classic/x/wasm/types/keys.go#L75C1-L83C2
+// https://github.com/classic-do/wasmd/blob/release/v0.46.x-classic/x/wasm/types/keys.go#L75C1-L83C2
 func GetContractByCodeIDSecondaryIndexPrefixLegacy(codeID uint64) []byte {
 	prefixLen := len(LegacyPrefixes.ContractByCodeIDAndCreatedSecondaryIndexPrefix)
 	const codeIDLen = 8
@@ -79,6 +79,7 @@ func GetContractCodeHistoryElementPrefixLegacy(contractAddr sdk.AccAddress) []by
 	copy(r[prefixLen:], contractAddr)
 	return r
 }
+
 
 
 

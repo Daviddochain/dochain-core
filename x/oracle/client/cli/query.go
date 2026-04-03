@@ -4,7 +4,7 @@ import (
 	"context"
 	"strings"
 
-	"github.com/Daviddochain/dochain-core/v4/x/oracle/types"
+	"github.com/Daviddochain/do-core/v4/x/oracle/types"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -90,9 +90,9 @@ func GetCmdQueryActives() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "actives",
 		Args:  cobra.NoArgs,
-		Short: "Query the active list of dochain assets recognized by the oracle",
+		Short: "Query the active list of do assets recognized by the oracle",
 		Long: strings.TrimSpace(`
-Query the active list of dochain assets recognized by the types.
+Query the active list of do assets recognized by the types.
 
 $ dochaind query oracle actives
 `),
@@ -151,7 +151,7 @@ func GetCmdQueryFeederDelegation() *cobra.Command {
 		Long: strings.TrimSpace(`
 Query the account the validator's oracle voting right is delegated to.
 
-$ dochaind query oracle feeder terravaloper...
+$ dochaind query oracle feeder dovaloper...
 `),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientQueryContext(cmd)
@@ -191,7 +191,7 @@ func GetCmdQueryMissCounter() *cobra.Command {
 		Long: strings.TrimSpace(`
 Query the # of vote periods missed in this oracle slash window.
 
-$ dochaind query oracle miss terravaloper...
+$ dochaind query oracle miss dovaloper...
 `),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientQueryContext(cmd)
@@ -235,7 +235,7 @@ $ dochaind query oracle aggregate-prevotes
 
 Or, can filter with voter address
 
-$ dochaind query oracle aggregate-prevotes terravaloper...
+$ dochaind query oracle aggregate-prevotes dovaloper...
 `),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientQueryContext(cmd)
@@ -291,7 +291,7 @@ $ dochaind query oracle aggregate-votes
 
 Or, can filter with voter address
 
-$ dochaind query oracle aggregate-votes terravaloper...
+$ dochaind query oracle aggregate-votes dovaloper...
 `),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientQueryContext(cmd)
@@ -415,6 +415,7 @@ Or, can
 	flags.AddQueryFlagsToCmd(cmd)
 	return cmd
 }
+
 
 
 

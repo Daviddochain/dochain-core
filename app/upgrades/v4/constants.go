@@ -2,7 +2,7 @@ package v4
 
 import (
 	store "cosmossdk.io/store/types"
-	"github.com/Daviddochain/dochain-core/v4/app/upgrades"
+	"github.com/Daviddochain/do-core/v4/app/upgrades"
 	icahosttypes "github.com/cosmos/ibc-go/v10/modules/apps/27-interchain-accounts/host/types"
 )
 
@@ -13,6 +13,7 @@ var Upgrade = upgrades.Upgrade{
 	CreateUpgradeHandler: CreateV4UpgradeHandler,
 	StoreUpgrades:        store.StoreUpgrades{Added: []string{icahosttypes.StoreKey}},
 }
+
 
 
 

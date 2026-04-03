@@ -10,7 +10,7 @@ import (
 // RegisterLegacyAminoCodec registers the necessary x/tax interfaces and concrete types
 // on the provided LegacyAmino codec. These types are used for Amino JSON serialization.
 func RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
-	cdc.RegisterConcrete(&MsgUpdateParams{}, "dochain/tax/MsgUpdateParams", nil)
+	cdc.RegisterConcrete(&MsgUpdateParams{}, "do/tax/MsgUpdateParams", nil)
 }
 
 func RegisterInterfaces(registry types.InterfaceRegistry) {
@@ -35,6 +35,7 @@ func init() {
 
 	amino.Seal()
 }
+
 
 
 

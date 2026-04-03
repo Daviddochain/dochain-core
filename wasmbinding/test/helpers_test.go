@@ -6,7 +6,7 @@ import (
 
 	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
 	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
-	apptesting "github.com/Daviddochain/dochain-core/v4/app/testing"
+	apptesting "github.com/Daviddochain/do-core/v4/app/testing"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/suite"
 )
@@ -58,6 +58,7 @@ func (s *WasmTestSuite) instantiateContract(funder sdk.AccAddress, codeID uint64
 
 	return addr
 }
+
 
 
 

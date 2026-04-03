@@ -3,8 +3,8 @@ package gov
 import (
 	"encoding/json"
 
-	customtypes "github.com/Daviddochain/dochain-core/v4/custom/gov/types"
-	core "github.com/Daviddochain/dochain-core/v4/types"
+	customtypes "github.com/Daviddochain/do-core/v4/custom/gov/types"
+	core "github.com/Daviddochain/do-core/v4/types"
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	"github.com/cosmos/cosmos-sdk/x/gov"
@@ -39,6 +39,7 @@ func (am AppModuleBasic) DefaultGenesis(cdc codec.JSONCodec) json.RawMessage {
 
 	return cdc.MustMarshalJSON(defaultGenesisState)
 }
+
 
 
 

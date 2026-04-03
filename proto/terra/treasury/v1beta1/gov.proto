@@ -1,10 +1,10 @@
 syntax = "proto3";
-package dochain.treasury.v1beta1;
+package do.treasury.v1beta1;
 
 import "cosmos_proto/cosmos.proto";
 import "gogoproto/gogo.proto";
 
-option go_package = "github.com/Daviddochain/dochain-core/v4/x/treasury/types";
+option go_package = "github.com/Daviddochain/do-core/v4/x/treasury/types";
 
 // proposal request structure for adding burn tax exemption address(es)
 message AddBurnTaxExemptionAddressProposal {
@@ -29,6 +29,7 @@ message RemoveBurnTaxExemptionAddressProposal {
   string          description = 2;
   repeated string addresses   = 3 [(gogoproto.moretags) = "yaml:\"addresses\""];
 }
+
 
 
 

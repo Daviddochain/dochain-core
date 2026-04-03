@@ -2,8 +2,8 @@ package treasury
 
 import (
 	errorsmod "cosmossdk.io/errors"
-	"github.com/Daviddochain/dochain-core/v4/x/treasury/keeper"
-	"github.com/Daviddochain/dochain-core/v4/x/treasury/types"
+	"github.com/Daviddochain/do-core/v4/x/treasury/keeper"
+	"github.com/Daviddochain/do-core/v4/x/treasury/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	govv1beta1 "github.com/cosmos/cosmos-sdk/x/gov/types/v1beta1"
@@ -29,6 +29,7 @@ func handleAddBurnTaxExemptionAddressProposal(ctx sdk.Context, k keeper.Keeper, 
 func handleRemoveBurnTaxExemptionAddressProposal(ctx sdk.Context, k keeper.Keeper, p *types.RemoveBurnTaxExemptionAddressProposal) error {
 	return keeper.HandleRemoveBurnTaxExemptionAddressProposal(ctx, k, p)
 }
+
 
 
 

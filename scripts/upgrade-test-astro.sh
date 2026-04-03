@@ -263,8 +263,8 @@ upload_and_instantiate_astroport_factory() {
             if [ -z "$FACTORY_ADDR" ] || [ "$FACTORY_ADDR" = "null" ]; then
                 RAW=$(echo "$TXQ" | jq -r '.raw_log // empty')
                 if [ -n "$RAW" ]; then
-                    # Try to grep address pattern terra1...
-                    FACTORY_ADDR=$(echo "$RAW" | grep -oE 'terra1[0-9a-z]{38,}' | head -n1)
+                    # Try to grep address pattern do1...
+                    FACTORY_ADDR=$(echo "$RAW" | grep -oE 'do1[0-9a-z]{38,}' | head -n1)
                 fi
             fi
         fi
@@ -317,7 +317,7 @@ DENOM=udo
 CHAIN_ID=localterra-legacy
 ADDITIONAL_PRE_SCRIPTS=${ADDITIONAL_PRE_SCRIPTS:-""}
 ADDITIONAL_AFTER_SCRIPTS=${ADDITIONAL_AFTER_SCRIPTS:-""}
-GAS_PRICE=${GAS_PRICE:-"30uluna"}
+GAS_PRICE=${GAS_PRICE:-"30udo"}
 ASTROPORT_LP_WASM=${ASTROPORT_LP_WASM:-"./scripts/wasm/contracts/astroport-440-lp.wasm"}
 ASTROPORT_POOL_WASM_GLOB=${ASTROPORT_POOL_WASM_GLOB:-"./scripts/wasm/contracts/astroport-*.wasm"}
 ASTROPORT_FACTORY_WASM=${ASTROPORT_FACTORY_WASM:-"./scripts/wasm/contracts/astroport-4006-factory.wasm"}
@@ -335,7 +335,7 @@ install_version() {
     # Download and extract if not exist
     if [ ! -f "_build/$version.zip" ]; then
         mkdir -p _build/$target_dir
-        wget -c "https://github.com/classic-dochain/core/archive/refs/tags/${version}.zip" -O _build/${version}.zip
+        wget -c "https://github.com/classic-do/core/archive/refs/tags/${version}.zip" -O _build/${version}.zip
         unzip _build/${version}.zip -d _build
     fi
     
@@ -665,7 +665,7 @@ upload_and_instantiate_astroport_pool() {
         if [ -n "$TXH" ] && [ "$TXH" != "null" ]; then
             RAW=$(echo "$TXQ" | jq -r '.raw_log // empty')
             if [ -n "$RAW" ]; then
-                CAND=$(echo "$RAW" | grep -oE 'terra1[0-9a-z]{38,}' | head -n1)
+                CAND=$(echo "$RAW" | grep -oE 'do1[0-9a-z]{38,}' | head -n1)
             fi
             if [ -n "$CAND" ] && [ "$CAND" != "null" ]; then
                 PAIR_ADDR="$CAND"
@@ -954,7 +954,7 @@ deploy_and_test_all_pools() {
                 echo "$DEDICATED_FACTORY" > "${HOME}/astroport_modern_factory_${base_file}.txt"
                 echo "Dedicated factory for $base_file at: $DEDICATED_FACTORY"
             fi
-            PAIR_ADDR=$(create_pair_via_factory_modern "$binary_path" "$DEDICATED_FACTORY" "$denom_a" "$denom_b" "$wasm" | grep -oE 'terra1[0-9a-z]{38,}' | head -n1)
+            PAIR_ADDR=$(create_pair_via_factory_modern "$binary_path" "$DEDICATED_FACTORY" "$denom_a" "$denom_b" "$wasm" | grep -oE 'do1[0-9a-z]{38,}' | head -n1)
             # Ensure we didn't capture LP by mistake
             if [ -n "$PAIR_ADDR" ] && ! is_pair_address "$binary_path" "$PAIR_ADDR"; then
                 FIX=$(resolve_pair_from_lp "$binary_path" "$PAIR_ADDR")
@@ -966,9 +966,9 @@ deploy_and_test_all_pools() {
         else
             # Legacy pairs: instantiate directly; include global factory_addr if present
             if [[ -n "$FACTORY_ADDR" ]]; then
-                PAIR_ADDR=$(upload_and_instantiate_astroport_pool "$binary_path" "$wasm" "$LP_CODE_ID" "$denom_a" "$denom_b" "$FACTORY_ADDR" | grep -oE 'terra1[0-9a-z]{38,}' | head -n1)
+                PAIR_ADDR=$(upload_and_instantiate_astroport_pool "$binary_path" "$wasm" "$LP_CODE_ID" "$denom_a" "$denom_b" "$FACTORY_ADDR" | grep -oE 'do1[0-9a-z]{38,}' | head -n1)
             else
-                PAIR_ADDR=$(upload_and_instantiate_astroport_pool "$binary_path" "$wasm" "$LP_CODE_ID" "$denom_a" "$denom_b" | grep -oE 'terra1[0-9a-z]{38,}' | head -n1)
+                PAIR_ADDR=$(upload_and_instantiate_astroport_pool "$binary_path" "$wasm" "$LP_CODE_ID" "$denom_a" "$denom_b" | grep -oE 'do1[0-9a-z]{38,}' | head -n1)
             fi
             # Ensure we didn't capture LP by mistake
             if [ -n "$PAIR_ADDR" ] && ! is_pair_address "$binary_path" "$PAIR_ADDR"; then
@@ -995,7 +995,7 @@ deploy_and_test_all_pools() {
             continue
         fi
         # Validate address before testing
-        if [[ -z "$PAIR_ADDR" || ! "$PAIR_ADDR" =~ ^terra1[0-9a-z]+$ ]]; then
+        if [[ -z "$PAIR_ADDR" || ! "$PAIR_ADDR" =~ ^do1[0-9a-z]+$ ]]; then
             echo "Skipping tests for $(basename "$wasm"): invalid/empty pair address ('$PAIR_ADDR')." >&2
             continue
         fi
@@ -1062,6 +1062,7 @@ done
 
 # Execute post-upgrade scripts
 execute_scripts "$ADDITIONAL_AFTER_SCRIPTS"
+
 
 
 

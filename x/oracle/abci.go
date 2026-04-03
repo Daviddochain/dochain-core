@@ -4,9 +4,9 @@ import (
 	"time"
 
 	"cosmossdk.io/math"
-	core "github.com/Daviddochain/dochain-core/v4/types"
-	"github.com/Daviddochain/dochain-core/v4/x/oracle/keeper"
-	"github.com/Daviddochain/dochain-core/v4/x/oracle/types"
+	core "github.com/Daviddochain/do-core/v4/types"
+	"github.com/Daviddochain/do-core/v4/x/oracle/keeper"
+	"github.com/Daviddochain/do-core/v4/x/oracle/types"
 	"github.com/cosmos/cosmos-sdk/telemetry"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
@@ -72,7 +72,7 @@ func EndBlocker(ctx sdk.Context, k keeper.Keeper) {
 		voteMap := k.OrganizeBallotByDenom(ctx, validatorClaimMap)
 
 		if referenceTerra := PickReferenceTerra(ctx, k, voteTargets, voteMap); referenceTerra != "" {
-			// make voteMap of Reference dochain to calculate cross exchange rates
+			// make voteMap of Reference do to calculate cross exchange rates
 			ballotRT := voteMap[referenceTerra]
 			voteMapRT := ballotRT.ToMap()
 			exchangeRateRT := ballotRT.WeightedMedian()
@@ -133,6 +133,7 @@ func EndBlocker(ctx sdk.Context, k keeper.Keeper) {
 		k.SlashAndResetMissCounters(ctx)
 	}
 }
+
 
 
 

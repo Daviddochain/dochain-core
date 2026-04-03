@@ -7,9 +7,9 @@ CHAIN_ID="localterra"
 HOME_DIR="mytestnet"
 KEYRING="test"
 FROM_KEY="test0"
-TO_ADDRESS="terra1yy0tteehf5xyg64mj48mxuygxeyj73a9skue4v"
+TO_ADDRESS="do1yy0tteehf5xyg64mj48mxuygxeyj73a9skue4v"
 GAS="500000"
-GAS_PRICES="1000uluna"
+GAS_PRICES="1000udo"
 
 # Get validator address
 VALIDATOR_ADDR=$($BINARY q staking validators -o json | jq -r '.validators[0].operator_address')
@@ -24,7 +24,7 @@ do
     echo "sequence number is $i"
 
     # Generate send tx
-        $BINARY tx bank send $FROM_KEY $TO_ADDRESS 100000uluna \
+        $BINARY tx bank send $FROM_KEY $TO_ADDRESS 100000udo \
             --from=$FROM_KEY \
             --gas=$GAS \
             --gas-prices=$GAS_PRICES \
@@ -91,6 +91,7 @@ do
 done
 
 echo "Script finished due to sequence mismatch"
+
 
 
 

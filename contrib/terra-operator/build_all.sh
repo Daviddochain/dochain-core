@@ -15,3 +15,4 @@ docker build --build-arg version=$VERSION --build-arg chainid=bombay-12 -t terra
 
 
 
+

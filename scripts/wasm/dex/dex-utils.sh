@@ -4,7 +4,7 @@ source scripts/wasm/env-test-pre.sh
 
 create_asset_info_json() {
     local input=$1
-    if [[ $input == dochain* ]]; then
+    if [[ $input == do* ]]; then
         echo "{\"token\":{\"contract_addr\":\"$input\"}}"
     else
         echo "{\"native_token\":{\"denom\":\"$input\"}}"
@@ -14,7 +14,7 @@ create_asset_info_json() {
 create_asset_json() {
     local input=$1
     local amount=${2:-"0"}
-    if [[ $input == dochain* ]]; then
+    if [[ $input == do* ]]; then
         echo "{\"info\":{\"token\":{\"contract_addr\":\"$input\"}},\"amount\":\"$amount\"}"
     else
         echo "{\"info\":{\"native_token\":{\"denom\":\"$input\"}},\"amount\":\"$amount\"}"
@@ -55,7 +55,7 @@ EOF
         --from "$KEY" \
         --chain-id "$CHAIN_ID" \
         --gas 20000000 \
-        --fees 1124975000uluna \
+        --fees 1124975000udo \
         --keyring-backend "$KEYRING" \
         --home "$HOME" \
         --output json \
@@ -100,7 +100,7 @@ increase_allowance() {
         --from "$KEY" \
         --chain-id "$CHAIN_ID" \
         --gas 20000000 \
-        --fees 11124975000uluna \
+        --fees 11124975000udo \
         --keyring-backend "$KEYRING" \
         --home "$HOME" \
         --output json \
@@ -134,18 +134,18 @@ provide_liquidity() {
     local asset2=$(create_asset_json "$token2" "$amount2")
 
 
-    if [[ $token1 == dochain* ]]; then
+    if [[ $token1 == do* ]]; then
         increase_allowance "$token1" "$pair_address" "$amount1"
     fi
-    if [[ $token2 == dochain* ]]; then
+    if [[ $token2 == do* ]]; then
         increase_allowance "$token2" "$pair_address" "$amount2"
     fi
 
     local funds=""
-    if [[ $token1 != dochain* ]]; then
+    if [[ $token1 != do* ]]; then
         funds="$funds--amount $amount1$token1 "
     fi
-    if [[ $token2 != dochain* ]]; then
+    if [[ $token2 != do* ]]; then
         funds="$funds--amount $amount2$token2 "
     fi
 
@@ -162,7 +162,7 @@ EOF
         --from "$KEY" \
         --chain-id "$CHAIN_ID" \
         --gas 20000000 \
-        --fees 1124975000uluna \
+        --fees 1124975000udo \
         $funds \
         --keyring-backend "$KEYRING" \
         --home "$HOME" \
@@ -210,7 +210,7 @@ execute_swap() {
 EOF
 )
 
-    if [[ $token1 == dochain* ]]; then
+    if [[ $token1 == do* ]]; then
         >&2 echo "Sending CW20 tokens to router..."
         local send_msg=$(cat << EOF
 {
@@ -226,7 +226,7 @@ EOF
             --from "$KEY" \
             --chain-id "$CHAIN_ID" \
             --gas 20000000 \
-            --fees 1124975000uluna \
+            --fees 1124975000udo \
             --keyring-backend "$KEYRING" \
             --home "$HOME" \
             --output json \
@@ -240,7 +240,7 @@ EOF
             --from "$KEY" \
             --chain-id "$CHAIN_ID" \
             --gas 20000000 \
-            --fees 1124975000uluna \
+            --fees 1124975000udo \
             $funds \
             --keyring-backend "$KEYRING" \
             --home "$HOME" \
@@ -254,6 +254,7 @@ EOF
     sleep $SLEEP_TIME
     tx_response=$($BINARY q tx $txhash --output json)
 }
+
 
 
 

@@ -1,6 +1,6 @@
 ---
-name: dochain Improvement Proposal (TIP)
-about: Use this template to outline proposed changes to the dochain core.
+name: do Improvement Proposal (TIP)
+about: Use this template to outline proposed changes to the do core.
 title: 'TIP # __ Your Title Here'
 labels: ''
 assignees: ''
@@ -63,6 +63,7 @@ assignees: ''
 ## Test cases
 
 <!--- If applicable, include any test cases or preliminary research related to the change. -->
+
 
 
 

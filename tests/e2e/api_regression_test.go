@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/Daviddochain/dochain-core/v4/tests/e2e/initialization"
-	"github.com/Daviddochain/dochain-core/v4/tests/e2e/util"
+	"github.com/Daviddochain/do-core/v4/tests/e2e/initialization"
+	"github.com/Daviddochain/do-core/v4/tests/e2e/util"
 )
 
 // TaxComputeRequest represents the request body for tax computation
@@ -172,7 +172,7 @@ func (s *IntegrationTestSuite) TestAPIRegression() {
 
 		// Fund sender wallet
 		validatorAddr := node.GetWallet(initialization.ValidatorWalletName)
-		node.BankSend("1000000uluna", validatorAddr, senderAddr)
+		node.BankSend("1000000udo", validatorAddr, senderAddr)
 
 		// Wait for transaction to be processed
 		time.Sleep(5 * time.Second)
@@ -268,7 +268,7 @@ func (s *IntegrationTestSuite) TestAPIRegression() {
 			// Create API client
 			apiClient := util.NewAPIClient(fmt.Sprintf("http://%s", hostPort))
 
-			resp, err := apiClient.PostJSON("/dochain/tx/v1beta1/compute_tax", reqBody)
+			resp, err := apiClient.PostJSON("/do/tx/v1beta1/compute_tax", reqBody)
 			if err != nil {
 				s.Suite.T().Logf("API request failed: %v", err)
 				return false
@@ -359,9 +359,9 @@ func (s *IntegrationTestSuite) TestAPIRegression() {
 		s.Suite.Require().Equal(200, resp.StatusCode)
 	})
 
-	// Test for slashing signing info query with terravalcons bech32 prefix
+	// Test for slashing signing info query with dovalcons bech32 prefix
 	// This tests the fix for the bech32 prefix mismatch error:
-	// "hrp does not match bech32 prefix: expected 'cosmosvalcons' got 'terravalcons'"
+	// "hrp does not match bech32 prefix: expected 'cosmosvalcons' got 'dovalcons'"
 	s.Run("Slashing Signing Info Query Test", func() {
 		chain := s.configurer.GetChainConfig(0)
 		node, err := chain.GetDefaultNode()
@@ -373,7 +373,7 @@ func (s *IntegrationTestSuite) TestAPIRegression() {
 		apiClient := util.NewAPIClient(fmt.Sprintf("http://%s", hostPort))
 		emptyHeaders := map[string]string{}
 
-		// First, query the list of all signing infos to get a valid terravalcons address
+		// First, query the list of all signing infos to get a valid dovalcons address
 		signingInfosPath := "/cosmos/slashing/v1beta1/signing_infos"
 		var signingInfosResp SigningInfosResponse
 		s.Eventually(func() bool {
@@ -401,14 +401,14 @@ func (s *IntegrationTestSuite) TestAPIRegression() {
 
 		s.Suite.Require().NotEmpty(signingInfosResp.Info, "Expected at least one validator signing info")
 
-		// Get the first validator's consensus address (should be terravalcons format)
+		// Get the first validator's consensus address (should be dovalcons format)
 		consAddress := signingInfosResp.Info[0].Address
 		s.Suite.T().Logf("Found validator consensus address: %s", consAddress)
 
-		// Verify the address has the correct terravalcons prefix
+		// Verify the address has the correct dovalcons prefix
 		s.Suite.Require().True(
-			len(consAddress) > 0 && consAddress[:12] == "terravalcons",
-			"Expected terravalcons prefix, got: %s", consAddress,
+			len(consAddress) > 0 && consAddress[:12] == "dovalcons",
+			"Expected dovalcons prefix, got: %s", consAddress,
 		)
 
 		// Now query the specific signing info for this validator
@@ -426,7 +426,7 @@ func (s *IntegrationTestSuite) TestAPIRegression() {
 		s.Suite.Require().Equal(consAddress, specificSigningInfoResp.ValSigningInfo.Address,
 			"Response address should match query address")
 
-		s.Suite.T().Logf("Slashing signing info query test passed - terravalcons prefix working correctly")
+		s.Suite.T().Logf("Slashing signing info query test passed - dovalcons prefix working correctly")
 	})
 
 	// Test for tx query logs reconstruction
@@ -443,13 +443,13 @@ func (s *IntegrationTestSuite) TestAPIRegression() {
 
 		// Fund sender wallet from validator
 		validatorAddr := node.GetWallet(initialization.ValidatorWalletName)
-		node.BankSend("1000000uluna", validatorAddr, txTestSender)
+		node.BankSend("1000000udo", validatorAddr, txTestSender)
 
 		// Wait for funding transaction
 		time.Sleep(5 * time.Second)
 
 		// Send a transaction that we'll query later
-		node.BankSend("100000uluna", txTestSender, txTestReceiver)
+		node.BankSend("100000udo", txTestSender, txTestReceiver)
 
 		// Wait for transaction to be indexed
 		time.Sleep(5 * time.Second)
@@ -525,7 +525,7 @@ func (s *IntegrationTestSuite) TestAPIRegression() {
 
 		// Fund sender wallet from validator
 		validatorAddr := node.GetWallet(initialization.ValidatorWalletName)
-		node.BankSend("10000000uluna", validatorAddr, wasmSender)
+		node.BankSend("10000000udo", validatorAddr, wasmSender)
 
 		// Wait for funding transaction
 		time.Sleep(5 * time.Second)
@@ -579,6 +579,7 @@ func (s *IntegrationTestSuite) TestAPIRegression() {
 		}
 	})
 }
+
 
 
 

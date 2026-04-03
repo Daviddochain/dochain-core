@@ -1,10 +1,10 @@
 #!/bin/sh
 
 # Default to "data".
-DATADIR="${DATADIR:-/dochain/.dochain/data}"
+DATADIR="${DATADIR:-/do/.do/data}"
 MONIKER="${MONIKER:-docker-node}"
 ENABLE_LCD="${ENABLE_LCD:-true}"
-MINIMUM_GAS_PRICES=${MINIMUM_GAS_PRICES-0.01133uluna,0.15uusd,0.104938usdr,169.77ukrw,428.571umnt,0.125ueur,0.98ucny,16.37ujpy,0.11ugbp,10.88uinr,0.19ucad,0.14uchf,0.19uaud,0.2usgd,4.62uthb,1.25usek,1.25unok,0.9udkk,2180.0uidr,7.6uphp,1.17uhkd}
+MINIMUM_GAS_PRICES=${MINIMUM_GAS_PRICES-0.01133udo,0.15uusd,0.104938usdr,169.77ukrw,428.571umnt,0.125ueur,0.98ucny,16.37ujpy,0.11ugbp,10.88uinr,0.19ucad,0.14uchf,0.19uaud,0.2usgd,4.62uthb,1.25usek,1.25unok,0.9udkk,2180.0uidr,7.6uphp,1.17uhkd}
 SNAPSHOT_NAME="${SNAPSHOT_NAME}"
 SNAPSHOT_BASE_URL="${SNAPSHOT_BASE_URL:-https://getsfo.quicksync.io}"
 
@@ -12,30 +12,30 @@ SNAPSHOT_BASE_URL="${SNAPSHOT_BASE_URL:-https://getsfo.quicksync.io}"
 dochaind init --chain-id $CHAINID moniker
 
 # Backup for templating
-mv ~/.dochain/config/config.toml ~/config.toml
-mv ~/.dochain/config/app.toml ~/app.toml
+mv ~/.do/config/config.toml ~/config.toml
+mv ~/.do/config/app.toml ~/app.toml
 
-if [ "$CHAINID" = "cookie-1" ] ; then wget -O ~/.dochain/config/genesis.json https://columbus-genesis.s3.ap-northeast-1.amazonaws.com/cookie-1-genesis.json; fi; \
-if [ "$CHAINID" = "cookie-1" ] ; then wget -O ~/.dochain/config/addrbook.json https://networks.mcontrol.ml/columbus/addrbook.json; fi; \
-if [ "$CHAINID" = "rebel-1" ]    ; then wget -O ~/.dochain/config/genesis.json https://raw.githubusercontent.com/dochain-rebels/classic-testnet/master/rebel-1/genesis.json; fi; \
-if [ "$CHAINID" = "rebel-1" ]    ; then wget -O ~/.dochain/config/addrbook.json https://raw.githubusercontent.com/dochain-rebels/classic-testnet/master/rebel-1/addrbook.json; fi; \
-if [ "$CHAINID" = "rebel-2" ]    ; then wget -O ~/.dochain/config/genesis.json https://raw.githubusercontent.com/dochain-rebels/classic-testnet/master/rebel-2/genesis.json; fi; \
-if [ "$CHAINID" = "rebel-2" ]    ; then wget -O ~/.dochain/config/addrbook.json https://raw.githubusercontent.com/dochain-rebels/classic-testnet/master/rebel-2/addrbook.json; fi;
+if [ "$CHAINID" = "cookie-1" ] ; then wget -O ~/.do/config/genesis.json https://columbus-genesis.s3.ap-northeast-1.amazonaws.com/cookie-1-genesis.json; fi; \
+if [ "$CHAINID" = "cookie-1" ] ; then wget -O ~/.do/config/addrbook.json https://networks.mcontrol.ml/columbus/addrbook.json; fi; \
+if [ "$CHAINID" = "rebel-1" ]    ; then wget -O ~/.do/config/genesis.json https://raw.githubusercontent.com/do-rebels/classic-testnet/master/rebel-1/genesis.json; fi; \
+if [ "$CHAINID" = "rebel-1" ]    ; then wget -O ~/.do/config/addrbook.json https://raw.githubusercontent.com/do-rebels/classic-testnet/master/rebel-1/addrbook.json; fi; \
+if [ "$CHAINID" = "rebel-2" ]    ; then wget -O ~/.do/config/genesis.json https://raw.githubusercontent.com/do-rebels/classic-testnet/master/rebel-2/genesis.json; fi; \
+if [ "$CHAINID" = "rebel-2" ]    ; then wget -O ~/.do/config/addrbook.json https://raw.githubusercontent.com/do-rebels/classic-testnet/master/rebel-2/addrbook.json; fi;
 
 # First sed gets the app.toml moved into place.
 # app.toml updates
-sed 's/minimum-gas-prices = "0uluna"/minimum-gas-prices = "'"$MINIMUM_GAS_PRICES"'"/g' ~/app.toml > ~/.dochain/config/app.toml
+sed 's/minimum-gas-prices = "0udo"/minimum-gas-prices = "'"$MINIMUM_GAS_PRICES"'"/g' ~/app.toml > ~/.do/config/app.toml
 
 # Needed to use awk to replace this multiline string.
 if [ "$ENABLE_LCD" = true ] ; then
-  sed -i '0,/enable = false/s//enable = true/' ~/.dochain/config/app.toml
+  sed -i '0,/enable = false/s//enable = true/' ~/.do/config/app.toml
 
 fi
 
 # config.toml updates
 
-sed 's/moniker = "moniker"/moniker = "'"$MONIKER"'"/g' ~/config.toml > ~/.dochain/config/config.toml
-sed -i 's/laddr = "tcp:\/\/127.0.0.1:26657"/laddr = "tcp:\/\/0.0.0.0:26657"/g' ~/.dochain/config/config.toml
+sed 's/moniker = "moniker"/moniker = "'"$MONIKER"'"/g' ~/config.toml > ~/.do/config/config.toml
+sed -i 's/laddr = "tcp:\/\/127.0.0.1:26657"/laddr = "tcp:\/\/0.0.0.0:26657"/g' ~/.do/config/config.toml
 
 if [ "$CHAINID" = "cookie-1" ] && [[ ! -z "$SNAPSHOT_NAME" ]] ; then 
   # Download the snapshot if data directory is empty.
@@ -79,7 +79,7 @@ if [ "$NEW_NETWORK" = "false" ] ; then
 
   if [ ! -z "$VALIDATOR_AUTO_CONFIG" ] && [ "$VALIDATOR_AUTO_CONFIG" = "1" ]; then
     if [ ! -z "$VALIDATOR_KEYNAME" ] && [ ! -z "$VALIDATOR_MNENOMIC" ] && [ ! -z "$VALIDATOR_PASSPHRASE" ] ; then
-      dochaind keys add $VALIDATOR_KEYNAME --recover > ~/.dochain/keys.log 2>&1 << EOF
+      dochaind keys add $VALIDATOR_KEYNAME --recover > ~/.do/keys.log 2>&1 << EOF
 $VALIDATOR_MNENOMIC
 $VALIDATOR_PASSPHRASE
 $VALIDATOR_PASSPHRASE
@@ -87,7 +87,7 @@ EOF
     fi
 
     if [ ! -z "$VALIDATOR_AMOUNT" ] && [ ! -z "$MONIKER" ] && [ ! -z "$VALIDATOR_PASSPHRASE" ] && [ ! -z "$VALIDATOR_KEYNAME" ] && [ ! -z "$VALIDATOR_KEYNAME" ] && [ ! -z "$VALIDATOR_COMMISSION_RATE" ] && [ ! -z "$VALIDATOR_COMMISSION_RATE_MAX" ]  && [ ! -z "$VALIDATOR_COMMISSION_RATE_MAX_CHANGE" ]  && [ ! -z "$VALIDATOR_MIN_SELF_DELEGATION" ] ; then
-      dochaind tx staking create-validator --amount=$VALIDATOR_AMOUNT --pubkey=$(dochaind tendermint show-validator) --moniker="$MONIKER" --chain-id=$CHAINID --from=$VALIDATOR_KEYNAME --commission-rate="$VALIDATOR_COMMISSION_RATE" --commission-max-rate="$VALIDATOR_COMMISSION_RATE_MAX" --commission-max-change-rate="$VALIDATOR_COMMISSION_RATE_MAX_CHANGE" --min-self-delegation="$VALIDATOR_MIN_SELF_DELEGATION" --gas=$VALIDATOR_GAS --gas-adjustment=$VALIDATOR_GAS_ADJUSTMENT --fees=$VALIDATOR_FEES > ~/.dochain/validator.log 2>&1 << EOF
+      dochaind tx staking create-validator --amount=$VALIDATOR_AMOUNT --pubkey=$(dochaind tendermint show-validator) --moniker="$MONIKER" --chain-id=$CHAINID --from=$VALIDATOR_KEYNAME --commission-rate="$VALIDATOR_COMMISSION_RATE" --commission-max-rate="$VALIDATOR_COMMISSION_RATE_MAX" --commission-max-change-rate="$VALIDATOR_COMMISSION_RATE_MAX_CHANGE" --min-self-delegation="$VALIDATOR_MIN_SELF_DELEGATION" --gas=$VALIDATOR_GAS --gas-adjustment=$VALIDATOR_GAS_ADJUSTMENT --fees=$VALIDATOR_FEES > ~/.do/validator.log 2>&1 << EOF
 $VALIDATOR_PASSPHRASE
 y
 EOF
@@ -96,6 +96,7 @@ EOF
 fi
 
 wait
+
 
 
 

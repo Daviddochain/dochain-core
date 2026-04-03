@@ -4,9 +4,9 @@ import (
 	"os"
 	"testing"
 
-	"github.com/Daviddochain/dochain-core/v4/tests/e2e/configurer/chain"
-	"github.com/Daviddochain/dochain-core/v4/tests/e2e/containers"
-	"github.com/Daviddochain/dochain-core/v4/tests/e2e/initialization"
+	"github.com/Daviddochain/do-core/v4/tests/e2e/configurer/chain"
+	"github.com/Daviddochain/do-core/v4/tests/e2e/containers"
+	"github.com/Daviddochain/do-core/v4/tests/e2e/initialization"
 )
 
 type CurrentBranchConfigurer struct {
@@ -38,7 +38,7 @@ func (cb *CurrentBranchConfigurer) ConfigureChains() error {
 
 func (cb *CurrentBranchConfigurer) ConfigureChain(chainConfig *chain.Config) error {
 	cb.t.Logf("starting e2e infrastructure from current branch for chain-id: %s", chainConfig.ID)
-	tmpDir, err := os.MkdirTemp("", "dochain-e2e-testnet-")
+	tmpDir, err := os.MkdirTemp("", "do-e2e-testnet-")
 	if err != nil {
 		return err
 	}
@@ -55,6 +55,7 @@ func (cb *CurrentBranchConfigurer) ConfigureChain(chainConfig *chain.Config) err
 func (cb *CurrentBranchConfigurer) RunSetup() error {
 	return cb.setupTests(cb)
 }
+
 
 
 

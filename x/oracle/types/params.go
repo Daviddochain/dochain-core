@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"cosmossdk.io/math"
-	core "github.com/Daviddochain/dochain-core/v4/types"
+	core "github.com/Daviddochain/do-core/v4/types"
 	paramstypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	"gopkg.in/yaml.v2"
 )
@@ -249,6 +249,7 @@ func validateMinValidPerWindow(i interface{}) error {
 
 	return nil
 }
+
 
 
 

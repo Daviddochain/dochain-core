@@ -6,10 +6,10 @@ import (
 	"fmt"
 	"math/rand"
 
-	"github.com/Daviddochain/dochain-core/v4/x/market/client/cli"
-	"github.com/Daviddochain/dochain-core/v4/x/market/keeper"
-	"github.com/Daviddochain/dochain-core/v4/x/market/simulation"
-	"github.com/Daviddochain/dochain-core/v4/x/market/types"
+	"github.com/Daviddochain/do-core/v4/x/market/client/cli"
+	"github.com/Daviddochain/do-core/v4/x/market/keeper"
+	"github.com/Daviddochain/do-core/v4/x/market/simulation"
+	"github.com/Daviddochain/do-core/v4/x/market/types"
 	abci "github.com/cometbft/cometbft/abci/types"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec"
@@ -191,6 +191,7 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 		am.accountKeeper, am.bankKeeper, am.oracleKeeper,
 	)
 }
+
 
 
 

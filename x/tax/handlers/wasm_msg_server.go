@@ -5,8 +5,8 @@ import (
 
 	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
 	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
-	taxkeeper "github.com/Daviddochain/dochain-core/v4/x/tax/keeper"
-	treasurykeeper "github.com/Daviddochain/dochain-core/v4/x/treasury/keeper"
+	taxkeeper "github.com/Daviddochain/do-core/v4/x/tax/keeper"
+	treasurykeeper "github.com/Daviddochain/do-core/v4/x/treasury/keeper"
 	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 )
 
@@ -125,6 +125,7 @@ func (s *WasmMsgServer) InstantiateContract2(ctx context.Context, msg *wasmtypes
 
 		return s.messageServer.InstantiateContract2(ctx, msg)*/
 }
+
 
 
 

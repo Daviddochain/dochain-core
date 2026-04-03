@@ -1,7 +1,7 @@
 package types
 
 import (
-	govtypes "github.com/Daviddochain/dochain-core/v4/custom/gov/types"
+	govtypes "github.com/Daviddochain/do-core/v4/custom/gov/types"
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/codec/legacy"
 	cryptocodec "github.com/cosmos/cosmos-sdk/crypto/codec"
@@ -32,6 +32,7 @@ func init() {
 
 	govtypes.RegisterProposalTypeCodec(types.CommunityPoolSpendProposal{}, "distribution/CommunityPoolSpendProposal")
 }
+
 
 
 

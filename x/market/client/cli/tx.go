@@ -3,8 +3,8 @@ package cli
 import (
 	"strings"
 
-	feeutils "github.com/Daviddochain/dochain-core/v4/custom/auth/client/utils"
-	"github.com/Daviddochain/dochain-core/v4/x/market/types"
+	feeutils "github.com/Daviddochain/do-core/v4/custom/auth/client/utils"
+	"github.com/Daviddochain/do-core/v4/x/market/types"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
@@ -42,7 +42,7 @@ $ dochaind market swap "1000ukrw" "uusd"
 
 The to-address can be specified. A default to-address is trader.
 
-$ dochaind market swap "1000ukrw" "uusd" "terra1..."
+$ dochaind market swap "1000ukrw" "uusd" "do1..."
 `),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientTxContext(cmd)
@@ -99,6 +99,7 @@ $ dochaind market swap "1000ukrw" "uusd" "terra1..."
 
 	return cmd
 }
+
 
 
 

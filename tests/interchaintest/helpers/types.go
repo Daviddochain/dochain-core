@@ -58,7 +58,7 @@ type GetAllBalancesResponse struct {
 }
 
 type GetBalanceQuery struct {
-	// {"get_balance":{"address":"terra1...","denom":"factory/terra1.../RcqfWz"}}
+	// {"get_balance":{"address":"do1...","denom":"factory/do1.../RcqfWz"}}
 	Address string `json:"address"`
 	Denom   string `json:"denom"`
 }
@@ -76,7 +76,7 @@ type WithdrawalTimestampObj struct {
 }
 
 type GetTotalFundsQuery struct {
-	// {"get_total_funds":{"addr":"terra1..."}}
+	// {"get_total_funds":{"addr":"do1..."}}
 	Addr string `json:"addr"`
 }
 type GetTotalFundsResponse struct {
@@ -93,7 +93,7 @@ type WasmCoin struct {
 }
 
 type GetCountQuery struct {
-	// {"get_total_funds":{"addr":"terra1..."}}
+	// {"get_total_funds":{"addr":"do1..."}}
 	Addr string `json:"addr"`
 }
 type GetCountResponse struct {
@@ -103,6 +103,7 @@ type GetCountResponse struct {
 type GetCountObj struct {
 	Count int64 `json:"count"`
 }
+
 
 
 

@@ -9,7 +9,7 @@ import (
 	"strings"
 
 	sdkmath "cosmossdk.io/math"
-	vestingtypes "github.com/Daviddochain/dochain-core/v4/x/vesting/types"
+	vestingtypes "github.com/Daviddochain/do-core/v4/x/vesting/types"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/crypto/keyring"
@@ -248,6 +248,7 @@ $ dochaind add-genesis-account acc1 '10000000000udo,1000000ukrw'
 	flags.AddQueryFlagsToCmd(cmd)
 	return cmd
 }
+
 
 
 

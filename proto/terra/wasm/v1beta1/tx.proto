@@ -1,10 +1,10 @@
 syntax = "proto3";
-package dochain.wasm.v1beta1;
+package do.wasm.v1beta1;
 
 import "gogoproto/gogo.proto";
 import "cosmos/base/v1beta1/coin.proto";
 
-option go_package = "github.com/Daviddochain/dochain-core/v4/custom/wasm/types/legacy";
+option go_package = "github.com/Daviddochain/do-core/v4/custom/wasm/types/legacy";
 
 // Msg defines the oracle Msg service.
 service Msg {
@@ -171,6 +171,7 @@ message MsgClearContractAdmin {
 
 // MsgClearContractAdminResponse defines the Msg/ClearContractAdmin response type.
 message MsgClearContractAdminResponse {}
+
 
 
 

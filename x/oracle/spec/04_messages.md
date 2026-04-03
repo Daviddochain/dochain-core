@@ -12,9 +12,9 @@ order: 4
 
 The exchange rate used in the hash must be the open market exchange rate of Luna, with respect to the denomination matching `Denom`. For example, if `Denom` is `uusd` and the going exchange rate for Luna is 1 USD, then "1" must be used as the exchange rate, as `1 udo = 1 uusd`.
 
-`Feeder` (`dochain-` address) is used if the validator wishes to delegate oracle vote signing to a separate key (who "feeds" the price in lieu of the operator) to de-risk exposing their validator signing key.
+`Feeder` (`do-` address) is used if the validator wishes to delegate oracle vote signing to a separate key (who "feeds" the price in lieu of the operator) to de-risk exposing their validator signing key.
 
-`Validator` is the validator address (`terravaloper-` address) of the original validator.
+`Validator` is the validator address (`dovaloper-` address) of the original validator.
 
 
 ```go
@@ -36,7 +36,7 @@ The `MsgExchangeRateVote` contains the actual exchange rate vote. The `Salt` par
 
 ```go
 // Deprecated: normal prevote and vote will be deprecated after columbus-4
-// MsgExchangeRateVote - struct for voting on the exchange rate of Luna denominated in various dochain assets.
+// MsgExchangeRateVote - struct for voting on the exchange rate of Luna denominated in various do assets.
 // For example, if the validator believes that the effective exchange rate of Luna in USD is 10.39, that's
 // what the exchange rate field would be, and if 1213.34 for KRW, same.
 type MsgExchangeRateVote struct {
@@ -52,9 +52,9 @@ type MsgExchangeRateVote struct {
 
 Validators may also elect to delegate voting rights to another key to prevent the block signing key from being kept online. To do so, they must submit a `MsgDelegateFeedConsent`, delegating their oracle voting rights to a `Delegate` that sign `MsgExchangeRatePrevote` and `MsgExchangeRateVote` on behalf of the validator.
 
-> Delegate validators will likely require you to deposit some funds (in dochain or Luna) which they can use to pay fees, sent in a separate MsgSend. This agreement is made off-chain and not enforced by the dochain protocol.
+> Delegate validators will likely require you to deposit some funds (in do or Luna) which they can use to pay fees, sent in a separate MsgSend. This agreement is made off-chain and not enforced by the do protocol.
 
-The `Operator` field contains the operator address of the validator (prefixed `terravaloper-`). The `Delegate` field is the account address (prefixed `dochain-`) of the delegate account that will be submitting exchange rate related votes and prevotes on behalf of the `Operator`.
+The `Operator` field contains the operator address of the validator (prefixed `dovaloper-`). The `Delegate` field is the account address (prefixed `do-`) of the delegate account that will be submitting exchange rate related votes and prevotes on behalf of the `Operator`.
 
 ```go
 // MsgDelegateFeedConsent - struct for delegating oracle voting rights to another address.
@@ -84,7 +84,7 @@ type MsgAggregateExchangeRatePrevote struct {
 The `MsgAggregateExchangeRateVote` contains the actual exchange rates vote. The `Salt` parameter must match the salt used to create the prevote, otherwise the voter cannot be rewarded.
 
 ```go
-// MsgAggregateExchangeRateVote - struct for voting on the exchange rates of Luna denominated in various dochain assets.
+// MsgAggregateExchangeRateVote - struct for voting on the exchange rates of Luna denominated in various do assets.
 type MsgAggregateExchangeRateVote struct {
 	Salt          string
 	ExchangeRates string
@@ -92,6 +92,7 @@ type MsgAggregateExchangeRateVote struct {
 	Validator     sdk.ValAddress 
 }
 ```
+
 
 
 

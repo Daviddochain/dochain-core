@@ -11,7 +11,7 @@ import (
 
 func GetIBCHooksUserAddress(t *testing.T, ctx context.Context, chain *cosmos.CosmosChain, channel, uaddr string) string {
 	chainNode := chain.FullNodes[0]
-	// dochaind q ibchooks wasm-sender channel-0 "terra14hj2tavq8fpesdwxxcu44rty3hh90vhujrvcmstl4zr3txmfvw9ssrc8au" --node http://localhost:26657
+	// dochaind q ibchooks wasm-sender channel-0 "do14hj2tavq8fpesdwxxcu44rty3hh90vhujrvcmstl4zr3txmfvw9ssrc8au" --node http://localhost:26657
 	cmd := []string{"ibchooks", "wasm-sender", channel, uaddr}
 
 	// This query does not return a type, just prints the string.
@@ -35,6 +35,7 @@ func GetIBCHookCount(t *testing.T, ctx context.Context, chain *cosmos.CosmosChai
 	require.NoError(t, err)
 	return res
 }
+
 
 
 

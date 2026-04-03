@@ -3,7 +3,7 @@ package vesting
 import (
 	"encoding/json"
 
-	"github.com/Daviddochain/dochain-core/v4/x/vesting/types"
+	"github.com/Daviddochain/do-core/v4/x/vesting/types"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
@@ -55,6 +55,7 @@ func (AppModuleBasic) GetTxCmd() *cobra.Command {
 func (AppModuleBasic) GetQueryCmd() *cobra.Command {
 	return nil
 }
+
 
 
 

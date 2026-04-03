@@ -14,13 +14,14 @@ func (k Keeper) ReplenishPools(ctx sdk.Context) {
 	delta := k.GetTerraPoolDelta(ctx)
 	regressionAmt := delta.QuoInt64(k.PoolRecoveryPeriod(ctx))
 
-	// Replenish dochain pool towards base pool
+	// Replenish do pool towards base pool
 	// regressionAmt cannot make delta zero
 	delta = delta.Sub(regressionAmt)
 
 	k.SetTerraPoolDelta(ctx, delta)
 }
 ```
+
 
 
 

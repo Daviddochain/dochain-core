@@ -3,7 +3,7 @@
 # the upgrade is a fork, "true" otherwise
 FORK=${FORK:-"false"}
 
-# $(curl --silent "https://api.github.com/repos/classic-dochain/core/releases/latest" | jq -r '.tag_name')
+# $(curl --silent "https://api.github.com/repos/classic-do/core/releases/latest" | jq -r '.tag_name')
 
 OLD_VERSION=${OLD_VERSION:-v3.6.2}
 HOME=mytestnet
@@ -13,7 +13,7 @@ CHAIN_ID=localterra
 SOFTWARE_UPGRADE_NAME=${SOFTWARE_UPGRADE_NAME:-"v14_1"}
 ADDITIONAL_PRE_SCRIPTS=${ADDITIONAL_PRE_SCRIPTS:-""}
 ADDITIONAL_AFTER_SCRIPTS=${ADDITIONAL_AFTER_SCRIPTS:-""}
-GAS_PRICE=${GAS_PRICE:-"30uluna"}
+GAS_PRICE=${GAS_PRICE:-"30udo"}
 FORK_HALT_HEIGHT=${FORK_HALT_HEIGHT:-""}
 
 if [[ "$FORK" == "true" ]]; then
@@ -34,7 +34,7 @@ export GOMODCACHE=$ROOT/_build/gocache
 
 # install old source if not exist
 if [ ! -f "_build/$OLD_VERSION.zip" ]; then
-    wget -c "https://github.com/classic-dochain/core/archive/refs/tags/${OLD_VERSION}.zip" -O _build/${OLD_VERSION}.zip
+    wget -c "https://github.com/classic-do/core/archive/refs/tags/${OLD_VERSION}.zip" -O _build/${OLD_VERSION}.zip
 fi
 
 if [ ! -d "_build/core-${OLD_VERSION:1}" ]; then
@@ -273,6 +273,7 @@ if [ ! -z "$ADDITIONAL_AFTER_SCRIPTS" ]; then
         fi
     done
 fi
+
 
 
 

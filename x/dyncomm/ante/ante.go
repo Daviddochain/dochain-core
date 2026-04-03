@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	errorsmod "cosmossdk.io/errors"
-	dyncommkeeper "github.com/Daviddochain/dochain-core/v4/x/dyncomm/keeper"
+	dyncommkeeper "github.com/Daviddochain/do-core/v4/x/dyncomm/keeper"
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -95,6 +95,7 @@ func (dd DyncommDecorator) ProcessEditValidator(ctx sdk.Context, msg sdk.Msg) (e
 
 	return nil
 }
+
 
 
 

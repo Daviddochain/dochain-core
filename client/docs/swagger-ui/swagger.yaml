@@ -1,7 +1,7 @@
 swagger: '2.0'
 info:
   title: Do-Chain - gRPC Gateway docs
-  description: REST interface for Do-Chain https://github.com/classic-dochain/core
+  description: REST interface for Do-Chain https://github.com/classic-do/core
   version: 2.2.1
 paths:
   /cosmos/auth/v1beta1/account_info/{address}:
@@ -26853,7 +26853,7 @@ paths:
           format: int64
       tags:
         - Query
-  /dochain/tx/v1beta1/compute_tax:
+  /do/tx/v1beta1/compute_tax:
     post:
       summary: EstimateFee simulates executing a transaction for estimating gas usage.
       operationId: ComputeTax
@@ -27087,10 +27087,10 @@ paths:
           in: body
           required: true
           schema:
-            $ref: '#/definitions/dochain.tx.v1beta1.ComputeTaxRequest'
+            $ref: '#/definitions/do.tx.v1beta1.ComputeTaxRequest'
       tags:
         - Service
-  /dochain/market/v1beta1/params:
+  /do/market/v1beta1/params:
     get:
       summary: Params queries all parameters.
       operationId: MarketParams
@@ -27140,7 +27140,7 @@ paths:
                       format: byte
       tags:
         - Query
-  /dochain/market/v1beta1/swap:
+  /do/market/v1beta1/swap:
     get:
       summary: Swap returns simulated swap amount.
       operationId: Swap
@@ -27187,7 +27187,7 @@ paths:
                       format: byte
       parameters:
         - name: offer_coin
-          description: offer_coin defines the coin being offered (i.e. 1000000uluna).
+          description: offer_coin defines the coin being offered (i.e. 1000000udo).
           in: query
           required: false
           type: string
@@ -27198,7 +27198,7 @@ paths:
           type: string
       tags:
         - Query
-  /dochain/market/v1beta1/terra_pool_delta:
+  /do/market/v1beta1/terra_pool_delta:
     get:
       summary: TerraPoolDelta returns terra_pool_delta amount.
       operationId: TerraPoolDelta
@@ -27241,7 +27241,7 @@ paths:
                       format: byte
       tags:
         - Query
-  /dochain/oracle/v1beta1/denoms/actives:
+  /do/oracle/v1beta1/denoms/actives:
     get:
       summary: Actives returns all active denoms
       operationId: Actives
@@ -27285,7 +27285,7 @@ paths:
                       format: byte
       tags:
         - Query
-  /dochain/oracle/v1beta1/denoms/exchange_rates:
+  /do/oracle/v1beta1/denoms/exchange_rates:
     get:
       summary: ExchangeRates returns exchange rates of all denoms
       operationId: ExchangeRates
@@ -27343,7 +27343,7 @@ paths:
                       format: byte
       tags:
         - Query
-  /dochain/oracle/v1beta1/denoms/tobin_taxes:
+  /do/oracle/v1beta1/denoms/tobin_taxes:
     get:
       summary: TobinTaxes returns tobin taxes of all denoms
       operationId: TobinTaxes
@@ -27393,7 +27393,7 @@ paths:
                       format: byte
       tags:
         - Query
-  /dochain/oracle/v1beta1/denoms/vote_targets:
+  /do/oracle/v1beta1/denoms/vote_targets:
     get:
       summary: VoteTargets returns all vote target denoms
       operationId: VoteTargets
@@ -27439,7 +27439,7 @@ paths:
                       format: byte
       tags:
         - Query
-  /dochain/oracle/v1beta1/denoms/{denom}/exchange_rate:
+  /do/oracle/v1beta1/denoms/{denom}/exchange_rate:
     get:
       summary: ExchangeRate returns exchange rate of a denom
       operationId: ExchangeRate
@@ -27453,7 +27453,7 @@ paths:
                 type: string
                 title: >-
                   exchange_rate defines the exchange rate of Luna denominated in
-                  various dochain
+                  various do
             description: |-
               QueryExchangeRateResponse is response type for the
               Query/ExchangeRate RPC method.
@@ -27487,7 +27487,7 @@ paths:
           type: string
       tags:
         - Query
-  /dochain/oracle/v1beta1/denoms/{denom}/tobin_tax:
+  /do/oracle/v1beta1/denoms/{denom}/tobin_tax:
     get:
       summary: TobinTax returns tobin tax of a denom
       operationId: TobinTax
@@ -27533,7 +27533,7 @@ paths:
           type: string
       tags:
         - Query
-  /dochain/oracle/v1beta1/params:
+  /do/oracle/v1beta1/params:
     get:
       summary: Params queries all parameters.
       operationId: OracleParams
@@ -27601,7 +27601,7 @@ paths:
                       format: byte
       tags:
         - Query
-  /dochain/oracle/v1beta1/valdiators/{validator_addr}/aggregate_vote:
+  /do/oracle/v1beta1/valdiators/{validator_addr}/aggregate_vote:
     get:
       summary: AggregateVote returns an aggregate vote of a validator
       operationId: AggregateVote
@@ -27634,7 +27634,7 @@ paths:
                 description: >-
                   MsgAggregateExchangeRateVote - struct for voting on
 
-                  the exchange rates of Luna denominated in various dochain
+                  the exchange rates of Luna denominated in various do
                   assets.
             description: |-
               QueryAggregateVoteResponse is response type for the
@@ -27669,7 +27669,7 @@ paths:
           type: string
       tags:
         - Query
-  /dochain/oracle/v1beta1/validators/aggregate_prevotes:
+  /do/oracle/v1beta1/validators/aggregate_prevotes:
     get:
       summary: AggregatePrevotes returns aggregate prevotes of all validators
       operationId: AggregatePrevotes
@@ -27729,7 +27729,7 @@ paths:
                       format: byte
       tags:
         - Query
-  /dochain/oracle/v1beta1/validators/aggregate_votes:
+  /do/oracle/v1beta1/validators/aggregate_votes:
     get:
       summary: AggregateVotes returns aggregate votes of all validators
       operationId: AggregateVotes
@@ -27761,7 +27761,7 @@ paths:
                   description: >-
                     MsgAggregateExchangeRateVote - struct for voting on
 
-                    the exchange rates of Luna denominated in various dochain
+                    the exchange rates of Luna denominated in various do
                     assets.
                 title: >-
                   aggregate_votes defines all oracle aggregate votes submitted
@@ -27793,7 +27793,7 @@ paths:
                       format: byte
       tags:
         - Query
-  /dochain/oracle/v1beta1/validators/{validator_addr}/aggregate_prevote:
+  /do/oracle/v1beta1/validators/{validator_addr}/aggregate_prevote:
     get:
       summary: AggregatePrevote returns an aggregate prevote of a validator
       operationId: AggregatePrevote
@@ -27854,7 +27854,7 @@ paths:
           type: string
       tags:
         - Query
-  /dochain/oracle/v1beta1/validators/{validator_addr}/feeder:
+  /do/oracle/v1beta1/validators/{validator_addr}/feeder:
     get:
       summary: FeederDelegation returns feeder delegation of a validator
       operationId: FeederDelegation
@@ -27900,7 +27900,7 @@ paths:
           type: string
       tags:
         - Query
-  /dochain/oracle/v1beta1/validators/{validator_addr}/miss:
+  /do/oracle/v1beta1/validators/{validator_addr}/miss:
     get:
       summary: MissCounter returns oracle miss counter of a validator
       operationId: MissCounter
@@ -27947,7 +27947,7 @@ paths:
           type: string
       tags:
         - Query
-  /dochain/treasury/v1beta1/burn_tax_exemption_list:
+  /do/treasury/v1beta1/burn_tax_exemption_list:
     get:
       summary: BurnTaxExemptionList returns all registered burn tax exemption addresses
       operationId: BurnTaxExemptionList
@@ -28073,7 +28073,7 @@ paths:
           type: boolean
       tags:
         - Query
-  /dochain/treasury/v1beta1/indicators:
+  /do/treasury/v1beta1/indicators:
     get:
       summary: Indicators return the current trl informations
       operationId: Indicators
@@ -28114,7 +28114,7 @@ paths:
                       format: byte
       tags:
         - Query
-  /dochain/treasury/v1beta1/params:
+  /do/treasury/v1beta1/params:
     get:
       summary: Params queries all parameters.
       operationId: TreasuryParams
@@ -28230,7 +28230,7 @@ paths:
                       format: byte
       tags:
         - Query
-  /dochain/treasury/v1beta1/reward_weight:
+  /do/treasury/v1beta1/reward_weight:
     get:
       summary: RewardWeight return the current reward weight
       operationId: RewardWeight
@@ -28269,7 +28269,7 @@ paths:
                       format: byte
       tags:
         - Query
-  /dochain/treasury/v1beta1/seigniorage_proceeds:
+  /do/treasury/v1beta1/seigniorage_proceeds:
     get:
       summary: SeigniorageProceeds return the current seigniorage proceeds
       operationId: SeigniorageProceeds
@@ -28308,7 +28308,7 @@ paths:
                       format: byte
       tags:
         - Query
-  /dochain/treasury/v1beta1/tax_caps:
+  /do/treasury/v1beta1/tax_caps:
     get:
       summary: TaxCaps returns the all tax caps
       operationId: TaxCaps
@@ -28357,7 +28357,7 @@ paths:
                       format: byte
       tags:
         - Query
-  /dochain/treasury/v1beta1/tax_caps/{denom}:
+  /do/treasury/v1beta1/tax_caps/{denom}:
     get:
       summary: TaxCap returns the tax cap of a denom
       operationId: TaxCap
@@ -28402,7 +28402,7 @@ paths:
           type: string
       tags:
         - Query
-  /dochain/treasury/v1beta1/tax_proceeds:
+  /do/treasury/v1beta1/tax_proceeds:
     get:
       summary: TaxProceeds return the current tax proceeds
       operationId: TaxProceeds
@@ -28456,7 +28456,7 @@ paths:
                       format: byte
       tags:
         - Query
-  /dochain/treasury/v1beta1/tax_rate:
+  /do/treasury/v1beta1/tax_rate:
     get:
       summary: TaxRate return the current tax rate
       operationId: TaxRate
@@ -28495,7 +28495,7 @@ paths:
                       format: byte
       tags:
         - Query
-  /dochain/taxexemption/v1/taxable/{from_address}/{to_address}:
+  /do/taxexemption/v1/taxable/{from_address}/{to_address}:
     get:
       operationId: Taxable
       responses:
@@ -28539,7 +28539,7 @@ paths:
           type: string
       tags:
         - Query
-  /dochain/taxexemption/v1/zones:
+  /do/taxexemption/v1/zones:
     get:
       operationId: TaxExemptionZonesList
       responses:
@@ -28670,7 +28670,7 @@ paths:
           type: boolean
       tags:
         - Query
-  /dochain/taxexemption/v1/{zone_name}/addresses:
+  /do/taxexemption/v1/{zone_name}/addresses:
     get:
       operationId: TaxExemptionAddressList
       responses:
@@ -28796,7 +28796,7 @@ paths:
           type: boolean
       tags:
         - Query
-  /dochain/dyncomm/v1beta1/params:
+  /do/dyncomm/v1beta1/params:
     get:
       summary: Params queries all parameters.
       operationId: DyncommParams
@@ -28845,7 +28845,7 @@ paths:
                       format: byte
       tags:
         - Query
-  /dochain/dyncomm/v1beta1/rate/{validator_addr}:
+  /do/dyncomm/v1beta1/rate/{validator_addr}:
     get:
       operationId: Rate
       responses:
@@ -63385,7 +63385,7 @@ definitions:
       Query/UpgradedConsensusState
 
       RPC method.
-  dochain.tx.v1beta1.ComputeTaxRequest:
+  do.tx.v1beta1.ComputeTaxRequest:
     type: object
     properties:
       tx:
@@ -63400,7 +63400,7 @@ definitions:
     description: |-
       ComputeTaxRequest is the request type for the Service.ComputeTax
       RPC method.
-  dochain.tx.v1beta1.ComputeTaxResponse:
+  do.tx.v1beta1.ComputeTaxResponse:
     type: object
     properties:
       tax_amount:
@@ -63421,7 +63421,7 @@ definitions:
     description: |-
       ComputeTaxResponse is the response type for the Service.ComputeTax
       RPC method.
-  dochain.market.v1beta1.Params:
+  do.market.v1beta1.Params:
     type: object
     properties:
       base_pool:
@@ -63434,7 +63434,7 @@ definitions:
         type: string
         format: byte
     description: Params defines the parameters for the market module.
-  dochain.market.v1beta1.QueryParamsResponse:
+  do.market.v1beta1.QueryParamsResponse:
     type: object
     properties:
       params:
@@ -63451,7 +63451,7 @@ definitions:
             type: string
             format: byte
     description: QueryParamsResponse is the response type for the Query/Params RPC method.
-  dochain.market.v1beta1.QuerySwapResponse:
+  do.market.v1beta1.QuerySwapResponse:
     type: object
     properties:
       return_coin:
@@ -63465,7 +63465,7 @@ definitions:
           amount:
             type: string
     description: QuerySwapResponse is the response type for the Query/Swap RPC method.
-  dochain.market.v1beta1.QueryTerraPoolDeltaResponse:
+  do.market.v1beta1.QueryTerraPoolDeltaResponse:
     type: object
     properties:
       terra_pool_delta:
@@ -63477,7 +63477,7 @@ definitions:
     description: >-
       QueryTerraPoolDeltaResponse is the response type for the
       Query/TerraPoolDelta RPC method.
-  dochain.oracle.v1beta1.AggregateExchangeRatePrevote:
+  do.oracle.v1beta1.AggregateExchangeRatePrevote:
     type: object
     properties:
       hash:
@@ -63494,7 +63494,7 @@ definitions:
 
       which is formatted as hex string in SHA256("{salt}:{exchange
       rate}{denom},...,{exchange rate}{denom}:{voter}")
-  dochain.oracle.v1beta1.AggregateExchangeRateVote:
+  do.oracle.v1beta1.AggregateExchangeRateVote:
     type: object
     properties:
       exchange_rate_tuples:
@@ -63513,8 +63513,8 @@ definitions:
         type: string
     description: |-
       MsgAggregateExchangeRateVote - struct for voting on
-      the exchange rates of Luna denominated in various dochain assets.
-  dochain.oracle.v1beta1.Denom:
+      the exchange rates of Luna denominated in various do assets.
+  do.oracle.v1beta1.Denom:
     type: object
     properties:
       name:
@@ -63522,7 +63522,7 @@ definitions:
       tobin_tax:
         type: string
     title: Denom - the object to hold configurations of each denom
-  dochain.oracle.v1beta1.ExchangeRateTuple:
+  do.oracle.v1beta1.ExchangeRateTuple:
     type: object
     properties:
       denom:
@@ -63532,7 +63532,7 @@ definitions:
     title: >-
       ExchangeRateTuple - struct to store interpreted exchange rates data to
       store
-  dochain.oracle.v1beta1.Params:
+  do.oracle.v1beta1.Params:
     type: object
     properties:
       vote_period:
@@ -63563,7 +63563,7 @@ definitions:
       min_valid_per_window:
         type: string
     description: Params defines the parameters for the oracle module.
-  dochain.oracle.v1beta1.QueryActivesResponse:
+  do.oracle.v1beta1.QueryActivesResponse:
     type: object
     properties:
       actives:
@@ -63576,7 +63576,7 @@ definitions:
     description: |-
       QueryActivesResponse is response type for the
       Query/Actives RPC method.
-  dochain.oracle.v1beta1.QueryAggregatePrevoteResponse:
+  do.oracle.v1beta1.QueryAggregatePrevoteResponse:
     type: object
     properties:
       aggregate_prevote:
@@ -63600,7 +63600,7 @@ definitions:
     description: |-
       QueryAggregatePrevoteResponse is response type for the
       Query/AggregatePrevote RPC method.
-  dochain.oracle.v1beta1.QueryAggregatePrevotesResponse:
+  do.oracle.v1beta1.QueryAggregatePrevotesResponse:
     type: object
     properties:
       aggregate_prevotes:
@@ -63629,7 +63629,7 @@ definitions:
     description: |-
       QueryAggregatePrevotesResponse is response type for the
       Query/AggregatePrevotes RPC method.
-  dochain.oracle.v1beta1.QueryAggregateVoteResponse:
+  do.oracle.v1beta1.QueryAggregateVoteResponse:
     type: object
     properties:
       aggregate_vote:
@@ -63654,11 +63654,11 @@ definitions:
             type: string
         description: |-
           MsgAggregateExchangeRateVote - struct for voting on
-          the exchange rates of Luna denominated in various dochain assets.
+          the exchange rates of Luna denominated in various do assets.
     description: |-
       QueryAggregateVoteResponse is response type for the
       Query/AggregateVote RPC method.
-  dochain.oracle.v1beta1.QueryAggregateVotesResponse:
+  do.oracle.v1beta1.QueryAggregateVotesResponse:
     type: object
     properties:
       aggregate_votes:
@@ -63682,25 +63682,25 @@ definitions:
               type: string
           description: |-
             MsgAggregateExchangeRateVote - struct for voting on
-            the exchange rates of Luna denominated in various dochain assets.
+            the exchange rates of Luna denominated in various do assets.
         title: >-
           aggregate_votes defines all oracle aggregate votes submitted in the
           current vote period
     description: |-
       QueryAggregateVotesResponse is response type for the
       Query/AggregateVotes RPC method.
-  dochain.oracle.v1beta1.QueryExchangeRateResponse:
+  do.oracle.v1beta1.QueryExchangeRateResponse:
     type: object
     properties:
       exchange_rate:
         type: string
         title: >-
           exchange_rate defines the exchange rate of Luna denominated in various
-          dochain
+          do
     description: |-
       QueryExchangeRateResponse is response type for the
       Query/ExchangeRate RPC method.
-  dochain.oracle.v1beta1.QueryExchangeRatesResponse:
+  do.oracle.v1beta1.QueryExchangeRatesResponse:
     type: object
     properties:
       exchange_rates:
@@ -63723,7 +63723,7 @@ definitions:
     description: |-
       QueryExchangeRatesResponse is response type for the
       Query/ExchangeRates RPC method.
-  dochain.oracle.v1beta1.QueryFeederDelegationResponse:
+  do.oracle.v1beta1.QueryFeederDelegationResponse:
     type: object
     properties:
       feeder_addr:
@@ -63732,7 +63732,7 @@ definitions:
     description: |-
       QueryFeederDelegationResponse is response type for the
       Query/FeederDelegation RPC method.
-  dochain.oracle.v1beta1.QueryMissCounterResponse:
+  do.oracle.v1beta1.QueryMissCounterResponse:
     type: object
     properties:
       miss_counter:
@@ -63742,7 +63742,7 @@ definitions:
     description: |-
       QueryMissCounterResponse is response type for the
       Query/MissCounter RPC method.
-  dochain.oracle.v1beta1.QueryParamsResponse:
+  do.oracle.v1beta1.QueryParamsResponse:
     type: object
     properties:
       params:
@@ -63777,7 +63777,7 @@ definitions:
           min_valid_per_window:
             type: string
     description: QueryParamsResponse is the response type for the Query/Params RPC method.
-  dochain.oracle.v1beta1.QueryTobinTaxResponse:
+  do.oracle.v1beta1.QueryTobinTaxResponse:
     type: object
     properties:
       tobin_tax:
@@ -63786,7 +63786,7 @@ definitions:
     description: |-
       QueryTobinTaxResponse is response type for the
       Query/TobinTax RPC method.
-  dochain.oracle.v1beta1.QueryTobinTaxesResponse:
+  do.oracle.v1beta1.QueryTobinTaxesResponse:
     type: object
     properties:
       tobin_taxes:
@@ -63803,7 +63803,7 @@ definitions:
     description: |-
       QueryTobinTaxesResponse is response type for the
       Query/TobinTaxes RPC method.
-  dochain.oracle.v1beta1.QueryVoteTargetsResponse:
+  do.oracle.v1beta1.QueryVoteTargetsResponse:
     type: object
     properties:
       vote_targets:
@@ -63816,7 +63816,7 @@ definitions:
     description: |-
       QueryVoteTargetsResponse is response type for the
       Query/VoteTargets RPC method.
-  dochain.treasury.v1beta1.Params:
+  do.treasury.v1beta1.Params:
     type: object
     properties:
       tax_policy:
@@ -63893,7 +63893,7 @@ definitions:
       oracle_split:
         type: string
     description: Params defines the parameters for the oracle module.
-  dochain.treasury.v1beta1.PolicyConstraints:
+  do.treasury.v1beta1.PolicyConstraints:
     type: object
     properties:
       rate_min:
@@ -63917,7 +63917,7 @@ definitions:
     title: >-
       PolicyConstraints - defines policy constraints can be applied in tax &
       reward policies
-  dochain.treasury.v1beta1.QueryBurnTaxExemptionListResponse:
+  do.treasury.v1beta1.QueryBurnTaxExemptionListResponse:
     type: object
     properties:
       addresses:
@@ -63953,7 +63953,7 @@ definitions:
     description: >-
       QueryBurnTaxExemptionListResponse is response type for the
       Query/BurnTaxExemptionList RPC method.
-  dochain.treasury.v1beta1.QueryIndicatorsResponse:
+  do.treasury.v1beta1.QueryIndicatorsResponse:
     type: object
     properties:
       trl_year:
@@ -63963,7 +63963,7 @@ definitions:
     description: |-
       QueryIndicatorsResponse is response type for the
       Query/Indicators RPC method.
-  dochain.treasury.v1beta1.QueryParamsResponse:
+  do.treasury.v1beta1.QueryParamsResponse:
     type: object
     properties:
       params:
@@ -64044,7 +64044,7 @@ definitions:
           oracle_split:
             type: string
     description: QueryParamsResponse is the response type for the Query/Params RPC method.
-  dochain.treasury.v1beta1.QueryRewardWeightResponse:
+  do.treasury.v1beta1.QueryRewardWeightResponse:
     type: object
     properties:
       reward_weight:
@@ -64052,7 +64052,7 @@ definitions:
     description: |-
       QueryRewardWeightResponse is response type for the
       Query/RewardWeight RPC method.
-  dochain.treasury.v1beta1.QuerySeigniorageProceedsResponse:
+  do.treasury.v1beta1.QuerySeigniorageProceedsResponse:
     type: object
     properties:
       seigniorage_proceeds:
@@ -64060,7 +64060,7 @@ definitions:
     description: |-
       QuerySeigniorageProceedsResponse is response type for the
       Query/SeigniorageProceeds RPC method.
-  dochain.treasury.v1beta1.QueryTaxCapResponse:
+  do.treasury.v1beta1.QueryTaxCapResponse:
     type: object
     properties:
       tax_cap:
@@ -64068,7 +64068,7 @@ definitions:
     description: |-
       QueryTaxCapResponse is response type for the
       Query/TaxCap RPC method.
-  dochain.treasury.v1beta1.QueryTaxCapsResponse:
+  do.treasury.v1beta1.QueryTaxCapsResponse:
     type: object
     properties:
       tax_caps:
@@ -64086,7 +64086,7 @@ definitions:
     description: |-
       QueryTaxCapsResponse is response type for the
       Query/TaxCaps RPC method.
-  dochain.treasury.v1beta1.QueryTaxCapsResponseItem:
+  do.treasury.v1beta1.QueryTaxCapsResponseItem:
     type: object
     properties:
       denom:
@@ -64096,7 +64096,7 @@ definitions:
     description: |-
       QueryTaxCapsResponseItem is response item type for the
       Query/TaxCaps RPC method.
-  dochain.treasury.v1beta1.QueryTaxProceedsResponse:
+  do.treasury.v1beta1.QueryTaxProceedsResponse:
     type: object
     properties:
       tax_proceeds:
@@ -64116,7 +64116,7 @@ definitions:
     description: |-
       QueryTaxProceedsResponse is response type for the
       Query/TaxProceeds RPC method.
-  dochain.treasury.v1beta1.QueryTaxRateResponse:
+  do.treasury.v1beta1.QueryTaxRateResponse:
     type: object
     properties:
       tax_rate:
@@ -64124,7 +64124,7 @@ definitions:
     description: |-
       QueryTaxRateResponse is response type for the
       Query/TaxRate RPC method.
-  dochain.taxexemption.v1.QueryTaxExemptionAddressResponse:
+  do.taxexemption.v1.QueryTaxExemptionAddressResponse:
     type: object
     properties:
       addresses:
@@ -64157,7 +64157,7 @@ definitions:
                    repeated Bar results = 1;
                    PageResponse page = 2;
            }
-  dochain.taxexemption.v1.QueryTaxExemptionZonesResponse:
+  do.taxexemption.v1.QueryTaxExemptionZonesResponse:
     type: object
     properties:
       zones:
@@ -64199,12 +64199,12 @@ definitions:
                    repeated Bar results = 1;
                    PageResponse page = 2;
            }
-  dochain.taxexemption.v1.QueryTaxableResponse:
+  do.taxexemption.v1.QueryTaxableResponse:
     type: object
     properties:
       taxable:
         type: boolean
-  dochain.taxexemption.v1.Zone:
+  do.taxexemption.v1.Zone:
     type: object
     properties:
       name:
@@ -64215,7 +64215,7 @@ definitions:
         type: boolean
       cross_zone:
         type: boolean
-  dochain.dyncomm.v1beta1.Params:
+  do.dyncomm.v1beta1.Params:
     type: object
     properties:
       max_zero:
@@ -64227,7 +64227,7 @@ definitions:
       cap:
         type: string
     description: Params defines the parameters for the dyncomm module.
-  dochain.dyncomm.v1beta1.QueryParamsResponse:
+  do.dyncomm.v1beta1.QueryParamsResponse:
     type: object
     properties:
       params:
@@ -64243,7 +64243,7 @@ definitions:
           cap:
             type: string
     description: QueryParamsResponse is the response type for the Query/Params RPC method.
-  dochain.dyncomm.v1beta1.QueryRateResponse:
+  do.dyncomm.v1beta1.QueryRateResponse:
     type: object
     properties:
       rate:
@@ -69297,6 +69297,7 @@ definitions:
     description: >-
       QueryTotalEscrowForDenomResponse is the response type for
       TotalEscrowForDenom RPC method.
+
 
 
 

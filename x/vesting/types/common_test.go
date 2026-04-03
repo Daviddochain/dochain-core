@@ -3,8 +3,8 @@ package types_test
 import (
 	"testing"
 
-	"github.com/Daviddochain/dochain-core/v4/custom/auth"
-	"github.com/Daviddochain/dochain-core/v4/x/vesting/types"
+	"github.com/Daviddochain/do-core/v4/custom/auth"
+	"github.com/Daviddochain/do-core/v4/x/vesting/types"
 	"github.com/cometbft/cometbft/crypto"
 	"github.com/cometbft/cometbft/crypto/secp256k1"
 	"github.com/cosmos/cosmos-sdk/codec"
@@ -72,6 +72,7 @@ func KeyTestPubAddr() (crypto.PrivKey, crypto.PubKey, sdk.AccAddress) {
 	addr := sdk.AccAddress(pub.Address())
 	return key, pub, addr
 }
+
 
 
 

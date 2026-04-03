@@ -3,7 +3,7 @@ package keeper
 import (
 	"context"
 
-	"github.com/Daviddochain/dochain-core/v4/x/tax/types"
+	"github.com/Daviddochain/do-core/v4/x/tax/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
@@ -20,6 +20,7 @@ func (k Keeper) BurnTaxRate(c context.Context, _ *types.QueryBurnTaxRateRequest)
 	ctx := sdk.UnwrapSDKContext(c)
 	return &types.QueryBurnTaxRateResponse{TaxRate: k.GetBurnTaxRate(ctx)}, nil
 }
+
 
 
 

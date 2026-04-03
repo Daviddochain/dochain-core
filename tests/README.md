@@ -53,7 +53,7 @@ This will affect currently test.yml and sims.yml
 1. go test: see if the code passes all unit testing
     * check if newly created function has test with it (if not, error)
     * new unit test must aim to break and error, not aim to pass. We have enjoyed false positive from unit test. Recently, we have falsely believed that tax split test works due to favourable input.
-    * I recently discovered that dochain wasm query testing doesn't work since Till provided it with blank contract bindings_tester.wasm and it still passes. That is way too false positive.
+    * I recently discovered that do wasm query testing doesn't work since Till provided it with blank contract bindings_tester.wasm and it still passes. That is way too false positive.
 2. go build binary: see if the binary can be built.
 3. liveness test:
     * liveness test is an __overall attack__ on FLP theorem by randomly shut down nodes.
@@ -75,7 +75,7 @@ This will affect currently test.yml and sims.yml
     * test-sim-after-import
     * test-sim-import-export
     * test-sim-nondeterminism
-    * test sim smart contract (for dochain query request since we maintain a custom implementation of this)
+    * test sim smart contract (for do query request since we maintain a custom implementation of this)
 
 ## Non - functional continous integration
 
@@ -100,6 +100,7 @@ Question:
 2. mantlemint functions normally
 3. station functions normally
 4. LocalTerra functions normally
+
 
 
 

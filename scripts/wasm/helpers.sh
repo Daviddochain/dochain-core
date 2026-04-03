@@ -8,7 +8,7 @@ upload_contract() {
         --from $KEY \
         --chain-id $CHAIN_ID \
         --gas 20000000 \
-        --fees 575529204uluna \
+        --fees 575529204udo \
         --keyring-backend $KEYRING \
         --home $HOME \
         --output json \
@@ -36,7 +36,7 @@ instantiate_contract() {
         --from $KEY \
         --chain-id $CHAIN_ID \
         --gas 20000000 \
-        --fees 575529204uluna \
+        --fees 575529204udo \
         --no-admin \
         --keyring-backend $KEYRING \
         --home $HOME \
@@ -62,7 +62,7 @@ execute_contract() {
     out=$($BINARY tx wasm execute $contract_addr "$msg" --from $key \
         --chain-id $CHAIN_ID \
         --gas 20000000 \
-        --fees 575529204uluna \
+        --fees 575529204udo \
         --keyring-backend $KEYRING \
         --home $HOME \
         --output json -y)
@@ -79,6 +79,7 @@ query_contract() {
 
     echo $out
 }
+
 
 
 

@@ -28,7 +28,7 @@ func TestTerraStart(t *testing.T) {
 
 	cf := interchaintest.NewBuiltinChainFactory(zaptest.NewLogger(t), []*interchaintest.ChainSpec{
 		{
-			Name:          "dochain",
+			Name:          "do",
 			ChainConfig:   config,
 			NumValidators: &numVals,
 			NumFullNodes:  &numFullNodes,
@@ -39,10 +39,10 @@ func TestTerraStart(t *testing.T) {
 	chains, err := cf.Chains(t.Name())
 	require.NoError(t, err)
 
-	dochain := chains[0].(*cosmos.CosmosChain)
+	do := chains[0].(*cosmos.CosmosChain)
 
 	// Create a new Interchain object which describes the chains, relayers, and IBC connections we want to use
-	ic := interchaintest.NewInterchain().AddChain(dochain)
+	ic := interchaintest.NewInterchain().AddChain(do)
 
 	rep := testreporter.NewNopReporter()
 	eRep := rep.RelayerExecReporter(t)
@@ -65,6 +65,7 @@ func TestTerraStart(t *testing.T) {
 		_ = ic.Close()
 	})
 }
+
 
 
 

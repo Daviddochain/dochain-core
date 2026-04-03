@@ -19,7 +19,7 @@ const (
 )
 
 // BurnModuleName is special purpose module name to perform burn coins
-// burn address = terra1sk06e3dyexuq4shw77y3dsv480xv42mq73anxu
+// burn address = do1sk06e3dyexuq4shw77y3dsv480xv42mq73anxu
 const BurnModuleName = "burn"
 
 // Keys for treasury store
@@ -84,6 +84,7 @@ func GetSubkeyByEpoch(prefix []byte, epoch int64) []byte {
 	binary.LittleEndian.PutUint64(b, uint64(epoch))
 	return append(prefix, b...)
 }
+
 
 
 

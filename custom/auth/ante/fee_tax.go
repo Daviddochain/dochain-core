@@ -2,9 +2,9 @@ package ante
 
 import (
 	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
-	marketexported "github.com/Daviddochain/dochain-core/v4/x/market/exported"
-	taxtypes "github.com/Daviddochain/dochain-core/v4/x/tax/types"
-	taxexemptionkeeper "github.com/Daviddochain/dochain-core/v4/x/taxexemption/keeper"
+	marketexported "github.com/Daviddochain/do-core/v4/x/market/exported"
+	taxtypes "github.com/Daviddochain/do-core/v4/x/tax/types"
+	taxexemptionkeeper "github.com/Daviddochain/do-core/v4/x/taxexemption/keeper"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authz "github.com/cosmos/cosmos-sdk/x/authz"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
@@ -75,6 +75,7 @@ func FilterMsgAndComputeTax(ctx sdk.Context, te taxexemptionkeeper.Keeper, tk Tr
 func computeTax(ctx sdk.Context, tk TreasuryKeeper, th TaxKeeper, principal sdk.Coins, simulate bool) sdk.Coins {
 	return taxtypes.ComputeTaxes(ctx, principal, th.GetBurnTaxRate(ctx), simulate, tk)
 }
+
 
 
 

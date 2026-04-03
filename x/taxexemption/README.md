@@ -203,13 +203,13 @@ The tax exemption module provides governance-controlled functionalities to manag
 ----------------------------------------------------------------
 Before submitting a proposal, users must create a draft proposal. Each proposal type has a specific msg type. Examples:
 
-Add a tax-exempt zone: dochain.taxexemption.v1.MsgAddTaxExemptionZone
+Add a tax-exempt zone: do.taxexemption.v1.MsgAddTaxExemptionZone
 
-Remove a tax-exempt zone: dochain.taxexemption.v1.MsgRemoveTaxExemptionZone
+Remove a tax-exempt zone: do.taxexemption.v1.MsgRemoveTaxExemptionZone
 
-Remove addresses from tax-exempt list: dochain.taxexemption.v1.MsgRemoveTaxExemptionAddress
+Remove addresses from tax-exempt list: do.taxexemption.v1.MsgRemoveTaxExemptionAddress
 
- Modify a tax exemption zone: dochain.taxexemption.v1.MsgModifyTaxExemptionZone
+ Modify a tax exemption zone: do.taxexemption.v1.MsgModifyTaxExemptionZone
 
 
 The draft proposal creation command:
@@ -223,15 +223,15 @@ After creating a proposal, a JSON file will be generated that looks like the one
 {
   "messages": [
     {
-      "@type": "/dochain.taxexemption.v1.MsgAddTaxExemptionZone",
+      "@type": "/do.taxexemption.v1.MsgAddTaxExemptionZone",
       "zone": "bnb",
       "outgoing": false,
       "incoming": false,
       "cross_zone": false,
       "addresses": [
-        "terra16r0fdcyy6whsfx9nxfx5zhhdwte59kaf3jm502"
+        "do16r0fdcyy6whsfx9nxfx5zhhdwte59kaf3jm502"
       ],
-      "authority": "terra10d07y265gmmuvt4z0w9aw880jnsr700juxf95n"
+      "authority": "do10d07y265gmmuvt4z0w9aw880jnsr700juxf95n"
     }
   ],
   "metadata": "ipfs://CID",
@@ -268,6 +268,7 @@ This command allows users to query and retrieve all tax-exempt addresses associa
 ```bash
 dochaind query taxable addresses [zone-name]
 ```
+
 
 
 

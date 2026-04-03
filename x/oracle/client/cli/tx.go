@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/Daviddochain/dochain-core/v4/x/oracle/types"
+	"github.com/Daviddochain/do-core/v4/x/oracle/types"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
@@ -43,9 +43,9 @@ Delegate the permission to submit exchange rate votes for the oracle to an addre
 
 Delegation can keep your validator operator key offline and use a separate replaceable key online.
 
-$ dochaind tx oracle set-feeder terra1...
+$ dochaind tx oracle set-feeder do1...
 
-where "terra1..." is the address you want to delegate your voting rights to.
+where "do1..." is the address you want to delegate your voting rights to.
 `),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientTxContext(cmd)
@@ -93,7 +93,7 @@ $ dochaind tx oracle aggregate-prevote 1234 8888.0ukrw,1.243uusd,0.99usdr
 where "ukrw,uusd,usdr" is the denominating currencies, and "8888.0,1.243,0.99" is the exchange rates of micro Luna in micro denoms from the voter's point of view.
 
 If voting from a voting delegate, set "validator" to the address of the validator to vote on behalf of:
-$ dochaind tx oracle aggregate-prevote 1234 8888.0ukrw,1.243uusd,0.99usdr terravaloper1...
+$ dochaind tx oracle aggregate-prevote 1234 8888.0ukrw,1.243uusd,0.99usdr dovaloper1...
 `),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientTxContext(cmd)
@@ -151,7 +151,7 @@ where "ukrw,uusd,usdr" is the denominating currencies, and "8888.0,1.243,0.99" i
 "salt" should match the salt used to generate the SHA256 hex in the aggregated pre-vote. 
 
 If voting from a voting delegate, set "validator" to the address of the validator to vote on behalf of:
-$ dochaind tx oracle aggregate-vote 1234 8888.0ukrw,1.243uusd,0.99usdr terravaloper1....
+$ dochaind tx oracle aggregate-vote 1234 8888.0ukrw,1.243uusd,0.99usdr dovaloper1....
 `),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientTxContext(cmd)
@@ -191,6 +191,7 @@ $ dochaind tx oracle aggregate-vote 1234 8888.0ukrw,1.243uusd,0.99usdr terravalo
 
 	return cmd
 }
+
 
 
 

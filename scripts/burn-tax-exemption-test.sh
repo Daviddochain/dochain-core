@@ -106,3 +106,4 @@ curl -s http://localhost:1317/treasury/burn_tax_exemption_list | jq ".result.add
 
 
 
+

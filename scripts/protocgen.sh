@@ -4,7 +4,7 @@ set -e
 
 echo "Generating gogo proto code"
 cd proto
-proto_dirs=$(find dochain -path -prune -o -name '*.proto' -print0 | xargs -0 -n1 dirname | sort | uniq)
+proto_dirs=$(find do -path -prune -o -name '*.proto' -print0 | xargs -0 -n1 dirname | sort | uniq)
 for dir in $proto_dirs; do
   for file in $(find "${dir}" -maxdepth 1 -name '*.proto'); do
     if grep go_package "$file" ; then
@@ -16,8 +16,9 @@ done
 cd ..
 
 # move proto files to the right places
-cp -r github.com/Daviddochain/dochain-core/v4/* ./
+cp -r github.com/Daviddochain/do-core/v4/* ./
 rm -rf github.com
+
 
 
 

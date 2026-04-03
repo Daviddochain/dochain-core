@@ -2,7 +2,7 @@
 
 export SIMULATION_FOLDER=$(dirname $(realpath "$0"))
 export TESTNET_FOLDER=$(echo $SIMULATION_FOLDER | sed 's|\(.*core\).*|\1|')/build
-export NODE_HOME=${NODE_HOME:-$TESTNET_FOLDER/.dochain}
+export NODE_HOME=${NODE_HOME:-$TESTNET_FOLDER/.do}
 export KEYRING_BACKEND=test
 export CHAIN_ID=${CHAIN_ID:-localterra}
 
@@ -74,6 +74,7 @@ echo "DONE CONTRACT SIMULATION (4/5)"
 sh $SIMULATION_FOLDER/gov.sh
 
 echo "DONE GOV SIMULATION (5/5)"
+
 
 
 

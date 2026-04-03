@@ -16,11 +16,11 @@ import (
 	storetypes "cosmossdk.io/store/types"
 	"github.com/CosmWasm/wasmd/x/wasm"
 	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
-	terraapp "github.com/Daviddochain/dochain-core/v4/app"
-	terralegacy "github.com/Daviddochain/dochain-core/v4/app/legacy"
-	"github.com/Daviddochain/dochain-core/v4/app/params"
-	authcustomcli "github.com/Daviddochain/dochain-core/v4/custom/auth/client/cli"
-	core "github.com/Daviddochain/dochain-core/v4/types"
+	terraapp "github.com/Daviddochain/do-core/v4/app"
+	terralegacy "github.com/Daviddochain/do-core/v4/app/legacy"
+	"github.com/Daviddochain/do-core/v4/app/params"
+	authcustomcli "github.com/Daviddochain/do-core/v4/custom/auth/client/cli"
+	core "github.com/Daviddochain/do-core/v4/types"
 	tmcfg "github.com/cometbft/cometbft/config"
 	tmcli "github.com/cometbft/cometbft/libs/cli"
 	dbm "github.com/cosmos/cosmos-db"
@@ -97,11 +97,11 @@ func NewRootCmd() (*cobra.Command, params.EncodingConfig) {
 		WithInput(os.Stdin).
 		WithAccountRetriever(types.AccountRetriever{}).
 		WithHomeDir(terraapp.DefaultNodeHome).
-		WithViper("dochain")
+		WithViper("do")
 
 	rootCmd := &cobra.Command{
 		Use:   "dochaind",
-		Short: "Stargate dochain App",
+		Short: "Stargate do App",
 		PersistentPreRunE: func(cmd *cobra.Command, _ []string) error {
 			// set the default command outputs
 			cmd.SetOut(cmd.OutOrStdout())
@@ -331,7 +331,7 @@ func (a appCreator) newApp(logger log.Logger, db dbm.DB, traceStore io.Writer, a
 		}
 		// If still empty (e.g., when running CLI help without an initialized home), use a benign default
 		if chainID == "" {
-			chainID = "dochain-local"
+			chainID = "do-local"
 		}
 	}
 
@@ -400,6 +400,7 @@ func (a appCreator) appExport(
 
 	return terraApp.ExportAppStateAndValidators(forZeroHeight, jailAllowedAddrs, modulesToExport)
 }
+
 
 
 

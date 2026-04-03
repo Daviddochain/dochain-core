@@ -31,7 +31,7 @@ DENOM=udo
 CHAIN_ID=localterra
 ADDITIONAL_PRE_SCRIPTS=${ADDITIONAL_PRE_SCRIPTS:-""}
 ADDITIONAL_AFTER_SCRIPTS=${ADDITIONAL_AFTER_SCRIPTS:-""}
-GAS_PRICE=${GAS_PRICE:-"30uluna"}
+GAS_PRICE=${GAS_PRICE:-"30udo"}
 CW20_TOKEN_WASM=${CW20_TOKEN_WASM:-"./scripts/cw20_token.wasm"}
 
 if [[ "$FORK" == "true" ]]; then
@@ -51,7 +51,7 @@ install_version() {
     # Download and extract if not exist
     if [ ! -f "_build/$version.zip" ]; then
         mkdir -p _build/$target_dir
-        wget -c "https://github.com/classic-dochain/core/archive/refs/tags/${version}.zip" -O _build/${version}.zip
+        wget -c "https://github.com/classic-do/core/archive/refs/tags/${version}.zip" -O _build/${version}.zip
         unzip _build/${version}.zip -d _build
     fi
     
@@ -505,6 +505,7 @@ execute_scripts "$ADDITIONAL_AFTER_SCRIPTS"
 
 # Run final tests after all upgrades
 run_final_tests "_build/new/dochaind" "35"
+
 
 
 

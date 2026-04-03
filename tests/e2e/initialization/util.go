@@ -3,7 +3,7 @@ package initialization
 import (
 	"fmt"
 
-	"github.com/Daviddochain/dochain-core/v4/tests/e2e/util"
+	"github.com/Daviddochain/do-core/v4/tests/e2e/util"
 	"github.com/cosmos/cosmos-sdk/codec/unknownproto"
 	sdktx "github.com/cosmos/cosmos-sdk/types/tx"
 )
@@ -44,6 +44,7 @@ func decodeTx(txBytes []byte) (*sdktx.Tx, error) {
 		Signatures: raw.Signatures,
 	}, nil
 }
+
 
 
 

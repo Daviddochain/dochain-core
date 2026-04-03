@@ -8,7 +8,7 @@ PAIR_CONTRACT_PATH="scripts/wasm/dex/artifacts/terraswap_pair.wasm"
 ROUTER_CONTRACT_PATH="scripts/wasm/dex/artifacts/terraswap_router.wasm"
 TOKEN_CONTRACT_PATH="scripts/wasm/dex/artifacts/terraswap_token.wasm"
 
-TREASURY="terra1nnj62ced7cpk2ll0cpavwqv9fufqfgznuwk4nm"
+TREASURY="do1nnj62ced7cpk2ll0cpavwqv9fufqfgznuwk4nm"
 
 # Token configuration
 TOKEN_NAME="Test Token"
@@ -109,8 +109,8 @@ out=$($BINARY tx wasm execute $FACTORY_CONTRACT_ADDRESS \
     --from $KEY \
     --chain-id $CHAIN_ID \
     --gas $GAS \
-    --fees 1124975000uluna \
-    --amount 1000000uluna \
+    --fees 1124975000udo \
+    --amount 1000000udo \
     --broadcast-mode sync \
     --keyring-backend $KEYRING \
     --home $HOME \
@@ -131,6 +131,7 @@ EOL
 
 # Make it executable
 chmod +x scripts/wasm/dex/deployment_info.sh
+
 
 
 

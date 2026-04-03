@@ -13,7 +13,7 @@ do
             continue
         fi
 
-        dochaind tx staking delegate $operator_address 1000000uluna --chain-id $CHAIN_ID --from test$i --gas auto --gas-adjustment 2.3 --fees 20000000uluna --keyring-backend $KEYRING_BACKEND --home $NODE_HOME --node $(sh $SIMULATION_FOLDER/next_node.sh) -y
+        dochaind tx staking delegate $operator_address 1000000udo --chain-id $CHAIN_ID --from test$i --gas auto --gas-adjustment 2.3 --fees 20000000udo --keyring-backend $KEYRING_BACKEND --home $NODE_HOME --node $(sh $SIMULATION_FOLDER/next_node.sh) -y
         if [ ! $? -eq 0 ]; then
             exit 1
         fi
@@ -21,6 +21,7 @@ do
         sleep 10
     done
 done
+
 
 
 

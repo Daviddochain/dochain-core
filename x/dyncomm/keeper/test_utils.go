@@ -13,13 +13,13 @@ import (
 	store "cosmossdk.io/store"
 	storemetrics "cosmossdk.io/store/metrics"
 	storetypes "cosmossdk.io/store/types"
-	customauth "github.com/Daviddochain/dochain-core/v4/custom/auth"
-	custombank "github.com/Daviddochain/dochain-core/v4/custom/bank"
-	customdistr "github.com/Daviddochain/dochain-core/v4/custom/distribution"
-	customparams "github.com/Daviddochain/dochain-core/v4/custom/params"
-	customstaking "github.com/Daviddochain/dochain-core/v4/custom/staking"
-	core "github.com/Daviddochain/dochain-core/v4/types"
-	types "github.com/Daviddochain/dochain-core/v4/x/dyncomm/types"
+	customauth "github.com/Daviddochain/do-core/v4/custom/auth"
+	custombank "github.com/Daviddochain/do-core/v4/custom/bank"
+	customdistr "github.com/Daviddochain/do-core/v4/custom/distribution"
+	customparams "github.com/Daviddochain/do-core/v4/custom/params"
+	customstaking "github.com/Daviddochain/do-core/v4/custom/staking"
+	core "github.com/Daviddochain/do-core/v4/types"
+	types "github.com/Daviddochain/do-core/v4/x/dyncomm/types"
 	tmproto "github.com/cometbft/cometbft/proto/tendermint/types"
 	dbm "github.com/cosmos/cosmos-db"
 	"github.com/cosmos/cosmos-sdk/codec"
@@ -284,6 +284,7 @@ func AddrFrom(idx int) sdk.AccAddress {
 func ValAddrFrom(idx int) sdk.ValAddress {
 	return sdk.ValAddress(PubKeys[idx].Address())
 }
+
 
 
 

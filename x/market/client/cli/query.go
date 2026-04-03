@@ -4,7 +4,7 @@ import (
 	"context"
 	"strings"
 
-	"github.com/Daviddochain/dochain-core/v4/x/market/types"
+	"github.com/Daviddochain/do-core/v4/x/market/types"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -75,13 +75,13 @@ $ dochaind query swap 5000000udo usdr
 // GetCmdQueryTerraPoolDelta implements the query mint pool delta command.
 func GetCmdQueryTerraPoolDelta() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "dochain-pool-delta",
+		Use:   "do-pool-delta",
 		Args:  cobra.NoArgs,
-		Short: "Query dochain pool delta",
-		Long: `Query dochain pool delta, which is usdr amount used for swap operation from the TerraPool.
-It can be negative if the market wants more dochain than Luna, and vice versa if the market wants more Luna.
+		Short: "Query do pool delta",
+		Long: `Query do pool delta, which is usdr amount used for swap operation from the TerraPool.
+It can be negative if the market wants more do than Luna, and vice versa if the market wants more Luna.
 
-$ dochaind query market dochain-pool-delta
+$ dochaind query market do-pool-delta
 	`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientQueryContext(cmd)
@@ -130,6 +130,7 @@ func GetCmdQueryParams() *cobra.Command {
 	flags.AddQueryFlagsToCmd(cmd)
 	return cmd
 }
+
 
 
 

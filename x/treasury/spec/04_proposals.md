@@ -68,7 +68,7 @@ type AddBurnTaxExemptionAddressProposal struct {
   "value": {
     "title": "proposal title",
     "description": "proposal description",
-    "exemption_address": ["terra1dczz24r33fwlj0q5ra7rcdryjpk9hxm8rwy39t","terra1qt8mrv72gtvmnca9z6ftzd7slqhaf8m60aa7ye"]
+    "exemption_address": ["do1dczz24r33fwlj0q5ra7rcdryjpk9hxm8rwy39t","do1qt8mrv72gtvmnca9z6ftzd7slqhaf8m60aa7ye"]
   }
 }
 ```
@@ -91,10 +91,11 @@ type RemoveBurnTaxExemptionAddressProposal struct {
   "value": {
     "title": "proposal title",
     "description": "proposal description",
-    "exemption_address": ["terra1dczz24r33fwlj0q5ra7rcdryjpk9hxm8rwy39t","terra1qt8mrv72gtvmnca9z6ftzd7slqhaf8m60aa7ye"]
+    "exemption_address": ["do1dczz24r33fwlj0q5ra7rcdryjpk9hxm8rwy39t","do1qt8mrv72gtvmnca9z6ftzd7slqhaf8m60aa7ye"]
   }
 }
 ```
+
 
 
 

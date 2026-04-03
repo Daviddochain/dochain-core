@@ -4,8 +4,8 @@ import (
 	"testing"
 
 	sdkmath "cosmossdk.io/math"
-	core "github.com/Daviddochain/dochain-core/v4/types"
-	"github.com/Daviddochain/dochain-core/v4/x/vesting/types"
+	core "github.com/Daviddochain/do-core/v4/types"
+	"github.com/Daviddochain/do-core/v4/x/vesting/types"
 	"github.com/cometbft/cometbft/crypto/ed25519"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
@@ -45,6 +45,7 @@ func TestValidateGenesisInvalidAccounts(t *testing.T) {
 	genAccs[0] = types.NewLazyGradedVestingAccountRaw(baseVestingAcc, types.VestingSchedules{types.VestingSchedule{core.MicroLunaDenom, types.Schedules{types.Schedule{1654668078, 1554668078, sdkmath.LegacyOneDec()}}}})
 	require.Error(t, authtypes.ValidateGenAccounts(genAccs))
 }
+
 
 
 

@@ -1,23 +1,23 @@
 syntax = "proto3";
-package dochain.taxexemption.v1;
+package do.taxexemption.v1;
 
 import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
-import "dochain/taxexemption/v1/taxexemption.proto";
+import "do/taxexemption/v1/taxexemption.proto";
 
-option go_package = "github.com/Daviddochain/dochain-core/v4/x/taxexemption/types";
+option go_package = "github.com/Daviddochain/do-core/v4/x/taxexemption/types";
 
 service Query {
   rpc Taxable(QueryTaxableRequest) returns (QueryTaxableResponse) {
-    option (google.api.http).get = "/dochain/taxexemption/v1/taxable/{from_address}/{to_address}";
+    option (google.api.http).get = "/do/taxexemption/v1/taxable/{from_address}/{to_address}";
   }
 
   rpc TaxExemptionZonesList(QueryTaxExemptionZonesRequest) returns (QueryTaxExemptionZonesResponse) {
-    option (google.api.http).get = "/dochain/taxexemption/v1/zones";
+    option (google.api.http).get = "/do/taxexemption/v1/zones";
   }
 
   rpc TaxExemptionAddressList(QueryTaxExemptionAddressRequest) returns (QueryTaxExemptionAddressResponse) {
-    option (google.api.http).get = "/dochain/taxexemption/v1/{zone_name}/addresses";
+    option (google.api.http).get = "/do/taxexemption/v1/{zone_name}/addresses";
   }
 }
 
@@ -50,6 +50,7 @@ message QueryTaxExemptionAddressResponse {
 
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
+
 
 
 

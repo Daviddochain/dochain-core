@@ -1,7 +1,7 @@
 package types
 
 import (
-	govamino "github.com/Daviddochain/dochain-core/v4/custom/gov/types"
+	govamino "github.com/Daviddochain/do-core/v4/custom/gov/types"
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/codec/legacy"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
@@ -68,6 +68,7 @@ func init() {
 	govamino.RegisterProposalTypeCodec(&AddTaxExemptionAddressProposal{}, "taxexemption/AddTaxExemptionAddressProposal")
 	govamino.RegisterProposalTypeCodec(&RemoveTaxExemptionAddressProposal{}, "taxexemption/RemoveTaxExemptionAddressProposal")
 }
+
 
 
 

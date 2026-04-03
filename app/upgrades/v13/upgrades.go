@@ -10,8 +10,8 @@ import (
 	upgradetypes "cosmossdk.io/x/upgrade/types"
 	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
 	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
-	"github.com/Daviddochain/dochain-core/v4/app/keepers"
-	"github.com/Daviddochain/dochain-core/v4/app/upgrades"
+	"github.com/Daviddochain/do-core/v4/app/keepers"
+	"github.com/Daviddochain/do-core/v4/app/upgrades"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 )
@@ -360,6 +360,7 @@ func MigrateWasmKeys(ctx sdk.Context, wasmKeeper wasmkeeper.Keeper, wasmStoreKey
 func RemoveLengthPrefixIfNeeded(bz []byte) ([]byte, bool) {
 	return removeLengthPrefixIfNeeded(bz)
 }
+
 
 
 

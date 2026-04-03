@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"testing"
 
-	configurer "github.com/Daviddochain/dochain-core/v4/tests/e2e/configurer"
+	configurer "github.com/Daviddochain/do-core/v4/tests/e2e/configurer"
 	"github.com/stretchr/testify/suite"
 )
 
@@ -95,6 +95,7 @@ func (s *IntegrationTestSuite) TearDownSuite() {
 	err := s.configurer.ClearResources()
 	s.Require().NoError(err)
 }
+
 
 
 

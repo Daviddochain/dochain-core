@@ -9,7 +9,7 @@ import (
 
 	"github.com/CosmWasm/wasmd/x/wasm/client/cli"
 	"github.com/CosmWasm/wasmd/x/wasm/types"
-	feeutils "github.com/Daviddochain/dochain-core/v4/custom/auth/client/utils"
+	feeutils "github.com/Daviddochain/do-core/v4/custom/auth/client/utils"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
@@ -359,6 +359,7 @@ func (a *argumentDecoder) DecodeString(s string) ([]byte, error) {
 func asciiDecodeString(s string) ([]byte, error) {
 	return []byte(s), nil
 }
+
 
 
 

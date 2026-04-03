@@ -3,8 +3,8 @@ package keeper_test
 import (
 	"testing"
 
-	ultil "github.com/Daviddochain/dochain-core/v4/x/taxexemption/keeper"
-	"github.com/Daviddochain/dochain-core/v4/x/taxexemption/types"
+	ultil "github.com/Daviddochain/do-core/v4/x/taxexemption/keeper"
+	"github.com/Daviddochain/do-core/v4/x/taxexemption/types"
 	"github.com/cometbft/cometbft/crypto/secp256k1"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
@@ -417,7 +417,7 @@ func TestMsgServer_RemoveTaxExemptionAddress(t *testing.T) {
 	nonExistentAddrMsg := types.MsgRemoveTaxExemptionAddress{
 		Zone:      "zone1",
 		Authority: authority,
-		Addresses: []string{"terra1nonexistent"},
+		Addresses: []string{"do1nonexistent"},
 	}
 
 	resp, err = server.RemoveTaxExemptionAddress(sdk.WrapSDKContext(ctx), &nonExistentAddrMsg)
@@ -425,6 +425,7 @@ func TestMsgServer_RemoveTaxExemptionAddress(t *testing.T) {
 	require.Error(t, err)
 	require.Nil(t, resp)
 }
+
 
 
 

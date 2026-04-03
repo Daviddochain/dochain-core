@@ -3,7 +3,7 @@ package types_test
 import (
 	"testing"
 
-	"github.com/Daviddochain/dochain-core/v4/x/oracle/types"
+	"github.com/Daviddochain/do-core/v4/x/oracle/types"
 	"github.com/stretchr/testify/require"
 )
 
@@ -28,6 +28,7 @@ func TestParseExchangeRateTuples(t *testing.T) {
 	_, err = types.ParseExchangeRateTuples(abstainCoinsWithValid)
 	require.NoError(t, err)
 }
+
 
 
 

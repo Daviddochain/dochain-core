@@ -2,8 +2,8 @@ package oracle
 
 import (
 	"cosmossdk.io/math"
-	"github.com/Daviddochain/dochain-core/v4/x/oracle/keeper"
-	"github.com/Daviddochain/dochain-core/v4/x/oracle/types"
+	"github.com/Daviddochain/do-core/v4/x/oracle/keeper"
+	"github.com/Daviddochain/do-core/v4/x/oracle/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
@@ -42,9 +42,9 @@ func ballotIsPassing(ballot types.ExchangeRateBallot, thresholdVotes math.Int) (
 	return ballotPower, !ballotPower.IsZero() && ballotPower.GTE(thresholdVotes)
 }
 
-// PickReferenceTerra choose Reference dochain with the highest voter turnout
+// PickReferenceTerra choose Reference do with the highest voter turnout
 // If the voting power of the two denominations is the same,
-// select reference dochain in alphabetical order.
+// select reference do in alphabetical order.
 func PickReferenceTerra(ctx sdk.Context, k keeper.Keeper, voteTargets map[string]math.LegacyDec, voteMap map[string]types.ExchangeRateBallot) string {
 	largestBallotPower := int64(0)
 	referenceTerra := ""
@@ -89,6 +89,7 @@ func PickReferenceTerra(ctx sdk.Context, k keeper.Keeper, voteTargets map[string
 
 	return referenceTerra
 }
+
 
 
 

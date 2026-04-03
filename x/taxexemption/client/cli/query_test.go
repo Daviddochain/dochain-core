@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/Daviddochain/dochain-core/v4/x/taxexemption/client/cli"
+	"github.com/Daviddochain/do-core/v4/x/taxexemption/client/cli"
 )
 
 func (s *CLITestSuite) TestGetQueryCmd() {
@@ -134,7 +134,7 @@ func (s *CLITestSuite) TestGetCmdQueryTaxable() {
 		{
 			"success: with valid addresses",
 			[]string{
-				"terra1address1", "terra1address2",
+				"do1address1", "do1address2",
 			},
 			true,
 		},
@@ -145,12 +145,12 @@ func (s *CLITestSuite) TestGetCmdQueryTaxable() {
 		},
 		{
 			"fail: missing second address",
-			[]string{"terra1address1"},
+			[]string{"do1address1"},
 			false,
 		},
 		{
 			"fail: too many arguments",
-			[]string{"terra1address1", "terra1address2", "terra1address3"},
+			[]string{"do1address1", "do1address2", "do1address3"},
 			false,
 		},
 	}
@@ -595,6 +595,7 @@ func (s *CLITestSuite) TestGetCmdQueryExemptlist() {
 	s.Require().NotNil(flags.Lookup("reverse"))
 	s.Require().NotNil(flags.Lookup("output"))
 }
+
 
 
 

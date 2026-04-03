@@ -10,7 +10,7 @@ CHAIN_ID=localterra
 echo "... stores a wasm"
 addr=$($BINARY keys show test0 -a --home $HOME --keyring-backend $KEYRING_BACKEND)
 addr2=$($BINARY keys show test1 -a --home $HOME --keyring-backend $KEYRING_BACKEND)
-out=$($BINARY tx wasm store ${CONTRACTPATH} --from test0 --output json --gas auto --gas-adjustment 2.3 --fees 100000000uluna --chain-id $CHAIN_ID --home $HOME --keyring-backend $KEYRING_BACKEND -y)
+out=$($BINARY tx wasm store ${CONTRACTPATH} --from test0 --output json --gas auto --gas-adjustment 2.3 --fees 100000000udo --chain-id $CHAIN_ID --home $HOME --keyring-backend $KEYRING_BACKEND -y)
 code=$(echo $out | jq -r '.code')
 if [ "$code" != "0" ]; then
     echo "... Could not store binary" >&2
@@ -27,7 +27,7 @@ echo ""
 echo "... stores a second wasm"
 addr=$($BINARY keys show test0 -a --home $HOME --keyring-backend $KEYRING_BACKEND)
 addr2=$($BINARY keys show test1 -a --home $HOME --keyring-backend $KEYRING_BACKEND)
-out=$($BINARY tx wasm store ${CONTRACTPATH} --from test0 --output json --gas auto --gas-adjustment 2.3 --fees 100000000uluna --chain-id $CHAIN_ID --home $HOME --keyring-backend $KEYRING_BACKEND -y)
+out=$($BINARY tx wasm store ${CONTRACTPATH} --from test0 --output json --gas auto --gas-adjustment 2.3 --fees 100000000udo --chain-id $CHAIN_ID --home $HOME --keyring-backend $KEYRING_BACKEND -y)
 code=$(echo $out | jq -r '.code')
 if [ "$code" != "0" ]; then
     echo "... Could not store binary" >&2
@@ -58,7 +58,7 @@ msg=$(jq -n '
     "symbol":"ANC"
 }')
 echo $msg
-out=$($BINARY tx wasm instantiate $id "$msg" --from test0 --output json --gas auto --gas-adjustment 2.3 --fees 20000000uluna --chain-id $CHAIN_ID --home $HOME --keyring-backend $KEYRING_BACKEND -y)
+out=$($BINARY tx wasm instantiate $id "$msg" --from test0 --output json --gas auto --gas-adjustment 2.3 --fees 20000000udo --chain-id $CHAIN_ID --home $HOME --keyring-backend $KEYRING_BACKEND -y)
 code=$(echo $out | jq -r '.code')
 if [ "$code" != "0" ]; then
     echo "... Could not instantiate contract" >&2
@@ -70,6 +70,7 @@ txhash=$(echo $out | jq -r '.txhash')
 
 PRE_UPGRADE_CONTRACT_ADDR=$($BINARY q tx $txhash -o json | jq -r '.raw_log' | jq -r '.[0].events[0].attributes[3].value')
 export PRE_UPGRADE_CONTRACT_ADDR
+
 
 
 

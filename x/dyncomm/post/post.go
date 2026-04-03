@@ -1,7 +1,7 @@
 package post
 
 import (
-	dyncommkeeper "github.com/Daviddochain/dochain-core/v4/x/dyncomm/keeper"
+	dyncommkeeper "github.com/Daviddochain/do-core/v4/x/dyncomm/keeper"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 )
@@ -67,6 +67,7 @@ func (dd DyncommDecorator) ProcessCreateValidator(ctx sdk.Context, msg sdk.Msg) 
 	newIntendedRate := msgCreateValidator.Commission.Rate
 	dd.dyncommKeeper.SetTargetCommissionRate(ctx, msgCreateValidator.ValidatorAddress, newIntendedRate)
 }
+
 
 
 

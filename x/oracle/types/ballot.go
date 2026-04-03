@@ -54,7 +54,7 @@ func (pb ExchangeRateBallot) ToCrossRate(bases map[string]math.LegacyDec) (cb Ex
 		if exchangeRateRT, ok := bases[string(vote.Voter)]; ok && vote.ExchangeRate.IsPositive() {
 			vote.ExchangeRate = exchangeRateRT.Quo(vote.ExchangeRate)
 		} else {
-			// If we can't get reference dochain exchange rate, we just convert the vote as abstain vote
+			// If we can't get reference do exchange rate, we just convert the vote as abstain vote
 			vote.ExchangeRate = math.LegacyZeroDec()
 			vote.Power = 0
 		}
@@ -73,7 +73,7 @@ func (pb ExchangeRateBallot) ToCrossRateWithSort(bases map[string]math.LegacyDec
 		if exchangeRateRT, ok := bases[string(vote.Voter)]; ok && vote.ExchangeRate.IsPositive() {
 			vote.ExchangeRate = exchangeRateRT.Quo(vote.ExchangeRate)
 		} else {
-			// If we can't get reference dochain exchange rate, we just convert the vote as abstain vote
+			// If we can't get reference do exchange rate, we just convert the vote as abstain vote
 			vote.ExchangeRate = math.LegacyZeroDec()
 			vote.Power = 0
 		}
@@ -173,6 +173,7 @@ func NewClaim(power, weight, winCount int64, recipient sdk.ValAddress) Claim {
 		Recipient: recipient,
 	}
 }
+
 
 
 

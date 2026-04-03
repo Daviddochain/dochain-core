@@ -1,10 +1,10 @@
 #!/bin/bash
-# Contract address: terra14hj2tavq8fpesdwxxcu44rty3hh90vhujrvcmstl4zr3txmfvw9ssrc8au
-# Test1 address: terra1dea2kw98rq3lce6tp8e9ae0rh893cj0hdkja29
-# Test2 address: terra14eg2hvlmxt4d4w99n58ctrkcfkzm5p4dvrdgmz
-CONTRACT_ADDR=terra14hj2tavq8fpesdwxxcu44rty3hh90vhujrvcmstl4zr3txmfvw9ssrc8au
-TEST1_ADDR=terra1dea2kw98rq3lce6tp8e9ae0rh893cj0hdkja29
-TEST2_ADDR=terra14eg2hvlmxt4d4w99n58ctrkcfkzm5p4dvrdgmz
+# Contract address: do14hj2tavq8fpesdwxxcu44rty3hh90vhujrvcmstl4zr3txmfvw9ssrc8au
+# Test1 address: do1dea2kw98rq3lce6tp8e9ae0rh893cj0hdkja29
+# Test2 address: do14eg2hvlmxt4d4w99n58ctrkcfkzm5p4dvrdgmz
+CONTRACT_ADDR=do14hj2tavq8fpesdwxxcu44rty3hh90vhujrvcmstl4zr3txmfvw9ssrc8au
+TEST1_ADDR=do1dea2kw98rq3lce6tp8e9ae0rh893cj0hdkja29
+TEST2_ADDR=do14eg2hvlmxt4d4w99n58ctrkcfkzm5p4dvrdgmz
 HOME=mytestnet
 # Function to run final tests after all upgrades
 run_final_tests() {
@@ -118,6 +118,7 @@ run_final_tests() {
 
 
 run_final_tests "_build/new/dochaind" "10"
+
 
 
 
