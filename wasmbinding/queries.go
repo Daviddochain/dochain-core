@@ -24,3 +24,4 @@ func NewQueryPlugin(tmk *marketkeeper.Keeper, tok *oraclekeeper.Keeper, ttk *tre
 
 
 
+

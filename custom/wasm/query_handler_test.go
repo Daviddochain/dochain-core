@@ -572,3 +572,4 @@ func (suite *LegacyQueryHandlerTestSuite) TestIsPreWasmKeyMigration() {
 
 
 
+

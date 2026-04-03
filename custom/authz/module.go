@@ -28,3 +28,4 @@ func (AppModuleBasic) GetTxCmd() *cobra.Command {
 
 
 
+

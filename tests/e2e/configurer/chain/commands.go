@@ -592,3 +592,4 @@ func (n *NodeConfig) SubmitOracleAggregateVote(salt string, amount string) {
 
 
 
+

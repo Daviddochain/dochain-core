@@ -50,3 +50,4 @@ func setWhitelistedQuery(queryPath string, protoType codec.ProtoMarshaler) {
 
 
 
+

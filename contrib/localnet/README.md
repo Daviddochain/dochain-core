@@ -30,3 +30,4 @@ For validator mnemonic, please look at build/node0/dochaind/key_seed.json. This 
 * Normal addresses will create text proposal and vote on it
 
 
+

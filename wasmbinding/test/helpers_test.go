@@ -61,3 +61,4 @@ func (s *WasmTestSuite) instantiateContract(funder sdk.AccAddress, codeID uint64
 
 
 
+

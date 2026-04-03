@@ -98,3 +98,4 @@ type RemoveBurnTaxExemptionAddressProposal struct {
 
 
 
+

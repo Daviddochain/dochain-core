@@ -6,3 +6,4 @@ LIST_DOCKER_IMAGE_HASHES=$(docker images dochain --format "{{ title .Tag }}" | a
 
 
 
+

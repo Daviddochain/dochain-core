@@ -8,3 +8,4 @@ RUN go install -ldflags '-w -s -linkmode=external -extldflags "-Wl,-z,muldefs -s
 ENTRYPOINT [ "/bin/sh" ]
 
 
+

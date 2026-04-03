@@ -48,3 +48,4 @@ $ dochaind tx estimate-fee [file] --gas-adjustment 1.4 --gas-prices 0.015udo
 
 
 
+

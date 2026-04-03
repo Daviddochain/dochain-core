@@ -32,3 +32,4 @@ func handleRemoveBurnTaxExemptionAddressProposal(ctx sdk.Context, k keeper.Keepe
 
 
 
+

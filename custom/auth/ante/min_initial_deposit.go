@@ -89,3 +89,4 @@ func (midd MinInitialDepositDecorator) AnteHandle(ctx sdk.Context, tx sdk.Tx, si
 
 
 
+

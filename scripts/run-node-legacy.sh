@@ -95,3 +95,4 @@ $BINARY validate-genesis --home $HOME_DIR
 $BINARY start --home $HOME_DIR >> /tmp/node_logs 2>&1
 
 
+

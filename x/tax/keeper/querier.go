@@ -23,3 +23,4 @@ func (k Keeper) BurnTaxRate(c context.Context, _ *types.QueryBurnTaxRateRequest)
 
 
 
+

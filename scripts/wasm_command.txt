@@ -7,3 +7,4 @@ FORK=true ADDITIONAL_AFTER_SCRIPTS=scripts/wasm/stargate-after-upgrade.sh bash s
 FORK=true ADDITIONAL_AFTER_SCRIPTS=scripts/contract-tax-exemption-after-upgrade.sh bash scripts/upgrade-test.sh
 
 
+

@@ -65,3 +65,4 @@ SPLIT_RATE=$(./_build/new/dochaind q treasury params --output=json | jq '.params
 echo "After split rate: $SPLIT_RATE"
 
 
+

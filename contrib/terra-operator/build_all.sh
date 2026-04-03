@@ -14,3 +14,4 @@ docker build --build-arg version=$VERSION --build-arg chainid=cookie-1 -t terram
 docker build --build-arg version=$VERSION --build-arg chainid=bombay-12 -t terramoney/core-node:$VERSION-testnet .
 
 
+

@@ -128,3 +128,4 @@ func (s *WasmMsgServer) InstantiateContract2(ctx context.Context, msg *wasmtypes
 
 
 
+

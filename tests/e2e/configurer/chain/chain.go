@@ -242,3 +242,4 @@ func (c *Config) AddBurnTaxExemptionAddressProposal(chainANode *NodeConfig, addr
 
 
 
+

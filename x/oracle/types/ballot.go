@@ -176,3 +176,4 @@ func NewClaim(power, weight, winCount int64, recipient sdk.ValAddress) Claim {
 
 
 
+

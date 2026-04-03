@@ -194,3 +194,4 @@ $ dochaind tx oracle aggregate-vote 1234 8888.0ukrw,1.243uusd,0.99usdr terravalo
 
 
 
+

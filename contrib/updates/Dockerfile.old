@@ -125,3 +125,4 @@ WORKDIR /app
 CMD ["dochaind", "version"]
 
 
+

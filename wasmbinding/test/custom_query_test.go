@@ -234,3 +234,4 @@ func (s *WasmTestSuite) queryStargate(contract sdk.AccAddress, request bindings.
 
 
 
+

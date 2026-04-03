@@ -192,3 +192,4 @@ $ dochaind migrate /path/to/genesis.json --chain-id=cosmoshub-4 --genesis-time=2
 
 
 
+

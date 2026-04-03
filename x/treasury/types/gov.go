@@ -119,3 +119,4 @@ func (p *RemoveBurnTaxExemptionAddressProposal) ValidateBasic() error {
 
 
 
+

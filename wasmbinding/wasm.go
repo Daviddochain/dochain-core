@@ -54,3 +54,4 @@ func RegisterLegacyQueryHandler(storeKey storetypes.StoreKey) wasmkeeper.Option 
 
 
 
+

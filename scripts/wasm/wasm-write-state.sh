@@ -16,3 +16,4 @@ for i in "${CONTRACTS[@]}"; do
 done
 
 
+

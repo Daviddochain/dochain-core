@@ -4,3 +4,4 @@ HOME=mytestnet
 CHAIN_ID=localterra
 
 
+

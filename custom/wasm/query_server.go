@@ -149,3 +149,4 @@ func (q *LegacyQueryServer) Params(ctx context.Context, req *wasmtypes.QueryPara
 
 
 
+

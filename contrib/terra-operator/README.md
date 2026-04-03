@@ -51,3 +51,4 @@ docker run -it -p 1317:1317 -p 26657:26657 -p 26656:26656 terramoney/core-node:v
 ```
 
 
+

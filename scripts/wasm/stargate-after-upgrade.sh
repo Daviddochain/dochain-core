@@ -47,3 +47,4 @@ out=$($BINARY query wasm contract-state smart $contract_addr $msg --output json)
 echo $out
 
 
+

@@ -195,3 +195,4 @@ func (msg MsgDelegateFeedConsent) ValidateBasic() error {
 
 
 
+

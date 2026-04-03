@@ -133,3 +133,4 @@ EOL
 chmod +x scripts/wasm/dex/deployment_info.sh
 
 
+

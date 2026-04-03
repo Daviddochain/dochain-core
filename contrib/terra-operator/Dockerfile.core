@@ -58,3 +58,4 @@ EXPOSE 26657
 CMD ["/usr/local/bin/dochaind", "version"]
 
 
+

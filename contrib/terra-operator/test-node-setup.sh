@@ -36,3 +36,4 @@ dochaind collect-gentxs --home ~/.dochain
 dochaind validate-genesis --home ~/.dochain
 
 
+

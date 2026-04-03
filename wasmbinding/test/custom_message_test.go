@@ -184,3 +184,4 @@ func (s *WasmTestSuite) executeOldBindings(contract sdk.AccAddress, sender sdk.A
 
 
 
+
