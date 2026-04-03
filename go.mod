@@ -2,7 +2,7 @@ go 1.24.0
 
 toolchain go1.24.7
 
-module github.com/classic-terra/core/v4
+module github.com/Daviddochain/dochain-core/v4
 
 require (
 	cosmossdk.io/api v0.9.2
@@ -268,3 +268,4 @@ replace (
 	go.etcd.io/bbolt => go.etcd.io/bbolt v1.3.7
 	golang.org/x/exp => golang.org/x/exp v0.0.0-20250506013437-ce4c2cf36ca6
 )
+

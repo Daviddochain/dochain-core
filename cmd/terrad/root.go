@@ -66,7 +66,7 @@ func NewRootCmd() (*cobra.Command, params.EncodingConfig) {
 	sdkConfig.Seal()
 
 	// Create temporary directory for CLI setup
-	tempDir, err := os.MkdirTemp("", "terrad")
+	tempDir, err := os.MkdirTemp("", "dochaind")
 	if err != nil {
 		panic(err)
 	}
@@ -100,7 +100,7 @@ func NewRootCmd() (*cobra.Command, params.EncodingConfig) {
 		WithViper("TERRA")
 
 	rootCmd := &cobra.Command{
-		Use:   "terrad",
+		Use:   "dochaind",
 		Short: "Stargate Terra App",
 		PersistentPreRunE: func(cmd *cobra.Command, _ []string) error {
 			// set the default command outputs
@@ -400,3 +400,4 @@ func (a appCreator) appExport(
 
 	return terraApp.ExportAppStateAndValidators(forZeroHeight, jailAllowedAddrs, modulesToExport)
 }
+

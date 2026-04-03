@@ -72,8 +72,8 @@ build_tags_comma_sep := $(subst $(whitespace),$(comma),$(build_tags))
 
 # process linker flags
 
-ldflags = -X github.com/cosmos/cosmos-sdk/version.Name=terra \
-		  -X github.com/cosmos/cosmos-sdk/version.AppName=terrad \
+ldflags = -X github.com/cosmos/cosmos-sdk/version.Name=dochain \
+		  -X github.com/cosmos/cosmos-sdk/version.AppName=dochaind \
 		  -X github.com/cosmos/cosmos-sdk/version.Version=$(VERSION) \
 		  -X github.com/cosmos/cosmos-sdk/version.Commit=$(COMMIT) \
 		  -X "github.com/cosmos/cosmos-sdk/version.BuildTags=$(build_tags_comma_sep)"
@@ -120,7 +120,7 @@ build: go.sum
 ifeq ($(OS),Windows_NT)
 	exit 1
 else
-	go build -mod=readonly $(BUILD_FLAGS) -o build/terrad ./cmd/terrad
+	go build -mod=readonly $(BUILD_FLAGS) -o build/dochaind ./cmd/terrad
 endif
 
 build-linux:
@@ -382,3 +382,4 @@ build-operator-img-node:
 	docker compose -f contrib/terra-operator/docker-compose.build.yml build node --no-cache
 
 .PHONY: build-operator-img-all build-operator-img-core build-operator-img-node
+
