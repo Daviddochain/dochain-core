@@ -38,11 +38,11 @@ rpc_addr = 'http://$TERRA_A_E2E_VAL_HOST:26657'
 grpc_addr = 'http://$TERRA_A_E2E_VAL_HOST:9090'
 event_source = { mode = 'push', url = 'ws://$TERRA_A_E2E_VAL_HOST:26657/websocket' }
 rpc_timeout = '10s'
-account_prefix = 'terra'
-key_name = 'val01-terra-a'
+account_prefix = 'dochain'
+key_name = 'val01-dochain-a'
 store_prefix = 'ibc'
 max_gas = 6000000
-gas_price = { price = 0.1, denom = 'uluna' }
+gas_price = { price = 0.1, denom = 'udo' }
 gas_multiplier = 1.1
 max_msg_num = 30
 max_tx_size = 2097152
@@ -65,11 +65,11 @@ rpc_addr = 'http://$TERRA_B_E2E_VAL_HOST:26657'
 grpc_addr = 'http://$TERRA_B_E2E_VAL_HOST:9090'
 event_source = { mode = 'push', url = 'ws://$TERRA_B_E2E_VAL_HOST:26657/websocket' }
 rpc_timeout = '10s'
-account_prefix = 'terra'
-key_name = 'val01-terra-b'
+account_prefix = 'dochain'
+key_name = 'val01-dochain-b'
 store_prefix = 'ibc'
 max_gas = 6000000
-gas_price = { price = 0.1, denom = 'uluna' }
+gas_price = { price = 0.1, denom = 'udo' }
 gas_multiplier = 1.1
 max_msg_num = 30
 max_tx_size = 2097152
@@ -90,8 +90,11 @@ EOF
 
 # import keys
 
-hermes keys add --hd-path "m/44'/330'/0'/0/0" --chain ${TERRA_A_E2E_CHAIN_ID} --key-name "val01-terra-a" --mnemonic-file "${TERRA_A_E2E_VAL_MNEMONIC}" --overwrite
-hermes keys add --hd-path "m/44'/330'/0'/0/0" --chain ${TERRA_B_E2E_CHAIN_ID} --key-name "val01-terra-b" --mnemonic-file "${TERRA_B_E2E_VAL_MNEMONIC}" --overwrite
+hermes keys add --hd-path "m/44'/330'/0'/0/0" --chain ${TERRA_A_E2E_CHAIN_ID} --key-name "val01-dochain-a" --mnemonic-file "${TERRA_A_E2E_VAL_MNEMONIC}" --overwrite
+hermes keys add --hd-path "m/44'/330'/0'/0/0" --chain ${TERRA_B_E2E_CHAIN_ID} --key-name "val01-dochain-b" --mnemonic-file "${TERRA_B_E2E_VAL_MNEMONIC}" --overwrite
 
 # start Hermes relayer
 hermes start
+
+
+

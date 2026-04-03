@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	"cosmossdk.io/math"
-	core "github.com/classic-terra/core/v4/types"
-	"github.com/classic-terra/core/v4/x/oracle/types"
+	core "github.com/Daviddochain/dochain-core/v4/types"
+	"github.com/Daviddochain/dochain-core/v4/x/oracle/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
@@ -97,3 +97,6 @@ func (k Keeper) RewardBallotWinners(
 		panic(fmt.Sprintf("[oracle] Failed to send coins to distribution module %s", err.Error()))
 	}
 }
+
+
+

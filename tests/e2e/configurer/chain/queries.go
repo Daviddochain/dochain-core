@@ -11,12 +11,12 @@ import (
 
 	sdkmath "cosmossdk.io/math"
 	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
-	"github.com/classic-terra/core/v4/tests/e2e/initialization"
-	"github.com/classic-terra/core/v4/tests/e2e/util"
-	oracletypes "github.com/classic-terra/core/v4/x/oracle/types"
-	taxtypes "github.com/classic-terra/core/v4/x/tax/types"
-	taxexemptiontypes "github.com/classic-terra/core/v4/x/taxexemption/types"
-	treasurytypes "github.com/classic-terra/core/v4/x/treasury/types"
+	"github.com/Daviddochain/dochain-core/v4/tests/e2e/initialization"
+	"github.com/Daviddochain/dochain-core/v4/tests/e2e/util"
+	oracletypes "github.com/Daviddochain/dochain-core/v4/x/oracle/types"
+	taxtypes "github.com/Daviddochain/dochain-core/v4/x/tax/types"
+	taxexemptiontypes "github.com/Daviddochain/dochain-core/v4/x/taxexemption/types"
+	treasurytypes "github.com/Daviddochain/dochain-core/v4/x/treasury/types"
 	tmabcitypes "github.com/cometbft/cometbft/abci/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
@@ -110,7 +110,7 @@ func (n *NodeConfig) QuerySupplyOf(denom string) (sdkmath.Int, error) {
 }
 
 func (n *NodeConfig) QueryTaxRate() (sdkmath.LegacyDec, error) {
-	path := "terra/treasury/v1beta1/tax_rate"
+	path := "dochain/treasury/v1beta1/tax_rate"
 	bz, err := n.QueryGRPCGateway(path)
 	require.NoError(n.t, err)
 
@@ -122,7 +122,7 @@ func (n *NodeConfig) QueryTaxRate() (sdkmath.LegacyDec, error) {
 }
 
 func (n *NodeConfig) QueryBurnTaxRate() (sdkmath.LegacyDec, error) {
-	path := "terra/tax/v1beta1/burn_tax_rate"
+	path := "dochain/tax/v1beta1/burn_tax_rate"
 	bz, err := n.QueryGRPCGateway(path)
 	require.NoError(n.t, err)
 
@@ -134,7 +134,7 @@ func (n *NodeConfig) QueryBurnTaxRate() (sdkmath.LegacyDec, error) {
 }
 
 func (n *NodeConfig) QueryBurnTaxExemptionList() ([]string, error) {
-	path := "terra/treasury/v1beta1/burn_tax_exemption_list"
+	path := "dochain/treasury/v1beta1/burn_tax_exemption_list"
 	bz, err := n.QueryGRPCGateway(path)
 	require.NoError(n.t, err)
 
@@ -167,7 +167,7 @@ func (n *NodeConfig) QuerySigningInfo(consAddress string) (string, error) {
 }
 
 func (n *NodeConfig) QueryFeederDelegation(validatorAddr string) (string, error) {
-	path := fmt.Sprintf("terra/oracle/v1beta1/validators/%s/feeder", validatorAddr)
+	path := fmt.Sprintf("dochain/oracle/v1beta1/validators/%s/feeder", validatorAddr)
 	bz, err := n.QueryGRPCGateway(path)
 	require.NoError(n.t, err)
 
@@ -180,7 +180,7 @@ func (n *NodeConfig) QueryFeederDelegation(validatorAddr string) (string, error)
 
 // QueryTaxExemptionZones returns the list of tax exemption zones.
 func (n *NodeConfig) QueryTaxExemptionZones() ([]taxexemptiontypes.Zone, error) {
-	path := "terra/taxexemption/v1/zones"
+	path := "dochain/taxexemption/v1/zones"
 	bz, err := n.QueryGRPCGateway(path)
 	require.NoError(n.t, err)
 
@@ -200,7 +200,7 @@ func (n *NodeConfig) QueryTaxExemptionZones() ([]taxexemptiontypes.Zone, error) 
 
 // QueryTaxExemptionAddresses returns the addresses for a given zone.
 func (n *NodeConfig) QueryTaxExemptionAddresses(zone string) ([]string, error) {
-	path := fmt.Sprintf("terra/taxexemption/v1/%s/addresses", zone)
+	path := fmt.Sprintf("dochain/taxexemption/v1/%s/addresses", zone)
 	bz, err := n.QueryGRPCGateway(path)
 	require.NoError(n.t, err)
 
@@ -317,3 +317,6 @@ func (n *NodeConfig) QueryListSnapshots() ([]*tmabcitypes.Snapshot, error) {
 
 	return listSnapshots.Snapshots, nil
 }
+
+
+

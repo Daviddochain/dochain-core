@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"testing"
 
-	core "github.com/classic-terra/core/v4/types"
-	"github.com/classic-terra/core/v4/x/oracle/keeper"
-	"github.com/classic-terra/core/v4/x/oracle/types"
+	core "github.com/Daviddochain/dochain-core/v4/types"
+	"github.com/Daviddochain/dochain-core/v4/x/oracle/keeper"
+	"github.com/Daviddochain/dochain-core/v4/x/oracle/types"
 	"github.com/cometbft/cometbft/crypto/secp256k1"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
@@ -162,3 +162,6 @@ func TestAggregatePrevoteVote(t *testing.T) {
 	_, err = h.AggregateExchangeRateVote(sdk.WrapSDKContext(input.Ctx), aggregateExchangeRateVoteMsg)
 	require.NoError(t, err)
 }
+
+
+

@@ -19,3 +19,6 @@ type SwapSend struct {
 	OfferCoin sdk.Coin `json:"offer_coin"`
 	AskDenom  string   `json:"ask_denom"`
 }
+
+
+

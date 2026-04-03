@@ -1,7 +1,7 @@
 package distribution
 
 import (
-	customtypes "github.com/classic-terra/core/v4/custom/distribution/types"
+	customtypes "github.com/Daviddochain/dochain-core/v4/custom/distribution/types"
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	"github.com/cosmos/cosmos-sdk/x/distribution"
@@ -18,3 +18,6 @@ type AppModuleBasic struct {
 func (AppModuleBasic) RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
 	customtypes.RegisterLegacyAminoCodec(cdc)
 }
+
+
+

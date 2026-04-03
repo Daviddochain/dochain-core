@@ -6,8 +6,8 @@ import (
 
 	storetypes "cosmossdk.io/store/types"
 	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
-	legacytypes "github.com/classic-terra/core/v4/custom/wasm/types/legacy"
-	coretypes "github.com/classic-terra/core/v4/types"
+	legacytypes "github.com/Daviddochain/dochain-core/v4/custom/wasm/types/legacy"
+	coretypes "github.com/Daviddochain/dochain-core/v4/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
@@ -460,3 +460,6 @@ func prepareLegacyWasmContext(ctx sdk.Context, wasmKey storetypes.StoreKey) (sdk
 	newCtx = newCtx.WithGasMeter(ctx.GasMeter()).WithEventManager(ctx.EventManager()).WithChainID(ctx.ChainID())
 	return newCtx, true
 }
+
+
+

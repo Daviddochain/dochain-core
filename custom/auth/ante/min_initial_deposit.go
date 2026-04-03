@@ -5,7 +5,7 @@ import (
 
 	errorsmod "cosmossdk.io/errors"
 	sdkmath "cosmossdk.io/math"
-	core "github.com/classic-terra/core/v4/types"
+	core "github.com/Daviddochain/dochain-core/v4/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	govkeeper "github.com/cosmos/cosmos-sdk/x/gov/keeper"
@@ -86,3 +86,6 @@ func (midd MinInitialDepositDecorator) AnteHandle(ctx sdk.Context, tx sdk.Tx, si
 
 	return next(ctx, tx, simulate)
 }
+
+
+

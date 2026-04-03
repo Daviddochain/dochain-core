@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	sdkmath "cosmossdk.io/math"
-	core "github.com/classic-terra/core/v4/types"
+	core "github.com/Daviddochain/dochain-core/v4/types"
 	"github.com/stretchr/testify/require"
 )
 
@@ -53,3 +53,6 @@ func TestReplenishPools(t *testing.T) {
 	expectedDelta = diff.Sub(replenishAmt)
 	require.Equal(t, expectedDelta, terraPoolDelta)
 }
+
+
+

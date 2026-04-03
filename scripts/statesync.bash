@@ -6,8 +6,8 @@ set -uxe
 #export GOPATH=~/go
 #export PATH=$PATH:~/go/bin
 export NODE=65.21.202.37:2161
-export ENVNAME=TERRAD
-export APPNAME=terrad
+export ENVNAME=dochaind
+export APPNAME=dochaind
 export $(echo $ENVNAME)$(echo "_HOME")=/plotting/terradata
 export GENESIS=QmZAMcdu85Qr8saFuNpL9VaxVqqLGWNAs72RVFhchL9jWs
 
@@ -38,9 +38,12 @@ echo "HOME: $HOMEDIR"
 # export state sync ars
 export $(echo $ENVNAME)_STATESYNC_ENABLE=true
 export $(echo $ENVNAME)_P2P_MAX_NUM_OUTBOUND_PEERS=200
-export $(echo $ENVNAME)_STATESYNC_RPC_SERVERS="$NODE,https://columbus-5.technofractal.com:443"
+export $(echo $ENVNAME)_STATESYNC_RPC_SERVERS="$NODE,https://cookie-1.technofractal.com:443"
 export $(echo $ENVNAME)_STATESYNC_TRUST_HEIGHT=$BLOCK_HEIGHT
 export $(echo $ENVNAME)_STATESYNC_TRUST_HASH=$TRUST_HASH
 export $(echo $ENVNAME)_P2P_PERSISTENT_PEERS="$NODE_ID@$NODE"
 
-terrad start
+dochaind start
+
+
+

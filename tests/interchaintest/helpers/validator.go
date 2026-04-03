@@ -205,3 +205,6 @@ func parseConsensusPubKeyTolerant(config testutil.TestEncodingConfig, val interf
 
 	return nil, fmt.Errorf("consensus_pubkey unmarshal failed: unsupported shape")
 }
+
+
+

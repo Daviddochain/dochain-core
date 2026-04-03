@@ -48,3 +48,6 @@ type errorResponse struct {
 func newErrorResponse(code int, err string) errorResponse {
 	return errorResponse{Code: code, Error: err}
 }
+
+
+

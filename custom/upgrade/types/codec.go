@@ -2,7 +2,7 @@ package types
 
 import (
 	"cosmossdk.io/x/upgrade/types"
-	govtypes "github.com/classic-terra/core/v4/custom/gov/types"
+	govtypes "github.com/Daviddochain/dochain-core/v4/custom/gov/types"
 	"github.com/cosmos/cosmos-sdk/codec"
 )
 
@@ -17,3 +17,6 @@ func init() {
 	govtypes.RegisterProposalTypeCodec(&types.SoftwareUpgradeProposal{}, "upgrade/SoftwareUpgradeProposal")
 	govtypes.RegisterProposalTypeCodec(&types.CancelSoftwareUpgradeProposal{}, "upgrade/CancelSoftwareUpgradeProposal")
 }
+
+
+

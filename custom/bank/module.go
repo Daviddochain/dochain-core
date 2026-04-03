@@ -1,9 +1,9 @@
 package bank
 
 import (
-	customcli "github.com/classic-terra/core/v4/custom/bank/client/cli"
-	customsim "github.com/classic-terra/core/v4/custom/bank/simulation"
-	customtypes "github.com/classic-terra/core/v4/custom/bank/types"
+	customcli "github.com/Daviddochain/dochain-core/v4/custom/bank/client/cli"
+	customsim "github.com/Daviddochain/dochain-core/v4/custom/bank/simulation"
+	customtypes "github.com/Daviddochain/dochain-core/v4/custom/bank/types"
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
@@ -63,3 +63,6 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 		simState.AppParams, simState.Cdc, am.accountKeeper, am.keeper,
 	)
 }
+
+
+

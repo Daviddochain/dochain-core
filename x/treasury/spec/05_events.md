@@ -27,3 +27,6 @@ The oracle module emits the following events:
 | Type                 | Attribute Key | Attribute Value     |
 |----------------------|---------------|---------------------|
 | reward_weight_update | reward_weight | {rewardWeight}      |
+
+
+

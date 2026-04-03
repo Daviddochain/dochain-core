@@ -116,14 +116,14 @@ def process_raw_genesis(genesis, parsed_args):
         if acc['address'] == 'terra1dp0taj85ruc299rkdvzp4z5pfg6z6swaed74e6':
             # (Foundation) sub 978,260 LUNA to give new vesting account
             for coin in newAcc['coins']:
-              if coin['denom'] == 'uluna':
+              if coin['denom'] == 'udo':
                 coin['amount'] = str(int(coin['amount']) - 978260000000)
         if acc['address'] == 'terra1nl2vrxr0qzzy4pd9m2mw0q0tvwcxe2mg8shaad':
             update_seed_to_private_vesting_schedule(newAcc)
         if acc['address'] == 'terra10y5usrnwk2ltddm5kenhznl5uj6w3yfga5al4a':
             # 978,260 LUNA 1M, 2M, 3M, 12M 10% 10% 10% 70%
             coin = {
-              'denom': 'uluna',
+              'denom': 'udo',
               'amount': '978260000000'
             }
 
@@ -177,7 +177,7 @@ def process_raw_genesis(genesis, parsed_args):
         create_module_account(
             'bonded_tokens_pool', 
             'terra1fl48vsnmsdzcv85q5d2q4z5ajdha8yu3nln0mh', 
-            [{'amount': str(bondedAmt), 'denom': 'uluna'}], 
+            [{'amount': str(bondedAmt), 'denom': 'udo'}], 
             ['burner', 'staking']
         )
     )
@@ -187,7 +187,7 @@ def process_raw_genesis(genesis, parsed_args):
         create_module_account(
             'not_bonded_tokens_pool', 
             'terra1tygms3xhhs3yv487phx3dw4a95jn7t7l8l07dr', 
-            [{'amount': str(notBondedAmt), 'denom': 'uluna'}], 
+            [{'amount': str(notBondedAmt), 'denom': 'udo'}], 
             ['burner', 'staking']
         )
     )
@@ -240,7 +240,7 @@ def process_raw_genesis(genesis, parsed_args):
             'max_deposit_period': '1209600000000000',
             'min_deposit': [{
                 'amount': '512000000',
-                'denom': 'uluna'
+                'denom': 'udo'
             }]
         },
         'voting_params': {
@@ -356,7 +356,7 @@ def update_vesting_schedule(account):
 
     # Luna Schedule Update
     luna_vesting_schedule = {
-        'denom': 'uluna',
+        'denom': 'udo',
         'schedules': [
             {
                 'start_time': str(get_time_after_n_month(genesis_date, 4)),
@@ -381,7 +381,7 @@ def update_vesting_schedule(account):
         ]
     }
 
-    # Terra Schedule Update
+    # dochain Schedule Update
     terra_schedules = []
     cumulated_ratio = 0
     for i in range(17):
@@ -418,7 +418,7 @@ def update_seed_to_private_vesting_schedule(account):
 
     # Luna Schedule Update
     luna_vesting_schedule = {
-        'denom': 'uluna',
+        'denom': 'udo',
         'schedules': [
             {
                 'start_time': str(get_time_after_n_month(genesis_date, 4)),
@@ -454,12 +454,12 @@ def update_seed_to_private_vesting_schedule(account):
     }
 
 
-    # Terra vesting has no need to be updated
+    # dochain vesting has no need to be updated
     terra_vesting_schedule = {
         'denom': 'usdr'
     }
 
-    # Find origin terra vesting schedule and use it to new vesting schedule
+    # Find origin dochain vesting schedule and use it to new vesting schedule
     for vesting_schedule in account['vesting_schedules']:
         if vesting_schedule['denom'] == 'usdr':
             terra_vesting_schedule['schedules'] = vesting_schedule['schedules']
@@ -478,7 +478,7 @@ def update_seed2_vesting_schedule(account):
 
     # Luna Schedule Update
     luna_vesting_schedule = {
-        'denom': 'uluna',
+        'denom': 'udo',
         'schedules': [
             {
                 'start_time': str(get_time_after_n_month(genesis_date, 1)),
@@ -526,3 +526,6 @@ if __name__ == '__main__':
         default_genesis_time='2019-12-13T15:00:00Z',
     )
     main(parser, process_raw_genesis)
+
+
+

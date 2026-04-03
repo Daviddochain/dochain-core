@@ -21,3 +21,6 @@ func GetDockerImageInfo() (repo, version string) {
 	branchVersion = strings.ReplaceAll(branchVersion, "/", "-")
 	return repo, branchVersion
 }
+
+
+

@@ -1,13 +1,13 @@
 syntax = "proto3";
-package terra.treasury.v1beta1;
+package dochain.treasury.v1beta1;
 
 import "cosmos/base/v1beta1/coin.proto";
 import "cosmos_proto/cosmos.proto";
 import "gogoproto/gogo.proto";
 
-import "terra/treasury/v1beta1/treasury.proto";
+import "dochain/treasury/v1beta1/treasury.proto";
 
-option go_package = "github.com/classic-terra/core/v4/x/treasury/types";
+option go_package = "github.com/Daviddochain/dochain-core/v4/x/treasury/types";
 
 // GenesisState defines the oracle module's genesis state.
 message GenesisState {
@@ -59,3 +59,6 @@ message EpochState {
     (gogoproto.nullable)   = false
   ];
 }
+
+
+

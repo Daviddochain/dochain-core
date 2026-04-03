@@ -2,8 +2,8 @@ package bindings
 
 import (
 	wasmvmtypes "github.com/CosmWasm/wasmvm/v3/types"
-	markettypes "github.com/classic-terra/core/v4/x/market/types"
-	treasurytypes "github.com/classic-terra/core/v4/x/treasury/types"
+	markettypes "github.com/Daviddochain/dochain-core/v4/x/market/types"
+	treasurytypes "github.com/Daviddochain/dochain-core/v4/x/treasury/types"
 )
 
 // ExchangeRateQueryParams query request params for exchange rates
@@ -12,7 +12,7 @@ type ExchangeRateQueryParams struct {
 	QuoteDenoms []string `json:"quote_denoms"`
 }
 
-// TerraQuery contains terra custom queries.
+// TerraQuery contains dochain custom queries.
 type TerraQuery struct {
 	Swap          *markettypes.QuerySwapParams     `json:"swap,omitempty"`
 	ExchangeRates *ExchangeRateQueryParams         `json:"exchange_rates,omitempty"`
@@ -48,3 +48,6 @@ type TaxCapQueryResponse struct {
 	// uint64 string, eg "1000000"
 	Cap string `json:"cap"`
 }
+
+
+

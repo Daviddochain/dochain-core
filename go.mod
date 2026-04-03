@@ -264,8 +264,11 @@ replace (
 replace (
 	github.com/ChainSafe/go-schnorrkel => github.com/ChainSafe/go-schnorrkel v1.0.0
 	// replace goleveldb to optimized one
-	github.com/syndtr/goleveldb => github.com/classic-terra/goleveldb v0.0.0-20230914223247-2b28f6655121
+	github.com/syndtr/goleveldb => github.com/classic-dochain/goleveldb v0.0.0-20230914223247-2b28f6655121
 	go.etcd.io/bbolt => go.etcd.io/bbolt v1.3.7
 	golang.org/x/exp => golang.org/x/exp v0.0.0-20250506013437-ce4c2cf36ca6
 )
+
+
+
 

@@ -3,7 +3,7 @@ package keeper
 import (
 	"testing"
 
-	"github.com/classic-terra/core/v4/x/treasury/types"
+	"github.com/Daviddochain/dochain-core/v4/x/treasury/types"
 	"github.com/stretchr/testify/require"
 )
 
@@ -18,3 +18,6 @@ func TestBurnCoinsFromBurnAccount(t *testing.T) {
 	coins = input.BankKeeper.GetAllBalances(input.Ctx, burnAddress)
 	require.True(t, coins.IsZero())
 }
+
+
+

@@ -15,38 +15,38 @@ import (
 	"github.com/CosmWasm/wasmd/x/wasm"
 	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
 	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
-	"github.com/classic-terra/core/v4/app/keepers"
-	appmempool "github.com/classic-terra/core/v4/app/mempool"
-	terraappparams "github.com/classic-terra/core/v4/app/params"
+	"github.com/Daviddochain/dochain-core/v4/app/keepers"
+	appmempool "github.com/Daviddochain/dochain-core/v4/app/mempool"
+	terraappparams "github.com/Daviddochain/dochain-core/v4/app/params"
 	// upgrades
-	"github.com/classic-terra/core/v4/app/upgrades"
+	"github.com/Daviddochain/dochain-core/v4/app/upgrades"
 	// v9 had been used by tax2gas and has to be skipped
-	v10_1 "github.com/classic-terra/core/v4/app/upgrades/v10_1"
-	v11 "github.com/classic-terra/core/v4/app/upgrades/v11"
-	v11_1 "github.com/classic-terra/core/v4/app/upgrades/v11_1"
-	v11_2 "github.com/classic-terra/core/v4/app/upgrades/v11_2"
-	v12 "github.com/classic-terra/core/v4/app/upgrades/v12"
-	v13 "github.com/classic-terra/core/v4/app/upgrades/v13"
-	v13_1 "github.com/classic-terra/core/v4/app/upgrades/v13_1"
-	v14_1 "github.com/classic-terra/core/v4/app/upgrades/v14_1"
-	v2 "github.com/classic-terra/core/v4/app/upgrades/v2"
-	v3 "github.com/classic-terra/core/v4/app/upgrades/v3"
-	v4 "github.com/classic-terra/core/v4/app/upgrades/v4"
-	v5 "github.com/classic-terra/core/v4/app/upgrades/v5"
-	v6 "github.com/classic-terra/core/v4/app/upgrades/v6"
-	v6_1 "github.com/classic-terra/core/v4/app/upgrades/v6_1"
-	v7 "github.com/classic-terra/core/v4/app/upgrades/v7"
-	v7_1 "github.com/classic-terra/core/v4/app/upgrades/v7_1"
-	v8 "github.com/classic-terra/core/v4/app/upgrades/v8"
-	v8_1 "github.com/classic-terra/core/v4/app/upgrades/v8_1"
-	v8_2 "github.com/classic-terra/core/v4/app/upgrades/v8_2"
-	v8_3 "github.com/classic-terra/core/v4/app/upgrades/v8_3"
+	v10_1 "github.com/Daviddochain/dochain-core/v4/app/upgrades/v10_1"
+	v11 "github.com/Daviddochain/dochain-core/v4/app/upgrades/v11"
+	v11_1 "github.com/Daviddochain/dochain-core/v4/app/upgrades/v11_1"
+	v11_2 "github.com/Daviddochain/dochain-core/v4/app/upgrades/v11_2"
+	v12 "github.com/Daviddochain/dochain-core/v4/app/upgrades/v12"
+	v13 "github.com/Daviddochain/dochain-core/v4/app/upgrades/v13"
+	v13_1 "github.com/Daviddochain/dochain-core/v4/app/upgrades/v13_1"
+	v14_1 "github.com/Daviddochain/dochain-core/v4/app/upgrades/v14_1"
+	v2 "github.com/Daviddochain/dochain-core/v4/app/upgrades/v2"
+	v3 "github.com/Daviddochain/dochain-core/v4/app/upgrades/v3"
+	v4 "github.com/Daviddochain/dochain-core/v4/app/upgrades/v4"
+	v5 "github.com/Daviddochain/dochain-core/v4/app/upgrades/v5"
+	v6 "github.com/Daviddochain/dochain-core/v4/app/upgrades/v6"
+	v6_1 "github.com/Daviddochain/dochain-core/v4/app/upgrades/v6_1"
+	v7 "github.com/Daviddochain/dochain-core/v4/app/upgrades/v7"
+	v7_1 "github.com/Daviddochain/dochain-core/v4/app/upgrades/v7_1"
+	v8 "github.com/Daviddochain/dochain-core/v4/app/upgrades/v8"
+	v8_1 "github.com/Daviddochain/dochain-core/v4/app/upgrades/v8_1"
+	v8_2 "github.com/Daviddochain/dochain-core/v4/app/upgrades/v8_2"
+	v8_3 "github.com/Daviddochain/dochain-core/v4/app/upgrades/v8_3"
 	// unnamed import of statik for swagger UI support
-	_ "github.com/classic-terra/core/v4/client/docs/statik"
-	customante "github.com/classic-terra/core/v4/custom/auth/ante"
-	custompost "github.com/classic-terra/core/v4/custom/auth/post"
-	customauthtx "github.com/classic-terra/core/v4/custom/auth/tx"
-	customserver "github.com/classic-terra/core/v4/server"
+	_ "github.com/Daviddochain/dochain-core/v4/client/docs/statik"
+	customante "github.com/Daviddochain/dochain-core/v4/custom/auth/ante"
+	custompost "github.com/Daviddochain/dochain-core/v4/custom/auth/post"
+	customauthtx "github.com/Daviddochain/dochain-core/v4/custom/auth/tx"
+	customserver "github.com/Daviddochain/dochain-core/v4/server"
 	abci "github.com/cometbft/cometbft/abci/types"
 	tmjson "github.com/cometbft/cometbft/libs/json"
 	tmos "github.com/cometbft/cometbft/libs/os"
@@ -80,7 +80,7 @@ import (
 const appName = "TerraApp"
 
 var (
-	// DefaultNodeHome defines default home directories for terrad
+	// DefaultNodeHome defines default home directories for dochaind
 	DefaultNodeHome string
 
 	// Upgrades defines upgrades to be applied to the network
@@ -147,7 +147,7 @@ func init() {
 		stdlog.Println("Failed to get home dir %2", err)
 	}
 
-	DefaultNodeHome = filepath.Join(userHomeDir, ".terra")
+	DefaultNodeHome = filepath.Join(userHomeDir, ".dochain")
 }
 
 // NewTerraApp returns a reference to an initialized TerraApp.
@@ -518,7 +518,7 @@ func (app *TerraApp) RegisterNodeService(clientCtx client.Context, config config
 
 // RegisterSwaggerAPI registers swagger route with API Server
 func RegisterSwaggerAPI(rtr *mux.Router) {
-	statikFS, err := fs.NewWithNamespace("terrad")
+	statikFS, err := fs.NewWithNamespace("dochaind")
 	if err != nil {
 		panic(err)
 	}
@@ -571,3 +571,6 @@ func (app *TerraApp) setupUpgradeHandlers() {
 func (app *TerraApp) GetTxConfig() client.TxConfig {
 	return app.txConfig
 }
+
+
+

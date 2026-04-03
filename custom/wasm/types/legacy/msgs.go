@@ -86,7 +86,7 @@ func (msg MsgStoreCode) ValidateBasic() error {
 }
 
 // NewMsgMigrateCode creates a MsgMigrateCode instance
-// TODO - remove after columbus-5 update
+// TODO - remove after cookie-1 update
 func NewMsgMigrateCode(codeID uint64, sender sdk.AccAddress, wasmByteCode []byte) *MsgMigrateCode {
 	return &MsgMigrateCode{
 		CodeID:       codeID,
@@ -427,3 +427,6 @@ func (msg MsgClearContractAdmin) GetSigners() []sdk.AccAddress {
 	}
 	return []sdk.AccAddress{owner}
 }
+
+
+

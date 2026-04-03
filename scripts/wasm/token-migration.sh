@@ -1,6 +1,6 @@
 #!/bin/sh
 
-BINARY=_build/old/terrad
+BINARY=_build/old/dochaind
 CONTRACTPATH="scripts/wasm/contracts/old_anc_token.wasm"
 KEYRING_BACKEND="test"
 HOME=mytestnet
@@ -70,3 +70,6 @@ txhash=$(echo $out | jq -r '.txhash')
 
 PRE_UPGRADE_CONTRACT_ADDR=$($BINARY q tx $txhash -o json | jq -r '.raw_log' | jq -r '.[0].events[0].attributes[3].value')
 export PRE_UPGRADE_CONTRACT_ADDR
+
+
+

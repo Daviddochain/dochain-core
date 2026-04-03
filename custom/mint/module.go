@@ -3,7 +3,7 @@ package mint
 import (
 	"encoding/json"
 
-	core "github.com/classic-terra/core/v4/types"
+	core "github.com/Daviddochain/dochain-core/v4/types"
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	"github.com/cosmos/cosmos-sdk/x/mint"
@@ -20,9 +20,12 @@ type AppModuleBasic struct {
 // DefaultGenesis returns default genesis state as raw bytes for the gov
 // module.
 func (am AppModuleBasic) DefaultGenesis(cdc codec.JSONCodec) json.RawMessage {
-	// customize to set default genesis state deposit denom to uluna
+	// customize to set default genesis state deposit denom to udo
 	defaultGenesisState := types.DefaultGenesisState()
 	defaultGenesisState.Params.MintDenom = core.MicroLunaDenom
 
 	return cdc.MustMarshalJSON(defaultGenesisState)
 }
+
+
+

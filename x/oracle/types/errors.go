@@ -23,3 +23,6 @@ var (
 	ErrNoTobinTax            = errorsmod.Register(ModuleName, 13, "no tobin tax")
 	ErrUnknownDenom          = errorsmod.Register(ModuleName, 14, "unknown denom")
 )
+
+
+

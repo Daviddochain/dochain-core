@@ -121,14 +121,14 @@ RUN --mount=type=cache,target=/root/.cache/go-build \
 
 ################################################################################
 
-FROM alpine AS terra-core
+FROM alpine AS dochain-core
 
 RUN apk update && apk add wget lz4 aria2 curl jq gawk coreutils "zlib>1.2.12-r2" libssl3
 
 COPY --from=builder-stage-2 /go/bin/dochaind /usr/local/bin/dochaind
 
-RUN addgroup -g 1000 terra && \
-    adduser -u 1000 -G terra -D -h /app terra
+RUN addgroup -g 1000 dochain && \
+    adduser -u 1000 -G dochain -D -h /app dochain
 
 # rest server
 EXPOSE 1317
@@ -142,3 +142,6 @@ EXPOSE 26657
 WORKDIR /app
 
 CMD ["dochaind", "version"]
+
+
+

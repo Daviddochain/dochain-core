@@ -6,7 +6,7 @@ import (
 	"time"
 
 	sdkmath "cosmossdk.io/math"
-	"github.com/classic-terra/core/v4/tests/e2e/initialization"
+	"github.com/Daviddochain/dochain-core/v4/tests/e2e/initialization"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
@@ -52,7 +52,7 @@ func (s *IntegrationTestSuite) TestIBCWasmHooks() {
 		10*time.Millisecond)
 
 	// sender wasm addr
-	// senderBech32, err := ibchookskeeper.DeriveIntermediateSender("channel-0", validatorAddr, "terra")
+	// senderBech32, err := ibchookskeeper.DeriveIntermediateSender("channel-0", validatorAddr, "dochain")
 	var response interface{}
 	response, err = nodeA.QueryWasmSmart(contractAddr, `{"get_total_funds": {}}`)
 	s.Require().NoError(err)
@@ -78,7 +78,7 @@ func (s *IntegrationTestSuite) TestIBCWasmHooks() {
 		if err != nil {
 			return false
 		}
-		// check if denom is uluna token ibc
+		// check if denom is udo token ibc
 		return sdkmath.NewInt(amount).Equal(transferAmount) && denom == initialization.TerraIBCDenom && count == 1
 	},
 		30*time.Second,
@@ -276,7 +276,7 @@ func (s *IntegrationTestSuite) TestFeeTaxWasm() {
 
 // TestOracleDelegateFeedConsent verifies that MsgDelegateFeedConsent can be
 // simulated and broadcast without the bech32 prefix mismatch error:
-// "hrp does not match bech32 prefix: expected 'terra' got 'terravaloper'"
+// "hrp does not match bech32 prefix: expected 'dochain' got 'terravaloper'"
 func (s *IntegrationTestSuite) TestOracleDelegateFeedConsent() {
 	chain := s.configurer.GetChainConfig(0)
 	node, err := chain.GetDefaultNode()
@@ -378,3 +378,6 @@ func (s *IntegrationTestSuite) TestSlashingUnjail() {
 	}, initialization.FiveMin, 5*time.Second,
 		"jailed_until should be cleared after unjail")
 }
+
+
+

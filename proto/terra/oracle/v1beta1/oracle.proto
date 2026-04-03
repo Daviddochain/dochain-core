@@ -1,10 +1,10 @@
 syntax = "proto3";
-package terra.oracle.v1beta1;
+package dochain.oracle.v1beta1;
 
 import "cosmos_proto/cosmos.proto";
 import "gogoproto/gogo.proto";
 
-option go_package = "github.com/classic-terra/core/v4/x/oracle/types";
+option go_package = "github.com/Daviddochain/dochain-core/v4/x/oracle/types";
 
 // Params defines the parameters for the oracle module.
 message Params {
@@ -74,7 +74,7 @@ message AggregateExchangeRatePrevote {
 }
 
 // MsgAggregateExchangeRateVote - struct for voting on
-// the exchange rates of Luna denominated in various Terra assets.
+// the exchange rates of Luna denominated in various dochain assets.
 message AggregateExchangeRateVote {
   option (gogoproto.equal)            = false;
   option (gogoproto.goproto_getters)  = false;
@@ -103,3 +103,6 @@ message ExchangeRateTuple {
     (gogoproto.nullable)   = false
   ];
 }
+
+
+

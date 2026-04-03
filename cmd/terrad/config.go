@@ -16,7 +16,7 @@ const (
 	IavlDisablefastNodeDefault = true
 )
 
-// TerraAppConfig terra specify app config
+// TerraAppConfig dochain specify app config
 type TerraAppConfig struct {
 	serverconfig.Config
 	Wasm wasmtypes.NodeConfig `mapstructure:"wasm"`
@@ -77,7 +77,7 @@ func initAppConfig() (string, interface{}) {
 	//   own app.toml to override, or use this default value.
 	//
 	// In simapp, we set the min gas prices to 0.
-	srvCfg.MinGasPrices = "0uluna"
+	srvCfg.MinGasPrices = "0udo"
 
 	terraAppConfig := TerraAppConfig{
 		Config: *srvCfg,
@@ -88,3 +88,6 @@ func initAppConfig() (string, interface{}) {
 
 	return terraAppTemplate, terraAppConfig
 }
+
+
+

@@ -147,7 +147,7 @@ def process_raw_genesis(genesis, parsed_args):
             'annual_provisions': '0.0',
         },
         'params': {
-            'mint_denom': 'uluna',
+            'mint_denom': 'udo',
             'inflation_rate_change': '0.0',
             'inflation_max': '0.0',
             'inflation_min': '0.0',
@@ -191,3 +191,6 @@ if __name__ == '__main__':
         default_pretty=False
     )
     main(parser, process_raw_genesis)
+
+
+

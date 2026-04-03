@@ -12,3 +12,6 @@ for pkg in ${PKGS[@]}; do
         rm profile.out
     fi
 done
+
+
+

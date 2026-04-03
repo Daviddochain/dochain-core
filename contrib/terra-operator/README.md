@@ -1,4 +1,4 @@
-# Terra Core Dockerized
+# dochain Core Dockerized
 
 ## Common usage examples 
 
@@ -25,10 +25,10 @@ docker run -e MINIMUM_GAS_PRICES="0.01133uluna,0.15uusd,0.104938usdr,169.77ukrw,
 Starting the sync from a snapshot:
 
 ```
-docker run -e SNAPSHOT_NAME="columbus-5-pruned.20211022.0410.tar.lz4" -it -p 1317:1317 -p 26657:26657 -p 26656:26656 terramoney/core-node:v0.5.11-oracle
+docker run -e SNAPSHOT_NAME="cookie-1-pruned.20211022.0410.tar.lz4" -it -p 1317:1317 -p 26657:26657 -p 26656:26656 terramoney/core-node:v0.5.11-oracle
 ```
 
-You can find the latest snapshots [here](https://quicksync.io/networks/terra.html).
+You can find the latest snapshots [here](https://quicksync.io/networks/dochain.html).
 
 Custom snapshot URL:
 
@@ -49,3 +49,5 @@ docker run -it -p 1317:1317 -p 26657:26657 -p 26656:26656 terramoney/core-node:v
 ```
 ./build_all.sh v0.5.11-oracle
 ```
+
+

@@ -1,12 +1,12 @@
 package market
 
 import (
-	"github.com/classic-terra/core/v4/x/market"
-	"github.com/classic-terra/core/v4/x/market/keeper"
-	"github.com/classic-terra/core/v4/x/market/types"
-	"github.com/classic-terra/core/v4/x/tax/handlers"
-	taxkeeper "github.com/classic-terra/core/v4/x/tax/keeper"
-	treasurykeeper "github.com/classic-terra/core/v4/x/treasury/keeper"
+	"github.com/Daviddochain/dochain-core/v4/x/market"
+	"github.com/Daviddochain/dochain-core/v4/x/market/keeper"
+	"github.com/Daviddochain/dochain-core/v4/x/market/types"
+	"github.com/Daviddochain/dochain-core/v4/x/tax/handlers"
+	taxkeeper "github.com/Daviddochain/dochain-core/v4/x/tax/keeper"
+	treasurykeeper "github.com/Daviddochain/dochain-core/v4/x/treasury/keeper"
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	"github.com/cosmos/cosmos-sdk/types/simulation"
@@ -55,3 +55,6 @@ func (am AppModule) RegisterServices(cfg module.Configurator) {
 func (am AppModule) RegisterStoreDecoder(reg simulation.StoreDecoderRegistry) {
 	/* TODO */
 }
+
+
+

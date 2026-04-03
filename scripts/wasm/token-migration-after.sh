@@ -1,6 +1,6 @@
 #! /bin/bash
 
-BINARY=_build/new/terrad
+BINARY=_build/new/dochaind
 CONTRACTPATH="scripts/wasm/contracts/new_anc_token.wasm"
 RECEIVERPATH="scripts/wasm/contracts/cw20_receiver_template.wasm"
 KEYRING_BACKEND="test"
@@ -81,3 +81,5 @@ if [ "$code" != "0" ]; then
 	exit -1
 fi
 echo $res
+
+

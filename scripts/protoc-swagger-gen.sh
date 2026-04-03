@@ -26,3 +26,5 @@ npx swagger-combine ./client/docs/config.json -o ./client/docs/swagger-ui/swagge
 
 # clean swagger files
 rm -rf ./tmp-swagger-gen
+
+

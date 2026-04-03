@@ -3,7 +3,7 @@ package keeper
 import (
 	"context"
 
-	"github.com/classic-terra/core/v4/x/market/types"
+	"github.com/Daviddochain/dochain-core/v4/x/market/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -52,9 +52,12 @@ func (q querier) Swap(c context.Context, req *types.QuerySwapRequest) (*types.Qu
 	return &types.QuerySwapResponse{ReturnCoin: retCoin}, nil
 }
 
-// TerraPoolDelta queries terra pool delta
+// TerraPoolDelta queries dochain pool delta
 func (q querier) TerraPoolDelta(c context.Context, _ *types.QueryTerraPoolDeltaRequest) (*types.QueryTerraPoolDeltaResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
 	terraPoolDelta := q.GetTerraPoolDelta(ctx)
 	return &types.QueryTerraPoolDeltaResponse{TerraPoolDelta: terraPoolDelta}, nil
 }
+
+
+

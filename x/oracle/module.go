@@ -6,10 +6,10 @@ import (
 	"fmt"
 	"math/rand"
 
-	"github.com/classic-terra/core/v4/x/oracle/client/cli"
-	"github.com/classic-terra/core/v4/x/oracle/keeper"
-	"github.com/classic-terra/core/v4/x/oracle/simulation"
-	"github.com/classic-terra/core/v4/x/oracle/types"
+	"github.com/Daviddochain/dochain-core/v4/x/oracle/client/cli"
+	"github.com/Daviddochain/dochain-core/v4/x/oracle/keeper"
+	"github.com/Daviddochain/dochain-core/v4/x/oracle/simulation"
+	"github.com/Daviddochain/dochain-core/v4/x/oracle/types"
 	abci "github.com/cometbft/cometbft/abci/types"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec"
@@ -190,3 +190,6 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	// )
 	return []simtypes.WeightedOperation{}
 }
+
+
+

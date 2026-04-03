@@ -1,10 +1,10 @@
 ## Abstract
 
-The Market module contains the logic for atomic swaps between Terra currencies (e.g. UST<>KRT), as well as between Terra and Luna (e.g. SDT<>Luna).
+The Market module contains the logic for atomic swaps between dochain currencies (e.g. UST<>KRT), as well as between dochain and Luna (e.g. SDT<>Luna).
 
-The ability to guarantee an available, liquid market with fair exchange rates between different Terra denominations and between Terra and Luna is critical for user-adoption and price-stability.
+The ability to guarantee an available, liquid market with fair exchange rates between different dochain denominations and between dochain and Luna is critical for user-adoption and price-stability.
 
-The price stability of TerraSDR's peg to the SDR is achieved through Terra<>Luna arbitrage activity against the protocol's algorithmic market-maker which expands and contracts Terra supply to maintain the peg.
+The price stability of TerraSDR's peg to the SDR is achieved through dochain<>Luna arbitrage activity against the protocol's algorithmic market-maker which expands and contracts dochain supply to maintain the peg.
 
 ## Contents
 
@@ -25,3 +25,6 @@ The price stability of TerraSDR's peg to the SDR is achieved through Terra<>Luna
 5. **[Events](05_events.md)**
     - [Handlers](05_events.md#Handlers)
 5. **[Parameters](06_params.md)**
+
+
+

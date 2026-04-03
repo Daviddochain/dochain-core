@@ -6,8 +6,8 @@ import (
 	"sort"
 
 	"cosmossdk.io/store/prefix"
-	"github.com/classic-terra/core/v4/x/taxexemption/keeper"
-	"github.com/classic-terra/core/v4/x/taxexemption/types"
+	"github.com/Daviddochain/dochain-core/v4/x/taxexemption/keeper"
+	"github.com/Daviddochain/dochain-core/v4/x/taxexemption/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
@@ -115,3 +115,6 @@ func ExportGenesis(ctx sdk.Context, keeper keeper.Keeper) (data *types.GenesisSt
 	}
 	return state
 }
+
+
+

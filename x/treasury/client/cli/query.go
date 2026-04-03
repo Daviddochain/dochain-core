@@ -4,7 +4,7 @@ import (
 	"context"
 	"strings"
 
-	"github.com/classic-terra/core/v4/x/treasury/types"
+	"github.com/Daviddochain/dochain-core/v4/x/treasury/types"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/spf13/cobra"
@@ -43,7 +43,7 @@ func GetCmdQueryTaxRate() *cobra.Command {
 		Long: strings.TrimSpace(`
 Query the stability tax rate of the current epoch.
 
-$ terrad query treasury tax-rate
+$ dochaind query treasury tax-rate
 `),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientQueryContext(cmd)
@@ -75,7 +75,7 @@ func GetCmdQueryTaxCap() *cobra.Command {
 Query the current stability tax cap of the denom asset. 
 The stability tax levied on a tx is at most tax cap, regardless of the size of the transaction. 
 
-$ terrad query treasury tax-cap ukrw
+$ dochaind query treasury tax-cap ukrw
 `),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientQueryContext(cmd)
@@ -110,7 +110,7 @@ func GetCmdQueryTaxCaps() *cobra.Command {
 Query the current stability tax caps of the all denom assets. 
 The stability tax levied on a tx is at most tax cap, regardless of the size of the transaction. 
 
-$ terrad query treasury tax-caps
+$ dochaind query treasury tax-caps
 `),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientQueryContext(cmd)
@@ -141,7 +141,7 @@ func GetCmdQueryRewardWeight() *cobra.Command {
 		Long: strings.TrimSpace(`
 Query the reward rate of the current epoch.
 
-$ terrad query treasury reward-weight
+$ dochaind query treasury reward-weight
 `),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientQueryContext(cmd)
@@ -172,7 +172,7 @@ func GetCmdQueryTaxProceeds() *cobra.Command {
 		Long: strings.TrimSpace(`
 Query the tax proceeds corresponding to the current epoch. The return value will be sdk.Coins{} of all the taxes collected. 
 
-$ terrad query treasury tax-proceeds
+$ dochaind query treasury tax-proceeds
 `),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientQueryContext(cmd)
@@ -201,9 +201,9 @@ func GetCmdQuerySeigniorageProceeds() *cobra.Command {
 		Args:  cobra.NoArgs,
 		Short: "Query the seigniorage proceeds for the current epoch",
 		Long: strings.TrimSpace(`
-Query the seigniorage proceeds corresponding to the current epoch. The return value will be in units of 'uluna' coins. 
+Query the seigniorage proceeds corresponding to the current epoch. The return value will be in units of 'udo' coins. 
 
-$ terrad query treasury seigniorage-proceeds
+$ dochaind query treasury seigniorage-proceeds
 `),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientQueryContext(cmd)
@@ -305,3 +305,6 @@ func GetCmdQueryExemptlist() *cobra.Command {
 	flags.AddPaginationFlagsToCmd(cmd, "burn tax exemption list")
 	return cmd
 }
+
+
+

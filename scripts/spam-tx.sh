@@ -2,7 +2,7 @@
 set -ue
 
 # Configuration
-BINARY="./build/terrad"
+BINARY="./build/dochaind"
 CHAIN_ID="localterra"
 HOME_DIR="mytestnet"
 KEYRING="test"
@@ -91,3 +91,5 @@ do
 done
 
 echo "Script finished due to sequence mismatch"
+
+

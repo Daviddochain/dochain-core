@@ -1,4 +1,4 @@
-ARG base_image=classic-terra/core
+ARG base_image=classic-dochain/core
 ARG version=latest
 
 FROM ${base_image}:${version}
@@ -32,3 +32,5 @@ COPY ./test-node-setup.sh /test-node-setup.sh
 COPY ./keys.json /keys.json
 
 CMD ["/entrypoint.sh"]
+
+

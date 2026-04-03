@@ -31,3 +31,6 @@ At the end of every block, the `Oracle` module checks whether it's the last bloc
 7. Distribute rewards to ballot winners with `k.RewardBallotWinners()`
 
 8. Clear all prevotes (except ones for the next `VotePeriod`) and votes from the store
+
+
+

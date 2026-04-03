@@ -1,5 +1,7 @@
 #!/bin/sh
-terrad keys add $VALIDATOR_KEYNAME << EOF
+dochaind keys add $VALIDATOR_KEYNAME << EOF
 $VALIDATOR_PASSPHRASE
 $VALIDATOR_PASSPHRASE
 EOF
+
+

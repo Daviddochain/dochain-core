@@ -3,7 +3,7 @@ package cli
 import (
 	"context"
 
-	"github.com/classic-terra/core/v4/x/dyncomm/types"
+	"github.com/Daviddochain/dochain-core/v4/x/dyncomm/types"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -87,3 +87,6 @@ func GetCmdQueryParams() *cobra.Command {
 	flags.AddQueryFlagsToCmd(cmd)
 	return cmd
 }
+
+
+

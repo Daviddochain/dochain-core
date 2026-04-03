@@ -21,3 +21,6 @@ const (
 	DefaultWeightTextProposal           int = 5
 	DefaultWeightParamChangeProposal    int = 5
 )
+
+
+

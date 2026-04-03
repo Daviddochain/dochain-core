@@ -11,7 +11,7 @@ import (
 	"go.uber.org/zap/zaptest"
 )
 
-// TestTerraStart is a test to assert that spinning up a Terra Classic network with one validator works properly.
+// TestTerraStart is a test to assert that spinning up a Do-Chain network with one validator works properly.
 func TestTerraStart(t *testing.T) {
 	if testing.Short() {
 		t.Skip()
@@ -19,7 +19,7 @@ func TestTerraStart(t *testing.T) {
 
 	t.Parallel()
 
-	// Create chain factory with Terra Classic
+	// Create chain factory with Do-Chain
 	numVals := 1
 	numFullNodes := 3
 
@@ -28,7 +28,7 @@ func TestTerraStart(t *testing.T) {
 
 	cf := interchaintest.NewBuiltinChainFactory(zaptest.NewLogger(t), []*interchaintest.ChainSpec{
 		{
-			Name:          "terra",
+			Name:          "dochain",
 			ChainConfig:   config,
 			NumValidators: &numVals,
 			NumFullNodes:  &numFullNodes,
@@ -39,10 +39,10 @@ func TestTerraStart(t *testing.T) {
 	chains, err := cf.Chains(t.Name())
 	require.NoError(t, err)
 
-	terra := chains[0].(*cosmos.CosmosChain)
+	dochain := chains[0].(*cosmos.CosmosChain)
 
 	// Create a new Interchain object which describes the chains, relayers, and IBC connections we want to use
-	ic := interchaintest.NewInterchain().AddChain(terra)
+	ic := interchaintest.NewInterchain().AddChain(dochain)
 
 	rep := testreporter.NewNopReporter()
 	eRep := rep.RelayerExecReporter(t)
@@ -65,3 +65,6 @@ func TestTerraStart(t *testing.T) {
 		_ = ic.Close()
 	})
 }
+
+
+

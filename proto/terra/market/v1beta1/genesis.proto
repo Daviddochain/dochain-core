@@ -1,11 +1,11 @@
 syntax = "proto3";
-package terra.market.v1beta1;
+package dochain.market.v1beta1;
 
 import "cosmos_proto/cosmos.proto";
 import "gogoproto/gogo.proto";
-import "terra/market/v1beta1/market.proto";
+import "dochain/market/v1beta1/market.proto";
 
-option go_package = "github.com/classic-terra/core/v4/x/market/types";
+option go_package = "github.com/Daviddochain/dochain-core/v4/x/market/types";
 
 // GenesisState defines the market module's genesis state.
 message GenesisState {
@@ -19,3 +19,6 @@ message GenesisState {
     (gogoproto.nullable)   = false
   ];
 }
+
+
+

@@ -33,3 +33,6 @@ The market module emits the following events:
 | message | module        | market             |
 | message | action        | swapsend           |
 | message | sender        | {senderAddress}    |
+
+
+

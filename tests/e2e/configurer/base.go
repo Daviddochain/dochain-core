@@ -11,10 +11,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/classic-terra/core/v4/tests/e2e/configurer/chain"
-	"github.com/classic-terra/core/v4/tests/e2e/containers"
-	"github.com/classic-terra/core/v4/tests/e2e/initialization"
-	"github.com/classic-terra/core/v4/tests/e2e/util"
+	"github.com/Daviddochain/dochain-core/v4/tests/e2e/configurer/chain"
+	"github.com/Daviddochain/dochain-core/v4/tests/e2e/containers"
+	"github.com/Daviddochain/dochain-core/v4/tests/e2e/initialization"
+	"github.com/Daviddochain/dochain-core/v4/tests/e2e/util"
 	"github.com/stretchr/testify/require"
 )
 
@@ -81,7 +81,7 @@ func (bc *baseConfigurer) RunIBC() error {
 func (bc *baseConfigurer) runIBCRelayer(chainConfigA *chain.Config, chainConfigB *chain.Config, hermesContainerName string) error {
 	bc.t.Log("starting Hermes relayer 1 container...")
 
-	tmpDir, err := os.MkdirTemp("", "terra-e2e-testnet-hermes-1")
+	tmpDir, err := os.MkdirTemp("", "dochain-e2e-testnet-hermes-1")
 	if err != nil {
 		return err
 	}
@@ -170,7 +170,7 @@ func (bc *baseConfigurer) runIBCRelayer(chainConfigA *chain.Config, chainConfigB
 	// transport errors.
 	time.Sleep(10 * time.Second)
 
-	// create the client, connection and channel between the two Terra chains
+	// create the client, connection and channel between the two dochain chains
 	return bc.connectIBCChains(chainConfigA, chainConfigB)
 }
 
@@ -195,3 +195,6 @@ func (bc *baseConfigurer) initializeChainConfigFromInitChain(initializedChain *i
 		chainConfig.NodeConfigs = append(chainConfig.NodeConfigs, conf)
 	}
 }
+
+
+

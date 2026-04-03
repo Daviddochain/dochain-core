@@ -117,4 +117,7 @@ run_final_tests() {
 }
 
 
-run_final_tests "_build/new/terrad" "10"
+run_final_tests "_build/new/dochaind" "10"
+
+
+

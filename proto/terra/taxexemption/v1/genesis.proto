@@ -1,10 +1,10 @@
 syntax = "proto3";
-package terra.taxexemption.v1;
+package dochain.taxexemption.v1;
 
 import "gogoproto/gogo.proto";
-import "terra/taxexemption/v1/taxexemption.proto";
+import "dochain/taxexemption/v1/taxexemption.proto";
 
-option go_package = "github.com/classic-terra/core/v4/x/taxexemption/types";
+option go_package = "github.com/Daviddochain/dochain-core/v4/x/taxexemption/types";
 
 // GenesisState defines the taxexemption module's genesis state.
 message GenesisState {
@@ -17,3 +17,6 @@ message AddressesByZone {
   string          zone      = 1 [(gogoproto.moretags) = "yaml:\"zone\""];
   repeated string addresses = 2 [(gogoproto.moretags) = "yaml:\"addresses\""];
 }
+
+
+

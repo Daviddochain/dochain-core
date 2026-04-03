@@ -30,8 +30,8 @@ build-e2e-script:
 	go build -mod=readonly $(BUILD_FLAGS) -o $(BUILDDIR)/ ./tests/e2e/initialization/$(E2E_SCRIPT_NAME)
 
 docker-build-debug:
-	@DOCKER_BUILDKIT=1 docker build -t terra:${COMMIT} --platform linux/amd64 --build-arg BASE_IMG_TAG=debug -f ./tests/e2e/e2e.Dockerfile .
-	@DOCKER_BUILDKIT=1 docker tag terra:${COMMIT} terra:debug
+	@DOCKER_BUILDKIT=1 docker build -t dochain:${COMMIT} --platform linux/amd64 --build-arg BASE_IMG_TAG=debug -f ./tests/e2e/e2e.Dockerfile .
+	@DOCKER_BUILDKIT=1 docker tag dochain:${COMMIT} dochain:debug
 
 e2e-setup: e2e-check-image-sha e2e-remove-resources
 	@echo Finished e2e environment setup, ready to start the test
@@ -41,3 +41,6 @@ e2e-check-image-sha:
 
 e2e-remove-resources:
 	tests/e2e/scripts/run/remove_stale_resources.sh
+
+
+

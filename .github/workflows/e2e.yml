@@ -68,8 +68,8 @@ jobs:
                   file: ./tests/e2e/e2e.Dockerfile
                   context: .
                   platforms: linux/amd64
-                  tags: terra:debug
-                  outputs: type=docker,dest=/tmp/terra-e2e-image.tar
+                  tags: dochain:debug
+                  outputs: type=docker,dest=/tmp/dochain-e2e-image.tar
                   build-args: |
                       BASE_IMG_TAG=debug
                   cache-from: type=gha
@@ -79,8 +79,8 @@ jobs:
             - name: Upload Docker image artifact
               uses: actions/upload-artifact@v4
               with:
-                  name: terra-e2e-image
-                  path: /tmp/terra-e2e-image.tar
+                  name: dochain-e2e-image
+                  path: /tmp/dochain-e2e-image.tar
                   retention-days: 1
 
     e2e:
@@ -133,14 +133,17 @@ jobs:
             - name: Download Docker image artifact
               uses: actions/download-artifact@v4
               with:
-                  name: terra-e2e-image
+                  name: dochain-e2e-image
                   path: /tmp
 
             # 6. Load Docker image
             - name: Load Docker image
-              run: docker load -i /tmp/terra-e2e-image.tar
+              run: docker load -i /tmp/dochain-e2e-image.tar
 
             # 7. Run specific E2E test
             - name: Run ${{ matrix.test }}
               run: |
                   VERSION=$(git describe --tags --always) TERRA_E2E=True TERRA_E2E_DEBUG_LOG=True go test -mod=readonly -timeout=20m -v ./tests/e2e/... -run TestIntegrationTestSuite/${{ matrix.test }}
+
+
+

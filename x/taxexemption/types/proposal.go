@@ -231,3 +231,6 @@ func (p *RemoveTaxExemptionAddressProposal) ValidateBasic() error {
 
 	return nil
 }
+
+
+

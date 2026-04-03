@@ -12,7 +12,7 @@ RUN apk add git cmake
 # NOTE: add these to run with LEDGER_ENABLED=true
 # RUN apk add libusb-dev linux-headers
 
-RUN git clone https://github.com/classic-terra/core.git && mv core /code
+RUN git clone https://github.com/classic-dochain/core.git && mv core /code
 WORKDIR /code
 
 # Install mimalloc
@@ -35,16 +35,16 @@ RUN DEBIAN_FRONTEND=noninteractive ; \
     apt-get update ; \
     apt-get install -y wget lz4 aria2 curl jq ip nmap; \
     apt-get clean ; \
-    mkdir /terra ; \
-    groupadd -r terra ; \
-    useradd -r -g terra  --home-dir=/terra terra ; \
-    chown -R terra:terra /terra
+    mkdir /dochain ; \
+    groupadd -r dochain ; \
+    useradd -r -g dochain  --home-dir=/dochain dochain ; \
+    chown -R dochain:dochain /dochain
 
-USER terra
+USER dochain
 
-WORKDIR /terra
+WORKDIR /dochain
 
-COPY --from=go-builder /code/build/terrad /usr/local/bin/terrad
+COPY --from=go-builder /code/build/dochaind /usr/local/bin/dochaind
 
 # rest server
 EXPOSE 1317
@@ -55,4 +55,6 @@ EXPOSE 26656
 # tendermint rpc
 EXPOSE 26657
 
-CMD ["/usr/local/bin/terrad", "version"]
+CMD ["/usr/local/bin/dochaind", "version"]
+
+

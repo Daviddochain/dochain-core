@@ -4,8 +4,8 @@ import (
 	"context"
 
 	"cosmossdk.io/math"
-	legacytypes "github.com/classic-terra/core/v4/custom/staking/types"
-	legacyupgrade "github.com/classic-terra/core/v4/custom/upgrade/legacy"
+	legacytypes "github.com/Daviddochain/dochain-core/v4/custom/staking/types"
+	legacyupgrade "github.com/Daviddochain/dochain-core/v4/custom/upgrade/legacy"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	"github.com/cosmos/cosmos-sdk/x/staking/keeper"
@@ -157,3 +157,6 @@ func (q *LegacyQueryServer) Pool(ctx context.Context, req *stakingtypes.QueryPoo
 func (q *LegacyQueryServer) Params(ctx context.Context, req *stakingtypes.QueryParamsRequest) (*stakingtypes.QueryParamsResponse, error) {
 	return q.QueryServer.Params(q.ensureLegacyParams(ctx), req)
 }
+
+
+

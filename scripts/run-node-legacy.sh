@@ -11,10 +11,10 @@ if [ "$CONTINUE" == "true" ]; then
 fi
 
 rm -rf mytestnet
-pkill terrad
+pkill dochaind
 
-# check DENOM is set. If not, set to uluna
-DENOM=${2:-uluna}
+# check DENOM is set. If not, set to udo
+DENOM=${2:-udo}
 
 COMMISSION_RATE=0.01
 COMMISSION_MAX_RATE=0.02
@@ -32,10 +32,10 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     fi
 fi
 
-# check BINARY is set. If not, build terrad and set BINARY
+# check BINARY is set. If not, build dochaind and set BINARY
 if [ -z "$BINARY" ]; then
     make build
-    BINARY=build/terrad
+    BINARY=build/dochaind
 fi
 
 CHAIN_ID="localterra-legacy"
@@ -57,7 +57,7 @@ $BINARY keys add $KEY1 --keyring-backend $KEYRING --home $HOME_DIR
 $BINARY keys add $KEY2 --keyring-backend $KEYRING --home $HOME_DIR
 
 # Allocate genesis accounts (cosmos formatted addresses)
-# Fund each account with both uluna and uusd so native-native pools have sufficient liquidity
+# Fund each account with both udo and uusd so native-native pools have sufficient liquidity
 $BINARY add-genesis-account $KEY  "100000000000000000uluna,100000000000000000uusd" --keyring-backend $KEYRING --home $HOME_DIR
 $BINARY add-genesis-account $KEY1 "100000000000000000uluna,100000000000000000uusd" --keyring-backend $KEYRING --home $HOME_DIR
 $BINARY add-genesis-account $KEY2 "100000000000000000uluna,100000000000000000uusd" --keyring-backend $KEYRING --home $HOME_DIR
@@ -93,3 +93,5 @@ $BINARY collect-gentxs --home $HOME_DIR
 $BINARY validate-genesis --home $HOME_DIR
 
 $BINARY start --home $HOME_DIR >> /tmp/node_logs 2>&1
+
+

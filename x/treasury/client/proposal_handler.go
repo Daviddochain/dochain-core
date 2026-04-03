@@ -1,7 +1,7 @@
 package client
 
 import (
-	"github.com/classic-terra/core/v4/x/treasury/client/cli"
+	"github.com/Daviddochain/dochain-core/v4/x/treasury/client/cli"
 	govclient "github.com/cosmos/cosmos-sdk/x/gov/client"
 )
 
@@ -11,3 +11,6 @@ var (
 	ProposalAddBurnTaxExemptionAddressHandler    = govclient.NewProposalHandler(cli.ProposalAddBurnTaxExemptionAddressCmd)
 	ProposalRemoveBurnTaxExemptionAddressHandler = govclient.NewProposalHandler(cli.ProposalRemoveBurnTaxExemptionAddressCmd)
 )
+
+
+

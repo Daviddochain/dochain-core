@@ -374,10 +374,10 @@ func TestIsTxQueryEndpoint(t *testing.T) {
 }
 
 // TestRealWasmExecuteTxLogsReconstruction tests logs reconstruction with a real
-// Terra Classic wasm execute contract transaction payload from mainnet
+// Do-Chain wasm execute contract transaction payload from mainnet
 // TX: CA3F0FB02FA0FDC92A16A5F973B87CE4F3667DB77FAB995F96C2C67AF970A616
 func TestRealWasmExecuteTxLogsReconstruction(t *testing.T) {
-	// Real transaction response from Terra Classic mainnet
+	// Real transaction response from Do-Chain mainnet
 	// This is a MsgExecuteContract with Trigger{} action
 	realTxResponse := `{
 		"tx": {
@@ -415,7 +415,7 @@ func TestRealWasmExecuteTxLogsReconstruction(t *testing.T) {
 				"fee": {
 					"amount": [
 						{
-							"denom": "uluna",
+							"denom": "udo",
 							"amount": "6752621"
 						}
 					],
@@ -635,10 +635,10 @@ func TestRealWasmExecuteTxLogsReconstruction(t *testing.T) {
 }
 
 // TestRealBankSendWithTaxPaymentLogsReconstruction tests logs reconstruction with a real
-// Terra Classic bank send transaction that includes tax_payment events from mainnet
+// Do-Chain bank send transaction that includes tax_payment events from mainnet
 // TX: 32980A4F8A2EBDEB773D390CEBE7A4215426C67C95BDD508AFF0AE5ED16675A3
 func TestRealBankSendWithTaxPaymentLogsReconstruction(t *testing.T) {
-	// Real transaction response from Terra Classic mainnet
+	// Real transaction response from Do-Chain mainnet
 	// This is a MsgSend with tax_payment events
 	realTxResponse := `{
 		"tx": {
@@ -651,7 +651,7 @@ func TestRealBankSendWithTaxPaymentLogsReconstruction(t *testing.T) {
 						"to_address": "terra1ycnrw0uvwhchdw4zthsnwdsqgd5tyvtvx2pupm",
 						"amount": [
 							{
-								"denom": "uluna",
+								"denom": "udo",
 								"amount": "348211891260"
 							}
 						]
@@ -680,7 +680,7 @@ func TestRealBankSendWithTaxPaymentLogsReconstruction(t *testing.T) {
 				"fee": {
 					"amount": [
 						{
-							"denom": "uluna",
+							"denom": "udo",
 							"amount": "1751059457"
 						}
 					],
@@ -863,7 +863,7 @@ func TestRealBankSendWithTaxPaymentLogsReconstruction(t *testing.T) {
 	}
 	require.Greater(t, len(logEvents), 0, "should have events in the log")
 
-	// Verify specific event types are present (including Terra-specific tax_payment)
+	// Verify specific event types are present (including dochain-specific tax_payment)
 	eventTypes := make(map[string]bool)
 	for _, event := range logEvents {
 		if eventType, ok := event["type"].(string); ok {
@@ -873,7 +873,7 @@ func TestRealBankSendWithTaxPaymentLogsReconstruction(t *testing.T) {
 
 	// These event types should be present from the bank send tx with tax
 	require.True(t, eventTypes["message"], "should have 'message' event type")
-	require.True(t, eventTypes["tax_payment"], "should have 'tax_payment' event type (Terra-specific)")
+	require.True(t, eventTypes["tax_payment"], "should have 'tax_payment' event type (dochain-specific)")
 	require.True(t, eventTypes["coin_spent"], "should have 'coin_spent' event type")
 	require.True(t, eventTypes["coin_received"], "should have 'coin_received' event type")
 	require.True(t, eventTypes["transfer"], "should have 'transfer' event type")
@@ -916,13 +916,13 @@ func TestRealBankSendWithTaxPaymentLogsReconstruction(t *testing.T) {
 }
 
 // TestRealOracleMultiMessageTxLogsReconstruction tests logs reconstruction with a real
-// Terra Classic oracle multi-message transaction from mainnet
+// Do-Chain oracle multi-message transaction from mainnet
 // TX: A7075AA154D7D4DCBAB70465EAF85168CED8C76E700CC30142DBA46F1D80E0F2
 // This transaction contains TWO messages:
 // 1. MsgAggregateExchangeRateVote (msg_index: 0)
 // 2. MsgAggregateExchangeRatePrevote (msg_index: 1)
 func TestRealOracleMultiMessageTxLogsReconstruction(t *testing.T) {
-	// Real transaction response from Terra Classic mainnet
+	// Real transaction response from Do-Chain mainnet
 	// This is a multi-message tx with oracle vote and prevote messages
 	realTxResponse := `{
 		"tx": {
@@ -930,20 +930,20 @@ func TestRealOracleMultiMessageTxLogsReconstruction(t *testing.T) {
 			"body": {
 				"messages": [
 					{
-						"@type": "/terra.oracle.v1beta1.MsgAggregateExchangeRateVote",
+						"@type": "/dochain.oracle.v1beta1.MsgAggregateExchangeRateVote",
 						"feeder": "terra19p69dm52exmhtyklgcpd2jrfwtv0awlp0ve63z",
 						"validator": "terravaloper1j5pj3n3m9nxmv9dgl4wnv2yq53k2jf2283j5zm",
 						"exchange_rates": "0.000066097941407884uaud,0.000061456692115652ucad,0.00003538288127528uchf,0.00030892650733513ucny,0.000283966498350392udkk,0.00003800111245669ueur,0.000032909024645851ugbp,0.000345525060444445uhkd,0.746825090789225464uidr,0.003995990890723461uinr,0.007034943470680445ujpy,0.065282105991835183ukrw,0.0umnt,0.00017969339697793umyr,0.000446742366801887unok,0.002633155589658828uphp,0.000032429987267087usdr,0.000407127883304437usek,0.00005702359065234usgd,0.001393924629462205uthb,0.0utwd,0.000044286727883801uusd",
 						"salt": "2c52"
 					},
 					{
-						"@type": "/terra.oracle.v1beta1.MsgAggregateExchangeRatePrevote",
+						"@type": "/dochain.oracle.v1beta1.MsgAggregateExchangeRatePrevote",
 						"feeder": "terra19p69dm52exmhtyklgcpd2jrfwtv0awlp0ve63z",
 						"validator": "terravaloper1j5pj3n3m9nxmv9dgl4wnv2yq53k2jf2283j5zm",
 						"hash": "0a15e0773b0819d71bcd74e2cf427f92597f85a7"
 					}
 				],
-				"memo": "@classic-terra/oracle-feeder@3.1.5",
+				"memo": "@classic-dochain/oracle-feeder@3.1.5",
 				"timeout_height": "0",
 				"extension_options": [],
 				"non_critical_extension_options": []
@@ -978,7 +978,7 @@ func TestRealOracleMultiMessageTxLogsReconstruction(t *testing.T) {
 			"codespace": "",
 			"code": 0,
 			"data": "123C0A3A2F74657272612E6F7261636C652E763162657461312E4D736741676772656761746545786368616E676552617465566F7465526573706F6E7365123F0A3D2F74657272612E6F7261636C652E763162657461312E4D736741676772656761746545786368616E676552617465507265766F7465526573706F6E7365",
-			"raw_log": "[{\"msg_index\":0,\"events\":[{\"type\":\"message\",\"attributes\":[{\"key\":\"action\",\"value\":\"/terra.oracle.v1beta1.MsgAggregateExchangeRateVote\"},{\"key\":\"sender\",\"value\":\"terra19p69dm52exmhtyklgcpd2jrfwtv0awlp0ve63z\"}]},{\"type\":\"aggregate_vote\",\"attributes\":[{\"key\":\"voter\",\"value\":\"terravaloper1j5pj3n3m9nxmv9dgl4wnv2yq53k2jf2283j5zm\"},{\"key\":\"exchange_rates\",\"value\":\"0.000066097941407884uaud,0.000061456692115652ucad,0.00003538288127528uchf,0.00030892650733513ucny,0.000283966498350392udkk,0.00003800111245669ueur,0.000032909024645851ugbp,0.000345525060444445uhkd,0.746825090789225464uidr,0.003995990890723461uinr,0.007034943470680445ujpy,0.065282105991835183ukrw,0.0umnt,0.00017969339697793umyr,0.000446742366801887unok,0.002633155589658828uphp,0.000032429987267087usdr,0.000407127883304437usek,0.00005702359065234usgd,0.001393924629462205uthb,0.0utwd,0.000044286727883801uusd\"}]},{\"type\":\"message\",\"attributes\":[{\"key\":\"module\",\"value\":\"oracle\"},{\"key\":\"sender\",\"value\":\"terra19p69dm52exmhtyklgcpd2jrfwtv0awlp0ve63z\"}]}]},{\"msg_index\":1,\"events\":[{\"type\":\"message\",\"attributes\":[{\"key\":\"action\",\"value\":\"/terra.oracle.v1beta1.MsgAggregateExchangeRatePrevote\"},{\"key\":\"sender\",\"value\":\"terra19p69dm52exmhtyklgcpd2jrfwtv0awlp0ve63z\"}]},{\"type\":\"aggregate_prevote\",\"attributes\":[{\"key\":\"voter\",\"value\":\"terravaloper1j5pj3n3m9nxmv9dgl4wnv2yq53k2jf2283j5zm\"}]},{\"type\":\"message\",\"attributes\":[{\"key\":\"module\",\"value\":\"oracle\"},{\"key\":\"sender\",\"value\":\"terra19p69dm52exmhtyklgcpd2jrfwtv0awlp0ve63z\"}]}]}]",
+			"raw_log": "[{\"msg_index\":0,\"events\":[{\"type\":\"message\",\"attributes\":[{\"key\":\"action\",\"value\":\"/dochain.oracle.v1beta1.MsgAggregateExchangeRateVote\"},{\"key\":\"sender\",\"value\":\"terra19p69dm52exmhtyklgcpd2jrfwtv0awlp0ve63z\"}]},{\"type\":\"aggregate_vote\",\"attributes\":[{\"key\":\"voter\",\"value\":\"terravaloper1j5pj3n3m9nxmv9dgl4wnv2yq53k2jf2283j5zm\"},{\"key\":\"exchange_rates\",\"value\":\"0.000066097941407884uaud,0.000061456692115652ucad,0.00003538288127528uchf,0.00030892650733513ucny,0.000283966498350392udkk,0.00003800111245669ueur,0.000032909024645851ugbp,0.000345525060444445uhkd,0.746825090789225464uidr,0.003995990890723461uinr,0.007034943470680445ujpy,0.065282105991835183ukrw,0.0umnt,0.00017969339697793umyr,0.000446742366801887unok,0.002633155589658828uphp,0.000032429987267087usdr,0.000407127883304437usek,0.00005702359065234usgd,0.001393924629462205uthb,0.0utwd,0.000044286727883801uusd\"}]},{\"type\":\"message\",\"attributes\":[{\"key\":\"module\",\"value\":\"oracle\"},{\"key\":\"sender\",\"value\":\"terra19p69dm52exmhtyklgcpd2jrfwtv0awlp0ve63z\"}]}]},{\"msg_index\":1,\"events\":[{\"type\":\"message\",\"attributes\":[{\"key\":\"action\",\"value\":\"/dochain.oracle.v1beta1.MsgAggregateExchangeRatePrevote\"},{\"key\":\"sender\",\"value\":\"terra19p69dm52exmhtyklgcpd2jrfwtv0awlp0ve63z\"}]},{\"type\":\"aggregate_prevote\",\"attributes\":[{\"key\":\"voter\",\"value\":\"terravaloper1j5pj3n3m9nxmv9dgl4wnv2yq53k2jf2283j5zm\"}]},{\"type\":\"message\",\"attributes\":[{\"key\":\"module\",\"value\":\"oracle\"},{\"key\":\"sender\",\"value\":\"terra19p69dm52exmhtyklgcpd2jrfwtv0awlp0ve63z\"}]}]}]",
 			"logs": [],
 			"info": "",
 			"gas_wanted": "300000",
@@ -1007,7 +1007,7 @@ func TestRealOracleMultiMessageTxLogsReconstruction(t *testing.T) {
 				{
 					"type": "message",
 					"attributes": [
-						{"key": "action", "value": "/terra.oracle.v1beta1.MsgAggregateExchangeRateVote", "msg_index": 0},
+						{"key": "action", "value": "/dochain.oracle.v1beta1.MsgAggregateExchangeRateVote", "msg_index": 0},
 						{"key": "sender", "value": "terra19p69dm52exmhtyklgcpd2jrfwtv0awlp0ve63z", "msg_index": 0}
 					]
 				},
@@ -1028,7 +1028,7 @@ func TestRealOracleMultiMessageTxLogsReconstruction(t *testing.T) {
 				{
 					"type": "message",
 					"attributes": [
-						{"key": "action", "value": "/terra.oracle.v1beta1.MsgAggregateExchangeRatePrevote", "msg_index": 1},
+						{"key": "action", "value": "/dochain.oracle.v1beta1.MsgAggregateExchangeRatePrevote", "msg_index": 1},
 						{"key": "sender", "value": "terra19p69dm52exmhtyklgcpd2jrfwtv0awlp0ve63z", "msg_index": 1}
 					]
 				},
@@ -1460,3 +1460,6 @@ func TestTxLogsMiddleware_SparseMsgIndex(t *testing.T) {
 		})
 	}
 }
+
+
+

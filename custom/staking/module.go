@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 
-	customtypes "github.com/classic-terra/core/v4/custom/staking/types"
-	core "github.com/classic-terra/core/v4/types"
+	customtypes "github.com/Daviddochain/dochain-core/v4/custom/staking/types"
+	core "github.com/Daviddochain/dochain-core/v4/types"
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	paramskeeper "github.com/cosmos/cosmos-sdk/x/params/keeper"
@@ -33,7 +33,7 @@ func (AppModuleBasic) RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
 // DefaultGenesis returns default genesis state as raw bytes for the gov
 // module.
 func (am AppModuleBasic) DefaultGenesis(cdc codec.JSONCodec) json.RawMessage {
-	// customize to set default genesis state deposit denom to uluna
+	// customize to set default genesis state deposit denom to udo
 	defaultGenesisState := stakingtypes.DefaultGenesisState()
 	defaultGenesisState.Params.BondDenom = core.MicroLunaDenom
 
@@ -89,3 +89,6 @@ func (am AppModule) RegisterServices(cfg module.Configurator) {
 		panic(fmt.Sprintf("failed to migrate x/%s from version 4 to 5: %v", stakingtypes.ModuleName, err))
 	}
 }
+
+
+

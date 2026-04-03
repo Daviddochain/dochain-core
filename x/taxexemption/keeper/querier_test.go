@@ -3,8 +3,8 @@ package keeper_test
 import (
 	"testing"
 
-	ultil "github.com/classic-terra/core/v4/x/taxexemption/keeper"
-	"github.com/classic-terra/core/v4/x/taxexemption/types"
+	ultil "github.com/Daviddochain/dochain-core/v4/x/taxexemption/keeper"
+	"github.com/Daviddochain/dochain-core/v4/x/taxexemption/types"
 	"github.com/cometbft/cometbft/crypto/secp256k1"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	query "github.com/cosmos/cosmos-sdk/types/query"
@@ -325,3 +325,6 @@ func TestTaxExemptionAddressList(t *testing.T) {
 	require.NoError(t, err)
 	require.Equal(t, 0, len(res.Addresses))
 }
+
+
+

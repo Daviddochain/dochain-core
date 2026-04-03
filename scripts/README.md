@@ -6,19 +6,19 @@ and OS-native threading may be more efficient for many parallel simulations, so 
 
 ### `run-node.sh`
 
-Initializes and starts a single-validator `terrad` node for local testing.
+Initializes and starts a single-validator `dochaind` node for local testing.
 
 **Usage:** `bash scripts/run-node.sh <binary> <denom>`
 
 **Arguments:**
-- `$1` — path to the `terrad` binary (e.g. `_build/old/terrad`)
-- `$2` — staking/gas denom (default: `uluna`)
+- `$1` — path to the `dochaind` binary (e.g. `_build/old/dochaind`)
+- `$2` — staking/gas denom (default: `udo`)
 
 **Environment variables:**
 | Variable | Default | Description |
 |----------|---------|-------------|
 | `CONTINUE` | `false` | Set to `true` to skip init and just restart an existing node (used after upgrades) |
-| `TERRAD_HALT_HEIGHT` | — | If set, passes `--halt-height` to terrad (used in fork-mode upgrades) |
+| `TERRAD_HALT_HEIGHT` | — | If set, passes `--halt-height` to dochaind (used in fork-mode upgrades) |
 | `SELF_DELEGATION` | `900000000000` | Validator self-delegation amount |
 
 The script creates three test accounts (`test0`, `test1`, `test2`), each funded with `1000000000000uluna`, configures 30s voting period and 500ms block commit timeout.
@@ -43,8 +43,8 @@ Tests a **single** upgrade from an old binary to the current codebase.
 | `GAS_PRICE` | `30uluna` | Gas price for transactions |
 
 **Flow:**
-1. Downloads and builds old binary → `_build/old/terrad`
-2. Builds current code → `_build/new/terrad`
+1. Downloads and builds old binary → `_build/old/dochaind`
+2. Builds current code → `_build/new/dochaind`
 3. Starts old node via `run-node.sh`
 4. Runs any pre-upgrade scripts
 5. Submits governance upgrade proposal (or halts at height if fork mode)
@@ -110,3 +110,6 @@ OLD_VERSIONS="v3.6.0-rc.0,v4.0.0-rc.5,v4.0.0-rc.6" \
 UPGRADE_NAMES="v14,v14rc4,v14_1" \
 bash scripts/upgrade-test-multi.sh
 ```
+
+
+

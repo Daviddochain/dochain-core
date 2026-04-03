@@ -3,8 +3,8 @@ package keeper_test
 import (
 	"testing"
 
-	ultil "github.com/classic-terra/core/v4/x/taxexemption/keeper"
-	"github.com/classic-terra/core/v4/x/taxexemption/types"
+	ultil "github.com/Daviddochain/dochain-core/v4/x/taxexemption/keeper"
+	"github.com/Daviddochain/dochain-core/v4/x/taxexemption/types"
 	"github.com/cometbft/cometbft/crypto/secp256k1"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
@@ -425,3 +425,6 @@ func TestMsgServer_RemoveTaxExemptionAddress(t *testing.T) {
 	require.Error(t, err)
 	require.Nil(t, resp)
 }
+
+
+

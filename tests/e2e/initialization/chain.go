@@ -32,3 +32,6 @@ func (c *internalChain) export() *Chain {
 		Nodes:     exportNodes,
 	}
 }
+
+
+

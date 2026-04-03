@@ -3,7 +3,7 @@ version: '3.8'
 services:
    node:
      container_name: node
-     image: public.ecr.aws/classic-terra/node:alpine3.17
+     image: public.ecr.aws/classic-dochain/node:alpine3.17
      platform: linux/amd64
      environment:
        - CHAINID=test
@@ -32,17 +32,19 @@ services:
        - "26656:26656"
        - "26657:26657"
      volumes:
-       - terra:/terra       
+       - dochain:/dochain       
      networks:
-       - terra-classic
+       - dochain-classic
      ulimits:
         nproc: 65535
         nofile:
           soft: 65535
           hard: 65535
 volumes:
-  terra:
+  dochain:
 
 networks:
-  terra-classic:
+  dochain-classic:
     driver: bridge
+
+

@@ -40,3 +40,6 @@ func (h *LegacyQueryHandler) HandleQuery(ctx sdk.Context, caller sdk.AccAddress,
 	// Execute the query with the (possibly wrapped) context
 	return h.next.HandleQuery(ctx, caller, request)
 }
+
+
+

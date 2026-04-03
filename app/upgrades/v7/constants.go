@@ -2,7 +2,7 @@ package v7
 
 import (
 	store "cosmossdk.io/store/types"
-	"github.com/classic-terra/core/v4/app/upgrades"
+	"github.com/Daviddochain/dochain-core/v4/app/upgrades"
 	ibchookstypes "github.com/cosmos/ibc-apps/modules/ibc-hooks/v10/types"
 )
 
@@ -17,3 +17,6 @@ var Upgrade = upgrades.Upgrade{
 		},
 	},
 }
+
+
+

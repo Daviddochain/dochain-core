@@ -6,8 +6,8 @@ import (
 	"time"
 
 	sdkmath "cosmossdk.io/math"
-	core "github.com/classic-terra/core/v4/types"
-	"github.com/classic-terra/core/v4/x/vesting/types"
+	core "github.com/Daviddochain/dochain-core/v4/types"
+	"github.com/Daviddochain/dochain-core/v4/x/vesting/types"
 	tmtime "github.com/cometbft/cometbft/types/time"
 	"github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -321,7 +321,7 @@ func TestGenesisAccountValidate(t *testing.T) {
 				{core.MicroLunaDenom, types.Schedules{types.Schedule{1554668078, 1654668078, sdkmath.LegacyOneDec()}}},
 				{core.MicroLunaDenom, types.Schedules{types.Schedule{1554668078, 1654668078, sdkmath.LegacyOneDec()}}},
 			}),
-			errors.New("cannot have multiple vesting schedules for uluna"),
+			errors.New("cannot have multiple vesting schedules for udo"),
 		},
 	}
 	for _, tt := range tests {
@@ -385,3 +385,6 @@ func TestLazyGradedVestingAccountMarshal(t *testing.T) {
 	require.IsType(t, &types.LazyGradedVestingAccount{}, acc2)
 	require.Equal(t, acc.String(), acc2.String())
 }
+
+
+

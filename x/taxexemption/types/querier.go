@@ -23,3 +23,6 @@ type QueryTaxExemptionListParams struct {
 func NewQueryTaxExemptionListParams(zone string, page, limit int) QueryTaxExemptionListParams {
 	return QueryTaxExemptionListParams{zone, page, limit}
 }
+
+
+

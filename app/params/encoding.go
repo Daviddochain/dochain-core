@@ -14,3 +14,6 @@ type EncodingConfig struct {
 	TxConfig          client.TxConfig
 	Amino             *codec.LegacyAmino
 }
+
+
+

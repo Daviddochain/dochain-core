@@ -2,7 +2,7 @@ package keeper
 
 import (
 	sdkmath "cosmossdk.io/math"
-	core "github.com/classic-terra/core/v4/types"
+	core "github.com/Daviddochain/dochain-core/v4/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
@@ -12,7 +12,7 @@ func (k Keeper) GetEpoch(ctx sdk.Context) int64 {
 }
 
 //
-// Computes important economic indicators for the stability of Terra currencies.
+// Computes important economic indicators for the stability of dochain currencies.
 //
 // Three important concepts:
 // - MR: Fees + Seigniorage for a given epoch sums to Mining Rewards
@@ -129,3 +129,6 @@ func (k Keeper) rollingAverageIndicator(ctx sdk.Context, epochs int64,
 
 	return sum.QuoInt64(computedEpochs)
 }
+
+
+

@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/classic-terra/core/v4/app"
-	"github.com/classic-terra/core/v4/x/oracle/types"
+	"github.com/Daviddochain/dochain-core/v4/app"
+	"github.com/Daviddochain/dochain-core/v4/x/oracle/types"
 	"github.com/stretchr/testify/require"
 )
 
@@ -25,3 +25,6 @@ func TestGetGenesisStateFromAppState(t *testing.T) {
 	appState[types.ModuleName] = cdc.MustMarshalJSON(defaultGenesisState)
 	require.Equal(t, *defaultGenesisState, *types.GetGenesisStateFromAppState(cdc, appState))
 }
+
+
+

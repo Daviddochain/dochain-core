@@ -1,11 +1,11 @@
 #!/usr/bin/env sh
 
-BINARY=/terrad/${BINARY:-terrad}
+BINARY=/dochaind/${BINARY:-dochaind}
 ID=${ID:-0}
-LOG=${LOG:-terrad.log}
+LOG=${LOG:-dochaind.log}
 
 if ! [ -f "${BINARY}" ]; then
-	echo "The binary $(basename "${BINARY}") cannot be found. Please add the binary to the shared folder. Please use the BINARY environment variable if the name of the binary is not 'terrad'"
+	echo "The binary $(basename "${BINARY}") cannot be found. Please add the binary to the shared folder. Please use the BINARY environment variable if the name of the binary is not 'dochaind'"
 	exit 1
 fi
 
@@ -16,10 +16,13 @@ if [ -z "${BINARY_CHECK}" ]; then
 	exit 1
 fi
 
-export TERRADHOME="/terrad/node${ID}/terrad"
+export TERRADHOME="/dochaind/node${ID}/dochaind"
 
 if [ -d "$(dirname "${TERRADHOME}"/"${LOG}")" ]; then
   "${BINARY}" --home "${TERRADHOME}" "$@" | tee "${TERRADHOME}/${LOG}"
 else
   "${BINARY}" --home "${TERRADHOME}" "$@"
 fi
+
+
+

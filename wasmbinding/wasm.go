@@ -3,10 +3,10 @@ package wasmbinding
 import (
 	storetypes "cosmossdk.io/store/types"
 	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
-	customwasm "github.com/classic-terra/core/v4/custom/wasm"
-	marketkeeper "github.com/classic-terra/core/v4/x/market/keeper"
-	oraclekeeper "github.com/classic-terra/core/v4/x/oracle/keeper"
-	treasurykeeper "github.com/classic-terra/core/v4/x/treasury/keeper"
+	customwasm "github.com/Daviddochain/dochain-core/v4/custom/wasm"
+	marketkeeper "github.com/Daviddochain/dochain-core/v4/x/market/keeper"
+	oraclekeeper "github.com/Daviddochain/dochain-core/v4/x/oracle/keeper"
+	treasurykeeper "github.com/Daviddochain/dochain-core/v4/x/treasury/keeper"
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/codec"
 )
@@ -51,3 +51,6 @@ func RegisterLegacyQueryHandler(storeKey storetypes.StoreKey) wasmkeeper.Option 
 		return customwasm.NewLegacyQueryHandler(next, storeKey)
 	})
 }
+
+
+

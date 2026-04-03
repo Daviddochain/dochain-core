@@ -192,3 +192,6 @@ func (msg MsgDelegateFeedConsent) ValidateBasic() error {
 
 	return nil
 }
+
+
+

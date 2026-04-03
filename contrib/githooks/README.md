@@ -19,3 +19,6 @@ $ go get github.com/golangci/misspell/cmd/misspell@master
 ```
 
 It also runs `go mod tidy` and `golangci-lint` if available.
+
+
+

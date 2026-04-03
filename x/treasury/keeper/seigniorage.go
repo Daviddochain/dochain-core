@@ -2,8 +2,8 @@ package keeper
 
 import (
 	sdkmath "cosmossdk.io/math"
-	core "github.com/classic-terra/core/v4/types"
-	"github.com/classic-terra/core/v4/x/treasury/types"
+	core "github.com/Daviddochain/dochain-core/v4/types"
+	"github.com/Daviddochain/dochain-core/v4/x/treasury/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
@@ -62,3 +62,6 @@ func (k Keeper) SettleSeigniorage(ctx sdk.Context) {
 		k.distrKeeper.FeePool.Set(ctx, feePool)
 	}
 }
+
+
+

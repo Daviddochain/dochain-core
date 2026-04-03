@@ -2,7 +2,7 @@ package v5
 
 import (
 	store "cosmossdk.io/store/types"
-	"github.com/classic-terra/core/v4/app/upgrades"
+	"github.com/Daviddochain/dochain-core/v4/app/upgrades"
 	icacontrollertypes "github.com/cosmos/ibc-go/v10/modules/apps/27-interchain-accounts/controller/types"
 )
 
@@ -17,3 +17,6 @@ var Upgrade = upgrades.Upgrade{
 		},
 	},
 }
+
+
+

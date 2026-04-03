@@ -116,3 +116,6 @@ func (h *AggregateVoteHash) UnmarshalJSON(data []byte) error {
 	*h = h2
 	return nil
 }
+
+
+

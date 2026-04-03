@@ -17,3 +17,6 @@ The market module contains the following parameters:
 | slashfraction            | string (dec) | "0.001000000000000000" |
 | slashwindow              | string (int) | "100800"               |
 | minvalidperwindow        | string (int) | "0.050000000000000000" |
+
+
+

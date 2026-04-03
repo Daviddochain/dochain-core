@@ -5,8 +5,8 @@ import (
 	"testing"
 
 	"cosmossdk.io/math"
-	apptesting "github.com/classic-terra/core/v4/app/testing"
-	"github.com/classic-terra/core/v4/types"
+	apptesting "github.com/Daviddochain/dochain-core/v4/app/testing"
+	"github.com/Daviddochain/dochain-core/v4/types"
 	simtestutil "github.com/cosmos/cosmos-sdk/testutil/sims"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	disttypes "github.com/cosmos/cosmos-sdk/x/distribution/types"
@@ -24,7 +24,7 @@ func TestStakingTestSuite(t *testing.T) {
 	suite.Run(t, new(StakingTestSuite))
 }
 
-// go test -v -run=TestStakingTestSuite/TestValidatorVPLimit github.com/classic-terra/core/v4/custom/staking
+// go test -v -run=TestStakingTestSuite/TestValidatorVPLimit github.com/Daviddochain/dochain-core/v4/custom/staking
 func (s *StakingTestSuite) TestValidatorVPLimit() {
 	s.Setup(s.T(), types.ColumbusChainID)
 
@@ -32,8 +32,8 @@ func (s *StakingTestSuite) TestValidatorVPLimit() {
 	num := 9
 	addrDels := s.RandomAccountAddresses(num)
 	for i, addrDel := range addrDels {
-		s.FundAcc(addrDel, sdk.NewCoins(sdk.NewInt64Coin("uluna", 1000000)))
-		err := s.App.BankKeeper.DelegateCoinsFromAccountToModule(s.Ctx, addrDels[i], stakingtypes.NotBondedPoolName, sdk.NewCoins(sdk.NewInt64Coin("uluna", 1000000)))
+		s.FundAcc(addrDel, sdk.NewCoins(sdk.NewInt64Coin("udo", 1000000)))
+		err := s.App.BankKeeper.DelegateCoinsFromAccountToModule(s.Ctx, addrDels[i], stakingtypes.NotBondedPoolName, sdk.NewCoins(sdk.NewInt64Coin("udo", 1000000)))
 		s.Require().NoError(err)
 	}
 	valAddrs := simtestutil.ConvertAddrsToValAddrs(addrDels)
@@ -55,9 +55,9 @@ func (s *StakingTestSuite) TestValidatorVPLimit() {
 	}
 
 	// delegate to a validator over 20% VP
-	s.FundAcc(s.TestAccs[0], sdk.NewCoins(sdk.NewInt64Coin("uluna", 2000000)))
-	s.App.DistrKeeper.SetValidatorHistoricalRewards(s.Ctx, valAddrs[0], 1, disttypes.NewValidatorHistoricalRewards(sdk.NewDecCoins(sdk.NewDecCoin("uluna", math.NewInt(1))), 2))
-	s.App.DistrKeeper.SetValidatorCurrentRewards(s.Ctx, valAddrs[0], disttypes.NewValidatorCurrentRewards(sdk.NewDecCoins(sdk.NewDecCoin("uluna", math.NewInt(1))), 2))
+	s.FundAcc(s.TestAccs[0], sdk.NewCoins(sdk.NewInt64Coin("udo", 2000000)))
+	s.App.DistrKeeper.SetValidatorHistoricalRewards(s.Ctx, valAddrs[0], 1, disttypes.NewValidatorHistoricalRewards(sdk.NewDecCoins(sdk.NewDecCoin("udo", math.NewInt(1))), 2))
+	s.App.DistrKeeper.SetValidatorCurrentRewards(s.Ctx, valAddrs[0], disttypes.NewValidatorCurrentRewards(sdk.NewDecCoins(sdk.NewDecCoin("udo", math.NewInt(1))), 2))
 	s.App.DistrKeeper.SetDelegatorStartingInfo(s.Ctx, valAddrs[0], s.TestAccs[0], disttypes.NewDelegatorStartingInfo(1, math.LegacyOneDec(), 1))
 	// first delegation should be normal
 	// raise voting power of validator 0 by 1 (1+1)/(10+1) = 0.181818 < 0.2
@@ -78,3 +78,6 @@ func (s *StakingTestSuite) TestValidatorVPLimit() {
 	s.Require().Error(err, fmt.Sprintf("voting power is %v, should be > 20", validators[0].ConsensusPower(s.App.StakingKeeper.PowerReduction(s.Ctx))))
 	s.Require().Equal("validator power is over the allowed limit", err.Error())
 }
+
+
+

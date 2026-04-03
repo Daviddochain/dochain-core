@@ -1,15 +1,15 @@
 syntax = "proto3";
-package terra.tax.v1beta1;
+package dochain.tax.v1beta1;
 
 import "gogoproto/gogo.proto";
 import "cosmos/base/v1beta1/coin.proto";
 import "amino/amino.proto";
 
-option go_package = "github.com/classic-terra/core/v4/x/tax/types";
+option go_package = "github.com/Daviddochain/dochain-core/v4/x/tax/types";
 
 message Params {
   option (gogoproto.goproto_stringer) = true;
-  option (amino.name)                 = "terra/x/tax/Params";
+  option (amino.name)                 = "dochain/x/tax/Params";
 
   repeated cosmos.base.v1beta1.DecCoin gas_prices = 1 [
     (gogoproto.moretags)     = "yaml:\"gas_prices\"",
@@ -26,3 +26,6 @@ message GenesisState {
   // params contains tax handling parameters.
   Params params = 1 [(gogoproto.nullable) = false];
 }
+
+
+

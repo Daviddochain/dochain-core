@@ -91,3 +91,6 @@ func ParseExchangeRateTuples(tuplesStr string) (ExchangeRateTuples, error) {
 
 	return tuples, nil
 }
+
+
+

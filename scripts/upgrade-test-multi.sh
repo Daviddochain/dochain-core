@@ -27,7 +27,7 @@ CURRENT_VERSION=${OLD_VERSIONS[0]}
 UPGRADE_WAIT=${UPGRADE_WAIT:-10}
 HOME=mytestnet
 ROOT=$(pwd)
-DENOM=uluna
+DENOM=udo
 CHAIN_ID=localterra
 ADDITIONAL_PRE_SCRIPTS=${ADDITIONAL_PRE_SCRIPTS:-""}
 ADDITIONAL_AFTER_SCRIPTS=${ADDITIONAL_AFTER_SCRIPTS:-""}
@@ -51,12 +51,12 @@ install_version() {
     # Download and extract if not exist
     if [ ! -f "_build/$version.zip" ]; then
         mkdir -p _build/$target_dir
-        wget -c "https://github.com/classic-terra/core/archive/refs/tags/${version}.zip" -O _build/${version}.zip
+        wget -c "https://github.com/classic-dochain/core/archive/refs/tags/${version}.zip" -O _build/${version}.zip
         unzip _build/${version}.zip -d _build
     fi
     
     # Install the binary
-    if [ "$reinstall_flag" == "--reinstall" ] || [ ! -x "$ROOT/_build/$target_dir/terrad" ]; then
+    if [ "$reinstall_flag" == "--reinstall" ] || [ ! -x "$ROOT/_build/$target_dir/dochaind" ]; then
         cd ./_build/core-${version:1}
         GOBIN="$ROOT/_build/$target_dir" go install -mod=readonly ./...
         cd ../..
@@ -75,7 +75,7 @@ for ((i=0; i<${#OLD_VERSIONS[@]}; i++)); do
 done
 
 # Install the current version as "new"
-if [ ! -x "_build/new/terrad" ]; then
+if [ ! -x "_build/new/dochaind" ]; then
     mkdir -p ./_build/new
     GOBIN="$ROOT/_build/new" go install -mod=readonly ./...
 fi
@@ -131,7 +131,7 @@ run_fork () {
     echo "forking"
 
     while true; do 
-        BLOCK_HEIGHT=$(./_build/old/terrad status | jq '.SyncInfo.latest_block_height' -r)
+        BLOCK_HEIGHT=$(./_build/old/dochaind status | jq '.SyncInfo.latest_block_height' -r)
         # if BLOCK_HEIGHT is not empty
         if [ ! -z "$BLOCK_HEIGHT" ]; then
             echo "BLOCK_HEIGHT = $BLOCK_HEIGHT"
@@ -151,7 +151,7 @@ run_upgrade () {
     
     echo "Upgrading from $current_binary to $next_binary with upgrade name $upgrade_name"
 
-    STATUS_INFO=($(./_build/$current_binary/terrad status --home $HOME | jq -r '.NodeInfo.network,.SyncInfo.latest_block_height // .sync_info.latest_block_height'))
+    STATUS_INFO=($(./_build/$current_binary/dochaind status --home $HOME | jq -r '.NodeInfo.network,.SyncInfo.latest_block_height // .sync_info.latest_block_height'))
     UPGRADE_HEIGHT=$((STATUS_INFO[1] + 80))
     if [ $UPGRADE_HEIGHT -lt 80 ]; then
         UPGRADE_HEIGHT=80
@@ -159,19 +159,19 @@ run_upgrade () {
     echo "UPGRADE_HEIGHT = $UPGRADE_HEIGHT"
 
     # Create the upgrade package for the next binary
-    tar -cf ./_build/$next_binary/terrad.tar -C ./_build/$next_binary terrad
-    SUM=$(shasum -a 256 ./_build/$next_binary/terrad.tar | cut -d ' ' -f1)
+    tar -cf ./_build/$next_binary/dochaind.tar -C ./_build/$next_binary dochaind
+    SUM=$(shasum -a 256 ./_build/$next_binary/dochaind.tar | cut -d ' ' -f1)
     UPGRADE_INFO=$(jq -n '
     {
         "binaries": {
-            "linux/amd64": "file://'$(pwd)'/_build/'$next_binary'/terrad.tar?checksum=sha256:'"$SUM"'",
+            "linux/amd64": "file://'$(pwd)'/_build/'$next_binary'/dochaind.tar?checksum=sha256:'"$SUM"'",
         }
     }')
 
-    ./_build/$current_binary/terrad keys list --home $HOME --keyring-backend test
+    ./_build/$current_binary/dochaind keys list --home $HOME --keyring-backend test
 
     # Get the gov module authority address
-    GOV_AUTHORITY=$(./_build/$current_binary/terrad q auth module-account gov --home $HOME --output json | jq -r '.account.value.address // .account.base_account.address // .account.address')
+    GOV_AUTHORITY=$(./_build/$current_binary/dochaind q auth module-account gov --home $HOME --output json | jq -r '.account.value.address // .account.base_account.address // .account.address')
 
     # Create the upgrade proposal JSON file
     cat > $HOME/upgrade_proposal_$upgrade_name.json <<EOF
@@ -195,21 +195,21 @@ run_upgrade () {
 EOF
 
     # Submit the upgrade proposal using the new JSON format
-    ./_build/$current_binary/terrad tx gov submit-proposal $HOME/upgrade_proposal_$upgrade_name.json --from test1 --keyring-backend test --chain-id $CHAIN_ID --home $HOME --gas-prices $GAS_PRICE -y
+    ./_build/$current_binary/dochaind tx gov submit-proposal $HOME/upgrade_proposal_$upgrade_name.json --from test1 --keyring-backend test --chain-id $CHAIN_ID --home $HOME --gas-prices $GAS_PRICE -y
 
     sleep 2
 
     # Deposit tokens for the proposal
-    ./_build/$current_binary/terrad tx gov deposit $proposal_id "20000000${DENOM}" --from test1 --keyring-backend test --chain-id $CHAIN_ID --home $HOME --gas-prices $GAS_PRICE -y
+    ./_build/$current_binary/dochaind tx gov deposit $proposal_id "20000000${DENOM}" --from test1 --keyring-backend test --chain-id $CHAIN_ID --home $HOME --gas-prices $GAS_PRICE -y
 
     sleep 2
 
     # Vote yes on the proposal
-    ./_build/$current_binary/terrad tx gov vote $proposal_id yes --from test0 --keyring-backend test --chain-id $CHAIN_ID --home $HOME --gas-prices $GAS_PRICE -y
+    ./_build/$current_binary/dochaind tx gov vote $proposal_id yes --from test0 --keyring-backend test --chain-id $CHAIN_ID --home $HOME --gas-prices $GAS_PRICE -y
 
     sleep 2
 
-    ./_build/$current_binary/terrad tx gov vote $proposal_id yes --from test1 --keyring-backend test --chain-id $CHAIN_ID --home $HOME --gas-prices $GAS_PRICE -y
+    ./_build/$current_binary/dochaind tx gov vote $proposal_id yes --from test1 --keyring-backend test --chain-id $CHAIN_ID --home $HOME --gas-prices $GAS_PRICE -y
 
     sleep 2
 
@@ -217,7 +217,7 @@ EOF
     LAST_BLOCK_HEIGHT=""
     STALLED_ROUNDS=0
     while true; do
-        BLOCK_HEIGHT=$(./_build/$current_binary/terrad status --home $HOME | jq -r '.SyncInfo.latest_block_height // .sync_info.latest_block_height')
+        BLOCK_HEIGHT=$(./_build/$current_binary/dochaind status --home $HOME | jq -r '.SyncInfo.latest_block_height // .sync_info.latest_block_height')
 
         if [ -z "$BLOCK_HEIGHT" ] || [ "$BLOCK_HEIGHT" == "null" ]; then
             echo "failed to fetch block height from old node"
@@ -237,13 +237,13 @@ EOF
         fi
 
         if [ "$BLOCK_HEIGHT" = "$UPGRADE_HEIGHT" ]; then
-            # assuming running only 1 terrad
+            # assuming running only 1 dochaind
             echo "BLOCK HEIGHT = $UPGRADE_HEIGHT REACHED, KILLING CURRENT NODE"
-            pkill terrad
+            pkill dochaind
             sleep 5
             break
         else
-            PROPOSAL_STATUS=$(./_build/$current_binary/terrad q gov proposal $proposal_id --output=json | jq -r '.status // .proposal.status // "UNKNOWN"')
+            PROPOSAL_STATUS=$(./_build/$current_binary/dochaind q gov proposal $proposal_id --output=json | jq -r '.status // .proposal.status // "UNKNOWN"')
             echo "$PROPOSAL_STATUS"
             if [ "$PROPOSAL_STATUS" = "PROPOSAL_STATUS_FAILED" ] || [ "$PROPOSAL_STATUS" = "PROPOSAL_STATUS_REJECTED" ]; then
                 echo "upgrade proposal is not passable in this run"
@@ -256,7 +256,7 @@ EOF
 }
 
 # Run the first node with the old binary
-run_node "_build/old/terrad" ""
+run_node "_build/old/dochaind" ""
 
 # Function to upload and instantiate CW20 token contract
 upload_and_instantiate_contract() {
@@ -442,7 +442,7 @@ execute_cw20_transfer() {
 execute_scripts "$ADDITIONAL_PRE_SCRIPTS"
 
 # Upload and instantiate CW20 token contract before the first upgrade
-upload_and_instantiate_contract "_build/old/terrad" "${CW20_TOKEN_WASM}"
+upload_and_instantiate_contract "_build/old/dochaind" "${CW20_TOKEN_WASM}"
 
 # Main upgrade sequence
 if [[ "$FORK" == "true" ]]; then
@@ -481,20 +481,20 @@ else
         # Start the next node after upgrade
         if [ $i -eq $((${#OLD_VERSIONS[@]}-1)) ]; then
             # For the final upgrade, run with the new binary
-            run_node "_build/new/terrad" "true"
+            run_node "_build/new/dochaind" "true"
         else
             # For intermediate upgrades, run with the next version
-            run_node "_build/$NEXT_BINARY/terrad" "true"
+            run_node "_build/$NEXT_BINARY/dochaind" "true"
             
             # After the first upgrade, execute a CW20 transfer and run tests
             if [ $i -eq 0 ]; then
                 echo "First upgrade completed, executing CW20 transfer..."
-                execute_cw20_transfer "_build/$NEXT_BINARY/terrad"
+                execute_cw20_transfer "_build/$NEXT_BINARY/dochaind"
                 
                 # Run tests after first upgrade to show historic height query issues
                 echo -e "\n======== RUNNING TESTS AFTER FIRST UPGRADE (EXPECT SOME ERRORS) ========\n"
                 echo "These tests should show errors with historic height queries that will be fixed in the final upgrade"
-                run_final_tests "_build/$NEXT_BINARY/terrad" "35"
+                run_final_tests "_build/$NEXT_BINARY/dochaind" "35"
             fi
         fi
     done
@@ -504,4 +504,7 @@ fi
 execute_scripts "$ADDITIONAL_AFTER_SCRIPTS"
 
 # Run final tests after all upgrades
-run_final_tests "_build/new/terrad" "35"
+run_final_tests "_build/new/dochaind" "35"
+
+
+

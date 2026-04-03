@@ -8,7 +8,7 @@ import (
 // DefaultGasPrices is set at runtime to the staking token with zero amount i.e. "0uatom"
 // see DefaultZeroGlobalFee method in gaia/x/globalfee/ante/fee.go.
 var DefaultGasPrices = sdk.NewDecCoins(
-	sdk.NewDecCoinFromDec("uluna", sdkmath.LegacyNewDecWithPrec(28325, 3)),
+	sdk.NewDecCoinFromDec("udo", sdkmath.LegacyNewDecWithPrec(28325, 3)),
 	sdk.NewDecCoinFromDec("usdr", sdkmath.LegacyNewDecWithPrec(52469, 5)),
 	sdk.NewDecCoinFromDec("uusd", sdkmath.LegacyNewDecWithPrec(75, 2)),
 	sdk.NewDecCoinFromDec("ukrw", sdkmath.LegacyNewDecWithPrec(850, 0)),
@@ -54,3 +54,6 @@ func (p Params) Validate() error {
 
 	return nil
 }
+
+
+

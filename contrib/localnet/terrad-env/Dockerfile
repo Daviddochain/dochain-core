@@ -9,11 +9,14 @@ ARG GID=1000
 ARG entrypoint=entrypoint.sh
 
 USER ${UID}:${GID}
-VOLUME /terrad
-WORKDIR /terrad
+VOLUME /dochaind
+WORKDIR /dochaind
 EXPOSE 26656 26657
 ENTRYPOINT ["/usr/bin/entrypoint.sh"]
 CMD ["start", "--log_format", "plain"]
 STOPSIGNAL SIGTERM
 
 COPY ${entrypoint} /usr/bin/entrypoint.sh
+
+
+

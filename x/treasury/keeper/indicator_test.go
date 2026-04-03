@@ -5,7 +5,7 @@ import (
 
 	"cosmossdk.io/math"
 	sdkmath "cosmossdk.io/math"
-	core "github.com/classic-terra/core/v4/types"
+	core "github.com/Daviddochain/dochain-core/v4/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 )
@@ -230,3 +230,6 @@ func TestRollingAverageIndicator(t *testing.T) {
 	rval = input.TreasuryKeeper.rollingAverageIndicator(input.Ctx, 1, SR)
 	require.Equal(t, sdkmath.LegacyNewDec(400), rval)
 }
+
+
+

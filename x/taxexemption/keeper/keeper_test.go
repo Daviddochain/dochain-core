@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"cosmossdk.io/store/prefix"
-	"github.com/classic-terra/core/v4/x/taxexemption/types"
+	"github.com/Daviddochain/dochain-core/v4/x/taxexemption/types"
 	"github.com/cometbft/cometbft/crypto/secp256k1"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkquery "github.com/cosmos/cosmos-sdk/types/query"
@@ -834,3 +834,6 @@ func TestIsExemptedFromTaxAllCases(t *testing.T) {
 		})
 	}
 }
+
+
+

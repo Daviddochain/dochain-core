@@ -1,4 +1,4 @@
-module github.com/classic-terra/core/v4/test/interchaintest
+module github.com/Daviddochain/dochain-core/v4/test/interchaintest
 
 go 1.24.0
 
@@ -6,7 +6,7 @@ toolchain go1.24.7
 
 require (
 	cosmossdk.io/math v1.5.3
-	github.com/classic-terra/core/v4 v4.0.0-00010101000000-000000000000
+	github.com/Daviddochain/dochain-core/v4 v4.0.0-00010101000000-000000000000
 	github.com/cosmos/cosmos-sdk v0.53.6
 	github.com/cosmos/ibc-go/v10 v10.5.0
 	github.com/cosmos/interchaintest/v10 v10.0.1
@@ -269,11 +269,11 @@ replace (
 )
 
 replace (
-	github.com/classic-terra/core/v4 => ../../
-	github.com/cosmos/ledger-cosmos-go => github.com/terra-money/ledger-terra-go v0.11.2
+	github.com/Daviddochain/dochain-core/v4 => ../../
+	github.com/cosmos/ledger-cosmos-go => github.com/dochain-money/ledger-dochain-go v0.11.2
 	github.com/creachadair/taskgroup => github.com/creachadair/taskgroup v0.6.0
 	// replace goleveldb to optimized one
-	github.com/syndtr/goleveldb => github.com/classic-terra/goleveldb v0.0.0-20230914223247-2b28f6655121
+	github.com/syndtr/goleveldb => github.com/classic-dochain/goleveldb v0.0.0-20230914223247-2b28f6655121
 )
 
 replace (
@@ -285,3 +285,6 @@ replace (
 replace github.com/ChainSafe/go-schnorrkel/1 => github.com/ChainSafe/go-schnorrkel v1.0.0
 
 replace github.com/ChainSafe/go-schnorrkel v1.1.0 => github.com/ChainSafe/go-schnorrkel v1.0.0
+
+
+

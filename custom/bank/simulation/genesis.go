@@ -6,7 +6,7 @@ import (
 	"math/rand"
 
 	"cosmossdk.io/math"
-	core "github.com/classic-terra/core/v4/types"
+	core "github.com/Daviddochain/dochain-core/v4/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	"github.com/cosmos/cosmos-sdk/x/bank/types"
@@ -37,7 +37,7 @@ func RandomizedGenState(simState *module.SimulationState) {
 		string(types.KeySendEnabled), &sendEnabledParams, simState.Rand,
 		func(r *rand.Rand) {
 			sendEnabledParams = []types.SendEnabled{
-				{Denom: "uluna", Enabled: true},
+				{Denom: "udo", Enabled: true},
 				{Denom: "uusd", Enabled: true},
 			}
 		},
@@ -71,3 +71,6 @@ func RandomizedGenState(simState *module.SimulationState) {
 	fmt.Printf("Selected randomly generated bank parameters:\n%s\n", paramsBytes)
 	simState.GenState[types.ModuleName] = simState.Cdc.MustMarshalJSON(&bankGenesis)
 }
+
+
+

@@ -5,7 +5,7 @@ import (
 
 	"cosmossdk.io/math"
 	sdkmath "cosmossdk.io/math"
-	oracletypes "github.com/classic-terra/core/v4/x/oracle/types"
+	oracletypes "github.com/Daviddochain/dochain-core/v4/x/oracle/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
@@ -42,3 +42,6 @@ type OracleKeeper interface {
 	SetLunaExchangeRate(ctx sdk.Context, denom string, exchangeRate sdkmath.LegacyDec)
 	SetWhitelist(ctx sdk.Context, whitelist oracletypes.DenomList)
 }
+
+
+

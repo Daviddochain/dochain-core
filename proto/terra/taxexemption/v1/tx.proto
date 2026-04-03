@@ -1,9 +1,9 @@
 syntax = "proto3";
-package terra.taxexemption.v1;
+package dochain.taxexemption.v1;
 
 import "gogoproto/gogo.proto";
 
-option go_package = "github.com/classic-terra/core/v4/x/taxexemption/types";
+option go_package = "github.com/Daviddochain/dochain-core/v4/x/taxexemption/types";
 
 // Msg defines the taxexemption Msg service.
 service Msg {
@@ -82,3 +82,6 @@ message MsgRemoveTaxExemptionAddress {
 }
 
 message MsgRemoveTaxExemptionAddressResponse {}
+
+
+

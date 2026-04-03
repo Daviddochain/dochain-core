@@ -1,7 +1,7 @@
 package app
 
 import (
-	"github.com/classic-terra/core/v4/app/params"
+	"github.com/Daviddochain/dochain-core/v4/app/params"
 	"github.com/cosmos/cosmos-sdk/codec/legacy"
 	"github.com/cosmos/cosmos-sdk/std"
 )
@@ -26,3 +26,6 @@ func MakeEncodingConfig() params.EncodingConfig {
 
 	return encodingConfig
 }
+
+
+

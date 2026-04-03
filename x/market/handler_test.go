@@ -4,9 +4,9 @@ import (
 	"testing"
 
 	sdkmath "cosmossdk.io/math"
-	core "github.com/classic-terra/core/v4/types"
-	"github.com/classic-terra/core/v4/x/market/keeper"
-	"github.com/classic-terra/core/v4/x/market/types"
+	core "github.com/Daviddochain/dochain-core/v4/types"
+	"github.com/Daviddochain/dochain-core/v4/x/market/keeper"
+	"github.com/Daviddochain/dochain-core/v4/x/market/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 )
@@ -95,3 +95,6 @@ func TestSwapSendMsg(t *testing.T) {
 	balance := input.BankKeeper.GetBalance(input.Ctx, keeper.Addrs[1], core.MicroSDRDenom)
 	require.Equal(t, expectedAmt, balance.Amount)
 }
+
+
+

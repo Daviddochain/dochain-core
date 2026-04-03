@@ -110,3 +110,6 @@ type QueryTobinTaxParams struct {
 func NewQueryTobinTaxParams(denom string) QueryTobinTaxParams {
 	return QueryTobinTaxParams{denom}
 }
+
+
+

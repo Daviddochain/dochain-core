@@ -69,3 +69,6 @@ The oracle module emits the following events:
 | message        | module         | oracle                    |
 | message        | action         | aggregateexchangeratevote |
 | message        | sender         | {senderAddress}           |
+
+
+

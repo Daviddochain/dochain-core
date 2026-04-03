@@ -1,7 +1,7 @@
 package types
 
 import (
-	govtypes "github.com/classic-terra/core/v4/custom/gov/types"
+	govtypes "github.com/Daviddochain/dochain-core/v4/custom/gov/types"
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/x/params/types/proposal"
 )
@@ -14,3 +14,6 @@ func RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
 func init() {
 	govtypes.RegisterProposalTypeCodec(&proposal.ParameterChangeProposal{}, "params/ParameterChangeProposal")
 }
+
+
+

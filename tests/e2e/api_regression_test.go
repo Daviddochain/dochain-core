@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/classic-terra/core/v4/tests/e2e/initialization"
-	"github.com/classic-terra/core/v4/tests/e2e/util"
+	"github.com/Daviddochain/dochain-core/v4/tests/e2e/initialization"
+	"github.com/Daviddochain/dochain-core/v4/tests/e2e/util"
 )
 
 // TaxComputeRequest represents the request body for tax computation
@@ -197,7 +197,7 @@ func (s *IntegrationTestSuite) TestAPIRegression() {
 					Amount string `json:"amount"`
 				}{
 					{
-						Denom:  "uluna",
+						Denom:  "udo",
 						Amount: "1000000",
 					},
 				},
@@ -242,7 +242,7 @@ func (s *IntegrationTestSuite) TestAPIRegression() {
 			Amount string `json:"amount"`
 		}{
 			{
-				Denom:  "uluna",
+				Denom:  "udo",
 				Amount: "0",
 			},
 		}
@@ -268,7 +268,7 @@ func (s *IntegrationTestSuite) TestAPIRegression() {
 			// Create API client
 			apiClient := util.NewAPIClient(fmt.Sprintf("http://%s", hostPort))
 
-			resp, err := apiClient.PostJSON("/terra/tx/v1beta1/compute_tax", reqBody)
+			resp, err := apiClient.PostJSON("/dochain/tx/v1beta1/compute_tax", reqBody)
 			if err != nil {
 				s.Suite.T().Logf("API request failed: %v", err)
 				return false
@@ -579,3 +579,6 @@ func (s *IntegrationTestSuite) TestAPIRegression() {
 		}
 	})
 }
+
+
+

@@ -80,3 +80,6 @@ query_contract() {
     echo $out
 }
 
+
+
+

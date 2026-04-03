@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	sdkmath "cosmossdk.io/math"
-	core "github.com/classic-terra/core/v4/types"
+	core "github.com/Daviddochain/dochain-core/v4/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 )
@@ -63,3 +63,6 @@ func TestOneRewardWeightSettle(t *testing.T) {
 	require.Equal(t, lunaSupply.Amount, initialLunaSupply.Amount.Sub(burnAmt))
 	require.Equal(t, sdkmath.ZeroInt(), feePool.CommunityPool.AmountOf(core.MicroLunaDenom).TruncateInt())
 }
+
+
+

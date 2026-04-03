@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	sdkmath "cosmossdk.io/math"
-	core "github.com/classic-terra/core/v4/types"
+	core "github.com/Daviddochain/dochain-core/v4/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 )
@@ -33,7 +33,7 @@ func TestApplySwapToPool(t *testing.T) {
 	sdrDiff = newSDRPoolDelta.Sub(oldSDRPoolDelta)
 	require.Equal(t, sdkmath.LegacyNewDec(1700), sdrDiff)
 
-	// TERRA <> TERRA, no pool changes are expected
+	// dochain <> dochain, no pool changes are expected
 	offerCoin = sdk.NewCoin(core.MicroSDRDenom, sdkmath.NewInt(1700))
 	askCoin = sdk.NewDecCoin(core.MicroKRWDenom, sdkmath.NewInt(3400))
 	oldSDRPoolDelta = input.MarketKeeper.GetTerraPoolDelta(input.Ctx)
@@ -107,3 +107,6 @@ func TestIlliquidTobinTaxListParams(t *testing.T) {
 	require.NoError(t, err)
 	require.Equal(t, tobinTax.Mul(illiquidFactor), spread)
 }
+
+
+

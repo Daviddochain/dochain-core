@@ -4,7 +4,7 @@ import (
 	"context"
 	"strings"
 
-	"github.com/classic-terra/core/v4/x/market/types"
+	"github.com/Daviddochain/dochain-core/v4/x/market/types"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -39,7 +39,7 @@ func GetCmdQuerySwap() *cobra.Command {
 		Long: strings.TrimSpace(`
 Query a quote for how many coins can be received in a swap operation. Note; rates are dynamic and can quickly change.
 
-$ terrad query swap 5000000uluna usdr
+$ dochaind query swap 5000000udo usdr
 `),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientQueryContext(cmd)
@@ -75,13 +75,13 @@ $ terrad query swap 5000000uluna usdr
 // GetCmdQueryTerraPoolDelta implements the query mint pool delta command.
 func GetCmdQueryTerraPoolDelta() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "terra-pool-delta",
+		Use:   "dochain-pool-delta",
 		Args:  cobra.NoArgs,
-		Short: "Query terra pool delta",
-		Long: `Query terra pool delta, which is usdr amount used for swap operation from the TerraPool.
-It can be negative if the market wants more Terra than Luna, and vice versa if the market wants more Luna.
+		Short: "Query dochain pool delta",
+		Long: `Query dochain pool delta, which is usdr amount used for swap operation from the TerraPool.
+It can be negative if the market wants more dochain than Luna, and vice versa if the market wants more Luna.
 
-$ terrad query market terra-pool-delta
+$ dochaind query market dochain-pool-delta
 	`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientQueryContext(cmd)
@@ -130,3 +130,6 @@ func GetCmdQueryParams() *cobra.Command {
 	flags.AddQueryFlagsToCmd(cmd)
 	return cmd
 }
+
+
+

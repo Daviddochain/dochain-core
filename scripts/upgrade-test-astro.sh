@@ -94,7 +94,7 @@ create_pair_via_factory_modern() {
     local binary_path=$1
     local factory_addr=$2
     local denom_a=${3:-"uusd"}
-    local denom_b=${4:-"uluna"}
+    local denom_b=${4:-"udo"}
     local wasm_file=${5:-"${XYK_PAIR_WASM}"}
 
     local CREATE_MSG
@@ -157,7 +157,7 @@ query_smart() {
     if ${binary_path} q wasm --help 2>&1 | grep -q "contract-state"; then
         ${binary_path} q wasm contract-state smart "$addr" "$msg" --output json
     else
-        # Legacy: terrad query wasm contract-store [bech32-address] [msg]
+        # Legacy: dochaind query wasm contract-store [bech32-address] [msg]
         ${binary_path} query wasm contract-store "$addr" "$msg" --output json
     fi
 }
@@ -313,7 +313,7 @@ CURRENT_VERSION=${OLD_VERSIONS[0]}
 UPGRADE_WAIT=${UPGRADE_WAIT:-10}
 HOME=mytestnet
 ROOT=$(pwd)
-DENOM=uluna
+DENOM=udo
 CHAIN_ID=localterra-legacy
 ADDITIONAL_PRE_SCRIPTS=${ADDITIONAL_PRE_SCRIPTS:-""}
 ADDITIONAL_AFTER_SCRIPTS=${ADDITIONAL_AFTER_SCRIPTS:-""}
@@ -335,14 +335,14 @@ install_version() {
     # Download and extract if not exist
     if [ ! -f "_build/$version.zip" ]; then
         mkdir -p _build/$target_dir
-        wget -c "https://github.com/classic-terra/core/archive/refs/tags/${version}.zip" -O _build/${version}.zip
+        wget -c "https://github.com/classic-dochain/core/archive/refs/tags/${version}.zip" -O _build/${version}.zip
         unzip _build/${version}.zip -d _build
     fi
     
     # Install the binary
-    if [ "$reinstall_flag" == "--reinstall" ] || ! command -v _build/$target_dir/terrad &> /dev/null; then
+    if [ "$reinstall_flag" == "--reinstall" ] || ! command -v _build/$target_dir/dochaind &> /dev/null; then
         cd ./_build/core-${version:1}
-        make build && cp build/terrad _build/$target_dir/terrad
+        make build && cp build/dochaind _build/$target_dir/dochaind
         cd ../..
     fi
 }
@@ -359,9 +359,9 @@ for ((i=0; i<${#OLD_VERSIONS[@]}; i++)); do
 done
 
 # Install the current version as "new"
-if ! command -v _build/new/terrad &> /dev/null; then
+if ! command -v _build/new/dochaind &> /dev/null; then
     mkdir -p ./_build/new
-    make build && cp build/terrad _build/new/terrad
+    make build && cp build/dochaind _build/new/dochaind
 fi
 
 # Function to run a node with a specific binary
@@ -408,25 +408,25 @@ run_upgrade () {
     
     echo "Upgrading from $current_binary to $next_binary with upgrade name $upgrade_name"
 
-    STATUS_INFO=($(./_build/$current_binary/terrad status --home $HOME | jq -r '.NodeInfo.network,.SyncInfo.latest_block_height'))
+    STATUS_INFO=($(./_build/$current_binary/dochaind status --home $HOME | jq -r '.NodeInfo.network,.SyncInfo.latest_block_height'))
     UPGRADE_HEIGHT=$((STATUS_INFO[1] + 20))
 
     # Create the upgrade package for the next binary
-    tar -cf ./_build/$next_binary/terrad.tar -C ./_build/$next_binary terrad
-    SUM=$(shasum -a 256 ./_build/$next_binary/terrad.tar | cut -d ' ' -f1)
+    tar -cf ./_build/$next_binary/dochaind.tar -C ./_build/$next_binary dochaind
+    SUM=$(shasum -a 256 ./_build/$next_binary/dochaind.tar | cut -d ' ' -f1)
     UPGRADE_INFO=$(jq -n '
     {
         "binaries": {
-            "linux/amd64": "file://'$(pwd)'/_build/'$next_binary'/terrad.tar?checksum=sha256:'"$SUM"'",
+            "linux/amd64": "file://'$(pwd)'/_build/'$next_binary'/dochaind.tar?checksum=sha256:'"$SUM"'",
         }
     }')
 
-    ./_build/$current_binary/terrad keys list --home $HOME --keyring-backend test
+    ./_build/$current_binary/dochaind keys list --home $HOME --keyring-backend test
 
     while [ true ] ; do
         # Submit the upgrade proposal
-        if ./_build/$current_binary/terrad tx gov --help 2>&1 | grep -q "submit-legacy-proposal"; then
-            CMD=( ./_build/$current_binary/terrad tx gov submit-legacy-proposal software-upgrade "$upgrade_name" \
+        if ./_build/$current_binary/dochaind tx gov --help 2>&1 | grep -q "submit-legacy-proposal"; then
+            CMD=( ./_build/$current_binary/dochaind tx gov submit-legacy-proposal software-upgrade "$upgrade_name" \
                 --upgrade-height "$UPGRADE_HEIGHT" \
                 --upgrade-info "$UPGRADE_INFO" \
                 --title "upgrade to $upgrade_name" \
@@ -435,7 +435,7 @@ run_upgrade () {
                 --broadcast-mode sync \
                 --gas-prices "$GAS_PRICE" -y )
         else
-            CMD=( ./_build/$current_binary/terrad tx gov submit-proposal software-upgrade "$upgrade_name" \
+            CMD=( ./_build/$current_binary/dochaind tx gov submit-proposal software-upgrade "$upgrade_name" \
                 --upgrade-height "$UPGRADE_HEIGHT" \
                 --upgrade-info "$UPGRADE_INFO" \
                 --title "upgrade to $upgrade_name" \
@@ -451,16 +451,16 @@ run_upgrade () {
             echo "Failed to submit proposal" >&2
             return 1
         fi
-        wait_for_tx "./_build/$current_binary/terrad" "$TX_HASH"
+        wait_for_tx "./_build/$current_binary/dochaind" "$TX_HASH"
 
-        res=$(./_build/$current_binary/terrad q gov proposals --home $HOME --output json | jq -r '.proposals[] | select(.title == "upgrade to '$upgrade_name'") | .id')
+        res=$(./_build/$current_binary/dochaind q gov proposals --home $HOME --output json | jq -r '.proposals[] | select(.title == "upgrade to '$upgrade_name'") | .id')
         if [ -n "$res" ]; then
             echo "Found proposal id: $res"
             proposal_id=$res
             break
         fi
 
-        if ./_build/$current_binary/terrad q gov proposal $proposal_id --home $HOME --output json >/dev/null 2>&1; then 
+        if ./_build/$current_binary/dochaind q gov proposal $proposal_id --home $HOME --output json >/dev/null 2>&1; then 
             echo "Proposal $proposal_id found"
             break
         fi
@@ -472,43 +472,43 @@ run_upgrade () {
     sleep_short
 
     # Deposit tokens for the proposal
-    OUT=$(./_build/$current_binary/terrad tx gov deposit $proposal_id "20000000${DENOM}" --from test1 --keyring-backend test --chain-id $CHAIN_ID --home $HOME --gas-prices $GAS_PRICE --output json -y 2>>/tmp/tx_exec_error)
+    OUT=$(./_build/$current_binary/dochaind tx gov deposit $proposal_id "20000000${DENOM}" --from test1 --keyring-backend test --chain-id $CHAIN_ID --home $HOME --gas-prices $GAS_PRICE --output json -y 2>>/tmp/tx_exec_error)
     TX_HASH=$(echo "$OUT" | jq -r '.txhash // empty')
     if [ -z "$TX_HASH" ] || [ "$TX_HASH" = "null" ]; then
         echo "Deposit failed" >&2
         return 1
     fi
-    wait_for_tx "./_build/$current_binary/terrad" "$TX_HASH"
+    wait_for_tx "./_build/$current_binary/dochaind" "$TX_HASH"
 
     # Vote yes on the proposal
-    OUT=$(./_build/$current_binary/terrad tx gov vote $proposal_id yes --from test0 --keyring-backend test --chain-id $CHAIN_ID --home $HOME --gas-prices $GAS_PRICE --output json -y 2>>/tmp/tx_exec_error)
+    OUT=$(./_build/$current_binary/dochaind tx gov vote $proposal_id yes --from test0 --keyring-backend test --chain-id $CHAIN_ID --home $HOME --gas-prices $GAS_PRICE --output json -y 2>>/tmp/tx_exec_error)
     TX_HASH=$(echo "$OUT" | jq -r '.txhash // empty')
     if [ -z "$TX_HASH" ] || [ "$TX_HASH" = "null" ]; then
         echo "Vote failed" >&2
         return 1
     fi
-    wait_for_tx "./_build/$current_binary/terrad" "$TX_HASH"
+    wait_for_tx "./_build/$current_binary/dochaind" "$TX_HASH"
 
-    OUT=$(./_build/$current_binary/terrad tx gov vote $proposal_id yes --from test1 --keyring-backend test --chain-id $CHAIN_ID --home $HOME --gas-prices $GAS_PRICE --output json -y 2>>/tmp/tx_exec_error)
+    OUT=$(./_build/$current_binary/dochaind tx gov vote $proposal_id yes --from test1 --keyring-backend test --chain-id $CHAIN_ID --home $HOME --gas-prices $GAS_PRICE --output json -y 2>>/tmp/tx_exec_error)
     TX_HASH=$(echo "$OUT" | jq -r '.txhash // empty')
     if [ -z "$TX_HASH" ] || [ "$TX_HASH" = "null" ]; then
         echo "Vote failed" >&2
         return 1
     fi
-    wait_for_tx "./_build/$current_binary/terrad" "$TX_HASH"
+    wait_for_tx "./_build/$current_binary/dochaind" "$TX_HASH"
 
     # Wait for the upgrade height
     while true; do 
-        BLOCK_HEIGHT=$(./_build/$current_binary/terrad status | jq '.SyncInfo.latest_block_height' -r)
+        BLOCK_HEIGHT=$(./_build/$current_binary/dochaind status | jq '.SyncInfo.latest_block_height' -r)
         if [ $BLOCK_HEIGHT = "$UPGRADE_HEIGHT" ]; then
-            # assuming running only 1 terrad
+            # assuming running only 1 dochaind
             echo "BLOCK HEIGHT = $UPGRADE_HEIGHT REACHED, KILLING CURRENT NODE"
             sleep 3
-            pkill terrad
+            pkill dochaind
             sleep 3
             break
         else
-            ./_build/$current_binary/terrad q gov proposal $proposal_id --output=json | jq ".status"
+            ./_build/$current_binary/dochaind q gov proposal $proposal_id --output=json | jq ".status"
             echo "BLOCK_HEIGHT = $BLOCK_HEIGHT"
             sleep_short
         fi
@@ -516,7 +516,7 @@ run_upgrade () {
 }
 
 # Run the first node with the old binary
-run_node "_build/old/terrad" ""
+run_node "_build/old/dochaind" ""
 
 # Function to upload LP code
 upload_astroport_lp_code() {
@@ -551,7 +551,7 @@ upload_and_instantiate_astroport_pool() {
     local binary_path=$1
     local wasm_file=$2
     local lp_code_id=$3
-    local denom_a=${4:-"uluna"}
+    local denom_a=${4:-"udo"}
     local denom_b=${5:-"uusd"}
     local factory_addr=${6:-""}
 
@@ -689,7 +689,7 @@ test_astroport_pool() {
     local binary_path=$1
     local pair_addr=$2
     local denom_a=${3:-"uusd"}
-    local denom_b=${4:-"uluna"}
+    local denom_b=${4:-"udo"}
 
     TEST1_ADDR=$(${binary_path} keys show test1 -a --keyring-backend test --home ${HOME})
 
@@ -842,7 +842,7 @@ test_astroport_pool() {
 
 deploy_and_test_all_pools() {
     local binary_path=$1
-    local denom_a=${2:-"uluna"}
+    local denom_a=${2:-"udo"}
     local denom_b=${3:-"uusd"}
 
     if [ -f ${HOME}/astroport_lp_code_id.txt ]; then
@@ -1010,11 +1010,11 @@ execute_scripts "$ADDITIONAL_PRE_SCRIPTS"
 # Do NOT deploy CW20 yet; it requires >= v2.3.3. Will deploy after reaching threshold.
 
 # Upload LP CW20 code needed by Astroport pools (store once, usable across upgrades)
-upload_astroport_lp_code "_build/old/terrad" "${ASTROPORT_LP_WASM}"
+upload_astroport_lp_code "_build/old/dochaind" "${ASTROPORT_LP_WASM}"
 
 # Deploy and test Astroport pools
 echo "Deploying and testing Astroport pools after first upgrade..."
-deploy_and_test_all_pools "_build/old/terrad" "uluna" "uusd"
+deploy_and_test_all_pools "_build/old/dochaind" "udo" "uusd"
 
 # Main upgrade sequence
 # Loop through all versions and upgrades
@@ -1049,16 +1049,19 @@ for ((i=0; i<${#OLD_VERSIONS[@]}; i++)); do
     # Start the next node after upgrade
     if [ $i -eq $((${#OLD_VERSIONS[@]}-1)) ]; then
         # For the final upgrade, run with the new binary
-        run_node "_build/new/terrad" "true"
+        run_node "_build/new/dochaind" "true"
 
-        deploy_and_test_all_pools "_build/new/terrad" "uluna" "uusd"
+        deploy_and_test_all_pools "_build/new/dochaind" "udo" "uusd"
     else
         # For intermediate upgrades, run with the next version
-        run_node "_build/$NEXT_BINARY/terrad" "true"
+        run_node "_build/$NEXT_BINARY/dochaind" "true"
 
-        deploy_and_test_all_pools "_build/$NEXT_BINARY/terrad" "uluna" "uusd"
+        deploy_and_test_all_pools "_build/$NEXT_BINARY/dochaind" "udo" "uusd"
     fi
 done
 
 # Execute post-upgrade scripts
 execute_scripts "$ADDITIONAL_AFTER_SCRIPTS"
+
+
+

@@ -54,3 +54,5 @@ jobs:
         run: cat build/release/checksum.txt
       - name: Upload the checksum to release
         run: gh release upload ${{github.ref_name}} build/release/checksum.txt --repo ${{github.repository}}
+
+

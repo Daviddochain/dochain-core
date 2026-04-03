@@ -18,3 +18,6 @@ func RegisterInterfaces(registry types.InterfaceRegistry) {
 		&RemoveBurnTaxExemptionAddressProposal{},
 	)
 }
+
+
+

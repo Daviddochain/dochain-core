@@ -3,8 +3,8 @@ package keeper
 import (
 	errorsmod "cosmossdk.io/errors"
 	"cosmossdk.io/math"
-	core "github.com/classic-terra/core/v4/types"
-	"github.com/classic-terra/core/v4/x/market/types"
+	core "github.com/Daviddochain/dochain-core/v4/types"
+	"github.com/Daviddochain/dochain-core/v4/x/market/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
@@ -13,14 +13,14 @@ import (
 // OfferPool = OfferPool + offerAmt (Fills the swap pool with offerAmt)
 // AskPool = AskPool - askAmt       (Uses askAmt from the swap pool)
 func (k Keeper) ApplySwapToPool(ctx sdk.Context, offerCoin sdk.Coin, askCoin sdk.DecCoin) error {
-	// No delta update in case Terra to Terra swap
+	// No delta update in case dochain to dochain swap
 	if offerCoin.Denom != core.MicroLunaDenom && askCoin.Denom != core.MicroLunaDenom {
 		return nil
 	}
 
 	terraPoolDelta := k.GetTerraPoolDelta(ctx)
 
-	// In case swapping Terra to Luna, the terra swap pool(offer) must be increased and the luna swap pool(ask) must be decreased
+	// In case swapping dochain to Luna, the dochain swap pool(offer) must be increased and the luna swap pool(ask) must be decreased
 	if offerCoin.Denom != core.MicroLunaDenom && askCoin.Denom == core.MicroLunaDenom {
 		offerBaseCoin, err := k.ComputeInternalSwap(ctx, sdk.NewDecCoinFromCoin(offerCoin), core.MicroSDRDenom)
 		if err != nil {
@@ -30,7 +30,7 @@ func (k Keeper) ApplySwapToPool(ctx sdk.Context, offerCoin sdk.Coin, askCoin sdk
 		terraPoolDelta = terraPoolDelta.Add(offerBaseCoin.Amount)
 	}
 
-	// In case swapping Luna to Terra, the luna swap pool(offer) must be increased and the terra swap pool(ask) must be decreased
+	// In case swapping Luna to dochain, the luna swap pool(offer) must be increased and the dochain swap pool(ask) must be decreased
 	if offerCoin.Denom == core.MicroLunaDenom && askCoin.Denom != core.MicroLunaDenom {
 		askBaseCoin, err := k.ComputeInternalSwap(ctx, askCoin, core.MicroSDRDenom)
 		if err != nil {
@@ -67,7 +67,7 @@ func (k Keeper) ComputeSwap(ctx sdk.Context, offerCoin sdk.Coin, askDenom string
 		return sdk.DecCoin{}, math.LegacyDec{}, err
 	}
 
-	// Terra => Terra swap
+	// dochain => dochain swap
 	// Apply only tobin tax without constant product spread
 	if offerCoin.Denom != core.MicroLunaDenom && askDenom != core.MicroLunaDenom {
 		var tobinTax math.LegacyDec
@@ -104,11 +104,11 @@ func (k Keeper) ComputeSwap(ctx sdk.Context, offerCoin sdk.Coin, askDenom string
 	var offerPool math.LegacyDec // base denom(usdr) unit
 	var askPool math.LegacyDec   // base denom(usdr) unit
 	if offerCoin.Denom != core.MicroLunaDenom {
-		// Terra->Luna swap
+		// dochain->Luna swap
 		offerPool = terraPool
 		askPool = lunaPool
 	} else {
-		// Luna->Terra swap
+		// Luna->dochain swap
 		offerPool = lunaPool
 		askPool = terraPool
 	}
@@ -182,3 +182,6 @@ func (k Keeper) simulateSwap(ctx sdk.Context, offerCoin sdk.Coin, askDenom strin
 	retCoin, _ := swapCoin.TruncateDecimal()
 	return retCoin, nil
 }
+
+
+

@@ -17,7 +17,7 @@ FROM ubuntu:20.04
 
 WORKDIR /root
 
-COPY --from=go-builder /code/build/terrad /usr/local/bin/terrad
+COPY --from=go-builder /code/build/dochaind /usr/local/bin/dochaind
 COPY --from=go-builder /lib/libwasmvm.so /lib/libwasmvm.so
 
 # rest server
@@ -29,4 +29,7 @@ EXPOSE 26656
 # tendermint rpc
 EXPOSE 26657
 
-CMD ["/usr/local/bin/terrad", "version"]
+CMD ["/usr/local/bin/dochaind", "version"]
+
+
+

@@ -34,3 +34,6 @@ func (p *LegacyParams) ParamSetPairs() paramtypes.ParamSetPairs {
 		paramtypes.NewParamSetPair([]byte("BondDenom"), &p.BondDenom, func(i interface{}) error { return nil }),
 	}
 }
+
+
+

@@ -1,30 +1,30 @@
 syntax = "proto3";
-package terra.market.v1beta1;
+package dochain.market.v1beta1;
 
 import "cosmos/base/v1beta1/coin.proto";
 import "cosmos_proto/cosmos.proto";
 import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
 
-import "terra/market/v1beta1/market.proto";
+import "dochain/market/v1beta1/market.proto";
 
-option go_package = "github.com/classic-terra/core/v4/x/market/types";
+option go_package = "github.com/Daviddochain/dochain-core/v4/x/market/types";
 
 // Query defines the gRPC querier service.
 service Query {
   // Swap returns simulated swap amount.
   rpc Swap(QuerySwapRequest) returns (QuerySwapResponse) {
-    option (google.api.http).get = "/terra/market/v1beta1/swap";
+    option (google.api.http).get = "/dochain/market/v1beta1/swap";
   }
 
   // TerraPoolDelta returns terra_pool_delta amount.
   rpc TerraPoolDelta(QueryTerraPoolDeltaRequest) returns (QueryTerraPoolDeltaResponse) {
-    option (google.api.http).get = "/terra/market/v1beta1/terra_pool_delta";
+    option (google.api.http).get = "/dochain/market/v1beta1/terra_pool_delta";
   }
 
   // Params queries all parameters.
   rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
-    option (google.api.http).get = "/terra/market/v1beta1/params";
+    option (google.api.http).get = "/dochain/market/v1beta1/params";
   }
 }
 
@@ -33,7 +33,7 @@ message QuerySwapRequest {
   option (gogoproto.equal)           = false;
   option (gogoproto.goproto_getters) = false;
 
-  // offer_coin defines the coin being offered (i.e. 1000000uluna)
+  // offer_coin defines the coin being offered (i.e. 1000000udo)
   string offer_coin = 1;
   // ask_denom defines the denom of the coin to swap to
   string ask_denom = 2;
@@ -66,3 +66,6 @@ message QueryParamsResponse {
   // params defines the parameters of the module.
   Params params = 1 [(gogoproto.nullable) = false];
 }
+
+
+

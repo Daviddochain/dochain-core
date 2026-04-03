@@ -4,7 +4,7 @@ source scripts/wasm/env-test-pre.sh
 
 create_asset_info_json() {
     local input=$1
-    if [[ $input == terra* ]]; then
+    if [[ $input == dochain* ]]; then
         echo "{\"token\":{\"contract_addr\":\"$input\"}}"
     else
         echo "{\"native_token\":{\"denom\":\"$input\"}}"
@@ -14,7 +14,7 @@ create_asset_info_json() {
 create_asset_json() {
     local input=$1
     local amount=${2:-"0"}
-    if [[ $input == terra* ]]; then
+    if [[ $input == dochain* ]]; then
         echo "{\"info\":{\"token\":{\"contract_addr\":\"$input\"}},\"amount\":\"$amount\"}"
     else
         echo "{\"info\":{\"native_token\":{\"denom\":\"$input\"}},\"amount\":\"$amount\"}"
@@ -134,18 +134,18 @@ provide_liquidity() {
     local asset2=$(create_asset_json "$token2" "$amount2")
 
 
-    if [[ $token1 == terra* ]]; then
+    if [[ $token1 == dochain* ]]; then
         increase_allowance "$token1" "$pair_address" "$amount1"
     fi
-    if [[ $token2 == terra* ]]; then
+    if [[ $token2 == dochain* ]]; then
         increase_allowance "$token2" "$pair_address" "$amount2"
     fi
 
     local funds=""
-    if [[ $token1 != terra* ]]; then
+    if [[ $token1 != dochain* ]]; then
         funds="$funds--amount $amount1$token1 "
     fi
-    if [[ $token2 != terra* ]]; then
+    if [[ $token2 != dochain* ]]; then
         funds="$funds--amount $amount2$token2 "
     fi
 
@@ -210,7 +210,7 @@ execute_swap() {
 EOF
 )
 
-    if [[ $token1 == terra* ]]; then
+    if [[ $token1 == dochain* ]]; then
         >&2 echo "Sending CW20 tokens to router..."
         local send_msg=$(cat << EOF
 {
@@ -254,4 +254,7 @@ EOF
     sleep $SLEEP_TIME
     tx_response=$($BINARY q tx $txhash --output json)
 }
+
+
+
 

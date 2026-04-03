@@ -25,3 +25,6 @@ func NewQuerySwapParams(offerCoin sdk.Coin, askDenom string) QuerySwapParams {
 		AskDenom:  askDenom,
 	}
 }
+
+
+

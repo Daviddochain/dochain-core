@@ -2,8 +2,8 @@ package ante_test
 
 import (
 	sdkmath "cosmossdk.io/math"
-	"github.com/classic-terra/core/v4/custom/auth/ante"
-	core "github.com/classic-terra/core/v4/types"
+	"github.com/Daviddochain/dochain-core/v4/custom/auth/ante"
+	core "github.com/Daviddochain/dochain-core/v4/types"
 	cryptotypes "github.com/cosmos/cosmos-sdk/crypto/types"
 	"github.com/cosmos/cosmos-sdk/testutil/testdata"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -22,7 +22,7 @@ func (suite *AnteTestSuite) TestMinInitialDepositRatioDefault() {
 	midd := ante.NewMinInitialDepositDecorator(suite.app.GovKeeper, suite.app.TreasuryKeeper)
 	antehandler := sdk.ChainAnteDecorators(midd)
 
-	// set required deposit to uluna
+	// set required deposit to udo
 	suite.app.GovKeeper.Params.Set(suite.ctx, govv1.DefaultParams())
 	govparams, err := suite.app.GovKeeper.Params.Get(suite.ctx)
 	suite.Require().NoError(err)
@@ -78,7 +78,7 @@ func (suite *AnteTestSuite) TestMinInitialDepositRatioWithSufficientDeposit() {
 	midd := ante.NewMinInitialDepositDecorator(suite.app.GovKeeper, suite.app.TreasuryKeeper)
 	antehandler := sdk.ChainAnteDecorators(midd)
 
-	// set required deposit to uluna
+	// set required deposit to udo
 	suite.app.GovKeeper.Params.Set(suite.ctx, govv1.DefaultParams())
 	govparams, err := suite.app.GovKeeper.Params.Get(suite.ctx)
 	suite.Require().NoError(err)
@@ -136,7 +136,7 @@ func (suite *AnteTestSuite) TestMinInitialDepositRatioWithInsufficientDeposit() 
 	midd := ante.NewMinInitialDepositDecorator(suite.app.GovKeeper, suite.app.TreasuryKeeper)
 	antehandler := sdk.ChainAnteDecorators(midd)
 
-	// set required deposit to uluna
+	// set required deposit to udo
 	suite.app.GovKeeper.Params.Set(suite.ctx, govv1.DefaultParams())
 	govparams, err := suite.app.GovKeeper.Params.Get(suite.ctx)
 	suite.Require().NoError(err)
@@ -186,3 +186,6 @@ func (suite *AnteTestSuite) TestMinInitialDepositRatioWithInsufficientDeposit() 
 	_, err = antehandler(suite.ctx, txv1, false)
 	suite.Require().Error(err, "error: v1 proposal with insufficient initial deposit should have failed")
 }
+
+
+

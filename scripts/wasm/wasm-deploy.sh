@@ -1,6 +1,6 @@
 #!/bin/sh
 
-BINARY=_build/old/terrad
+BINARY=_build/old/dochaind
 WASMFILE="cw721_base.wasm"
 CONTRACTPATH="scripts/wasm/contracts/$WASMFILE"
 KEYRING_BACKEND="test"
@@ -105,3 +105,5 @@ echo "CONTRACT_ADDRESSES = $CONTRACT_ADDRESSES_STRING"
 
 export TXHASH_STRING
 export CONTRACT_ADDRESSES_STRING
+
+

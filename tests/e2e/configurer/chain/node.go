@@ -8,8 +8,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/classic-terra/core/v4/tests/e2e/containers"
-	"github.com/classic-terra/core/v4/tests/e2e/initialization"
+	"github.com/Daviddochain/dochain-core/v4/tests/e2e/containers"
+	"github.com/Daviddochain/dochain-core/v4/tests/e2e/initialization"
 	rpchttp "github.com/cometbft/cometbft/rpc/client/http"
 	coretypes "github.com/cometbft/cometbft/rpc/core/types"
 	"github.com/stretchr/testify/require"
@@ -73,7 +73,7 @@ func (n *NodeConfig) Run() error {
 		},
 		initialization.TwoMin,
 		time.Second,
-		"Terra node failed to produce blocks",
+		"dochain node failed to produce blocks",
 	)
 
 	// Wait for 2 more blocks to confirm p2p connections are established.
@@ -89,7 +89,7 @@ func (n *NodeConfig) Run() error {
 			},
 			initialization.TwoMin,
 			time.Second,
-			"Terra node failed to advance blocks after start",
+			"dochain node failed to advance blocks after start",
 		)
 	}
 
@@ -130,7 +130,7 @@ func (n *NodeConfig) extractOperatorAddressIfValidator() error {
 		return nil
 	}
 
-	cmd := []string{"terrad", "debug", "addr", n.PublicKey}
+	cmd := []string{"dochaind", "debug", "addr", n.PublicKey}
 	n.t.Logf("extracting validator operator addresses for validator: %s", n.Name)
 	outBuf, _, err := n.containerManager.ExecCmd(n.t, n.Name, cmd, "", false)
 	if err != nil {
@@ -145,7 +145,7 @@ func (n *NodeConfig) extractOperatorAddressIfValidator() error {
 	// The consensus address is derived from the ed25519 consensus key, which is
 	// different from the secp256k1 account/operator key fed to "debug addr".
 	// Use "comet show-address" to read it directly from the node's local keyfiles.
-	showAddrCmd := []string{"terrad", "comet", "show-address"}
+	showAddrCmd := []string{"dochaind", "comet", "show-address"}
 	showAddrBuf, _, err := n.containerManager.ExecCmd(n.t, n.Name, showAddrCmd, "", false)
 	if err != nil {
 		return err
@@ -169,3 +169,6 @@ func (n *NodeConfig) LogActionF(msg string, args ...interface{}) {
 	s := fmt.Sprintf(msg, args...)
 	n.t.Logf("[%s] %s. From container %s", timeSinceStart, s, n.Name)
 }
+
+
+

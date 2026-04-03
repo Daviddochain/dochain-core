@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/classic-terra/core/v4/tests/e2e/initialization"
+	"github.com/Daviddochain/dochain-core/v4/tests/e2e/initialization"
 	"github.com/stretchr/testify/require"
 )
 
@@ -43,7 +43,7 @@ func TestChainInit(t *testing.T) {
 				IsValidator:        false,
 			},
 		}
-		dataDir, err = os.MkdirTemp("", "terra-e2e-testnet-test")
+		dataDir, err = os.MkdirTemp("", "dochain-e2e-testnet-test")
 	)
 	require.NoError(t, err)
 
@@ -101,7 +101,7 @@ func TestSingleNodeInit(t *testing.T) {
 			SnapshotKeepRecent: 1,
 			IsValidator:        false,
 		}
-		dataDir, err = os.MkdirTemp("", "terra-e2e-testnet-test")
+		dataDir, err = os.MkdirTemp("", "dochain-e2e-testnet-test")
 	)
 	require.NoError(t, err)
 
@@ -138,3 +138,6 @@ func validateNode(t *testing.T, chainID string, dataDir string, expectedConfig *
 	_, err := os.Stat(path.Join(expectedPath, "keyring-test"))
 	require.NoError(t, err)
 }
+
+
+

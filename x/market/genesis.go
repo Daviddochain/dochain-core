@@ -3,8 +3,8 @@ package market
 import (
 	"fmt"
 
-	"github.com/classic-terra/core/v4/x/market/keeper"
-	"github.com/classic-terra/core/v4/x/market/types"
+	"github.com/Daviddochain/dochain-core/v4/x/market/keeper"
+	"github.com/Daviddochain/dochain-core/v4/x/market/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
@@ -30,3 +30,6 @@ func ExportGenesis(ctx sdk.Context, keeper keeper.Keeper) (data *types.GenesisSt
 
 	return types.NewGenesisState(terraPoolDelta, params)
 }
+
+
+

@@ -2,7 +2,7 @@ package keeper
 
 import (
 	"cosmossdk.io/math"
-	"github.com/classic-terra/core/v4/x/market/types"
+	"github.com/Daviddochain/dochain-core/v4/x/market/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
@@ -19,7 +19,7 @@ func (k Keeper) MinStabilitySpread(ctx sdk.Context) (res math.LegacyDec) {
 	return res
 }
 
-// PoolRecoveryPeriod is the period required to recover Terra&Luna Pools to the MintBasePool & BurnBasePool
+// PoolRecoveryPeriod is the period required to recover dochain&Luna Pools to the MintBasePool & BurnBasePool
 func (k Keeper) PoolRecoveryPeriod(ctx sdk.Context) (res uint64) {
 	k.paramSpace.Get(ctx, types.KeyPoolRecoveryPeriod, &res)
 	return res
@@ -35,3 +35,6 @@ func (k Keeper) GetParams(ctx sdk.Context) (params types.Params) {
 func (k Keeper) SetParams(ctx sdk.Context, params types.Params) {
 	k.paramSpace.SetParamSet(ctx, &params)
 }
+
+
+

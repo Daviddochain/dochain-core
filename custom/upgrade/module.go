@@ -2,7 +2,7 @@ package upgrade
 
 import (
 	"cosmossdk.io/x/upgrade"
-	customtypes "github.com/classic-terra/core/v4/custom/upgrade/types"
+	customtypes "github.com/Daviddochain/dochain-core/v4/custom/upgrade/types"
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/types/module"
 )
@@ -18,3 +18,6 @@ type AppModuleBasic struct {
 func (AppModuleBasic) RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
 	customtypes.RegisterLegacyAminoCodec(cdc)
 }
+
+
+

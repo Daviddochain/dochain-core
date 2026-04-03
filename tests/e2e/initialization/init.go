@@ -6,8 +6,8 @@ import (
 	"path/filepath"
 
 	errorsmod "cosmossdk.io/errors"
-	"github.com/classic-terra/core/v4/tests/e2e/util"
-	coreutil "github.com/classic-terra/core/v4/types/util"
+	"github.com/Daviddochain/dochain-core/v4/tests/e2e/util"
+	coreutil "github.com/Daviddochain/dochain-core/v4/types/util"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/address"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -112,3 +112,6 @@ func InitSingleNode(chainID, dataDir string, existingGenesisDir string, nodeConf
 
 	return newNode.export(), nil
 }
+
+
+

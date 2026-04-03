@@ -6,7 +6,7 @@ order: 2
 
 ## TerraPoolDelta
 
-Market module provides swap functionality based on constant product mechanism. Terra pool have to keep its delta to track the currency demands for swap spread. Luna pool can be retrived from Terra pool delta with following equation:
+Market module provides swap functionality based on constant product mechanism. dochain pool have to keep its delta to track the currency demands for swap spread. Luna pool can be retrived from dochain pool delta with following equation:
 
 ```go
 TerraPool := BasePool + delta
@@ -20,3 +20,6 @@ LunaPool := (BasePool * BasePool) / TerraPool
 ```go
 type TerraPoolDelta sdk.Dec // the gap between the TerraPool and the BasePool
 ```
+
+
+

@@ -1,8 +1,8 @@
 package auth
 
 import (
-	customsim "github.com/classic-terra/core/v4/custom/auth/simulation"
-	customtypes "github.com/classic-terra/core/v4/custom/auth/types"
+	customsim "github.com/Daviddochain/dochain-core/v4/custom/auth/simulation"
+	customtypes "github.com/Daviddochain/dochain-core/v4/custom/auth/types"
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	"github.com/cosmos/cosmos-sdk/x/auth"
@@ -51,3 +51,6 @@ func NewAppModule(cdc codec.Codec, accountKeeper keeper.AccountKeeper, randGenAc
 func (am AppModule) GenerateGenesisState(simState *module.SimulationState) {
 	customsim.RandomizedGenState(simState, am.randGenAccountsFn)
 }
+
+
+

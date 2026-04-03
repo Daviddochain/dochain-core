@@ -25,3 +25,6 @@ type Chain struct {
 func (c *ChainMeta) configDir() string {
 	return fmt.Sprintf("%s/%s", c.DataDir, c.ID)
 }
+
+
+

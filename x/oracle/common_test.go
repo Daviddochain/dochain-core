@@ -4,8 +4,8 @@ import (
 	"testing"
 
 	sdkmath "cosmossdk.io/math"
-	"github.com/classic-terra/core/v4/x/oracle/keeper"
-	"github.com/classic-terra/core/v4/x/oracle/types"
+	"github.com/Daviddochain/dochain-core/v4/x/oracle/keeper"
+	"github.com/Daviddochain/dochain-core/v4/x/oracle/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	stakingkeeper "github.com/cosmos/cosmos-sdk/x/staking/keeper"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
@@ -89,3 +89,6 @@ func setupVal5(t *testing.T) (keeper.TestInput, types.MsgServer) {
 
 	return input, h
 }
+
+
+

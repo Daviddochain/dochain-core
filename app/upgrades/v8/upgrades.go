@@ -6,8 +6,8 @@ import (
 	upgradetypes "cosmossdk.io/x/upgrade/types"
 	wasmmigration "github.com/CosmWasm/wasmd/x/wasm/migrations/v2"
 	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
-	"github.com/classic-terra/core/v4/app/keepers"
-	"github.com/classic-terra/core/v4/app/upgrades"
+	"github.com/Daviddochain/dochain-core/v4/app/keepers"
+	"github.com/Daviddochain/dochain-core/v4/app/upgrades"
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
@@ -72,3 +72,6 @@ func CreateV8UpgradeHandler(
 		return mm.RunMigrations(ctx, cfg, fromVM)
 	}
 }
+
+
+

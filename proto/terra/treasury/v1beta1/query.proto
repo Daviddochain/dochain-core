@@ -1,5 +1,5 @@
 syntax = "proto3";
-package terra.treasury.v1beta1;
+package dochain.treasury.v1beta1;
 
 import "cosmos_proto/cosmos.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
@@ -8,55 +8,55 @@ import "cosmos/base/v1beta1/coin.proto";
 import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
 
-import "terra/treasury/v1beta1/treasury.proto";
+import "dochain/treasury/v1beta1/treasury.proto";
 
-option go_package = "github.com/classic-terra/core/v4/x/treasury/types";
+option go_package = "github.com/Daviddochain/dochain-core/v4/x/treasury/types";
 
 // Query defines the gRPC querier service.
 service Query {
   // TaxRate return the current tax rate
   rpc TaxRate(QueryTaxRateRequest) returns (QueryTaxRateResponse) {
-    option (google.api.http).get = "/terra/treasury/v1beta1/tax_rate";
+    option (google.api.http).get = "/dochain/treasury/v1beta1/tax_rate";
   }
 
   // TaxCap returns the tax cap of a denom
   rpc TaxCap(QueryTaxCapRequest) returns (QueryTaxCapResponse) {
-    option (google.api.http).get = "/terra/treasury/v1beta1/tax_caps/{denom}";
+    option (google.api.http).get = "/dochain/treasury/v1beta1/tax_caps/{denom}";
   }
 
   // TaxCaps returns the all tax caps
   rpc TaxCaps(QueryTaxCapsRequest) returns (QueryTaxCapsResponse) {
-    option (google.api.http).get = "/terra/treasury/v1beta1/tax_caps";
+    option (google.api.http).get = "/dochain/treasury/v1beta1/tax_caps";
   }
 
   // RewardWeight return the current reward weight
   rpc RewardWeight(QueryRewardWeightRequest) returns (QueryRewardWeightResponse) {
-    option (google.api.http).get = "/terra/treasury/v1beta1/reward_weight";
+    option (google.api.http).get = "/dochain/treasury/v1beta1/reward_weight";
   }
 
   // SeigniorageProceeds return the current seigniorage proceeds
   rpc SeigniorageProceeds(QuerySeigniorageProceedsRequest) returns (QuerySeigniorageProceedsResponse) {
-    option (google.api.http).get = "/terra/treasury/v1beta1/seigniorage_proceeds";
+    option (google.api.http).get = "/dochain/treasury/v1beta1/seigniorage_proceeds";
   }
 
   // TaxProceeds return the current tax proceeds
   rpc TaxProceeds(QueryTaxProceedsRequest) returns (QueryTaxProceedsResponse) {
-    option (google.api.http).get = "/terra/treasury/v1beta1/tax_proceeds";
+    option (google.api.http).get = "/dochain/treasury/v1beta1/tax_proceeds";
   }
 
   // Indicators return the current trl informations
   rpc Indicators(QueryIndicatorsRequest) returns (QueryIndicatorsResponse) {
-    option (google.api.http).get = "/terra/treasury/v1beta1/indicators";
+    option (google.api.http).get = "/dochain/treasury/v1beta1/indicators";
   }
 
   // BurnTaxExemptionList returns all registered burn tax exemption addresses
   rpc BurnTaxExemptionList(QueryBurnTaxExemptionListRequest) returns (QueryBurnTaxExemptionListResponse) {
-    option (google.api.http).get = "/terra/treasury/v1beta1/burn_tax_exemption_list";
+    option (google.api.http).get = "/dochain/treasury/v1beta1/burn_tax_exemption_list";
   }
 
   // Params queries all parameters.
   rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
-    option (google.api.http).get = "/terra/treasury/v1beta1/params";
+    option (google.api.http).get = "/dochain/treasury/v1beta1/params";
   }
 }
 
@@ -191,3 +191,6 @@ message QueryBurnTaxExemptionListResponse {
 
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
+
+
+

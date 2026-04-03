@@ -46,7 +46,7 @@ You can get the active list of denoms trading against `Luna` (denominations with
 
 ## FeederDelegation
 
-An `sdk.AccAddress` (`terra-` account) address of `operator`'s delegated price feeder.
+An `sdk.AccAddress` (`dochain-` account) address of `operator`'s delegated price feeder.
 
 - FeederDelegation: `0x04<valAddress_Bytes> -> amino(sdk.AccAddress)`
 
@@ -96,6 +96,9 @@ type AggregateExchangeRateVote struct {
 
 ## TobinTax
 
-`sdk.Dec` that stores spread tax for the denom whose ballot is passed, which is used by the [Market](../../market/spec/README.md) module for spot-converting Terra<>Terra.
+`sdk.Dec` that stores spread tax for the denom whose ballot is passed, which is used by the [Market](../../market/spec/README.md) module for spot-converting dochain<>dochain.
 
 - TobinTax: `0x08<denom_Bytes> -> amino(sdk.Dec)`
+
+
+

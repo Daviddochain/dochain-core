@@ -33,3 +33,6 @@ func TestConstraintClamp(t *testing.T) {
 	clampedRate = taxPolicy.Clamp(prevRate, newRate)
 	require.Equal(t, taxPolicy.RateMin, clampedRate)
 }
+
+
+

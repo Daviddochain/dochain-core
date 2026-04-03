@@ -1,7 +1,7 @@
 package keeper
 
 import (
-	"github.com/classic-terra/core/v4/x/tax/types"
+	"github.com/Daviddochain/dochain-core/v4/x/tax/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
@@ -30,3 +30,6 @@ func (k Keeper) GetParams(clientCtx sdk.Context) (params types.Params) {
 	k.cdc.MustUnmarshal(bz, &params)
 	return params
 }
+
+
+

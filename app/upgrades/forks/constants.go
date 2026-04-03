@@ -1,8 +1,8 @@
 package forks
 
 import (
-	"github.com/classic-terra/core/v4/app/upgrades"
-	"github.com/classic-terra/core/v4/types/fork"
+	"github.com/Daviddochain/dochain-core/v4/app/upgrades"
+	"github.com/Daviddochain/dochain-core/v4/types/fork"
 )
 
 var DisableSwapFork = upgrades.Fork{
@@ -22,3 +22,6 @@ var VersionMapEnableFork = upgrades.Fork{
 	UpgradeHeight:  fork.VersionMapEnableHeight,
 	BeginForkLogic: runForkLogicVersionMapEnable,
 }
+
+
+

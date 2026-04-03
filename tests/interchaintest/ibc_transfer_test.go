@@ -17,8 +17,8 @@ import (
 	"go.uber.org/zap/zaptest"
 )
 
-// TestTerraGaiaIBCTranfer spins up a Terra Classic and Gaia network, initializes an IBC connection between them,
-// and sends an ICS20 token transfer from Terra Classic -> Gaia and then back from Gaia -> Terra Classic.
+// TestTerraGaiaIBCTranfer spins up a Do-Chain and Gaia network, initializes an IBC connection between them,
+// and sends an ICS20 token transfer from Do-Chain -> Gaia and then back from Gaia -> Do-Chain.
 func TestTerraGaiaIBCTranfer(t *testing.T) {
 	if testing.Short() {
 		t.Skip()
@@ -26,7 +26,7 @@ func TestTerraGaiaIBCTranfer(t *testing.T) {
 
 	t.Parallel()
 
-	// Create chain factory with Terra Classic
+	// Create chain factory with Do-Chain
 	numVals := 3
 	numFullNodes := 3
 	// tax rate in ictest is 0.0001
@@ -41,7 +41,7 @@ func TestTerraGaiaIBCTranfer(t *testing.T) {
 
 	cf := interchaintest.NewBuiltinChainFactory(zaptest.NewLogger(t), []*interchaintest.ChainSpec{
 		{
-			Name:          "terra",
+			Name:          "dochain",
 			ChainConfig:   config,
 			NumValidators: &numVals,
 			NumFullNodes:  &numFullNodes,
@@ -59,7 +59,7 @@ func TestTerraGaiaIBCTranfer(t *testing.T) {
 	chains, err := cf.Chains(t.Name())
 	require.NoError(t, err)
 
-	terra, gaia := chains[0].(*cosmos.CosmosChain), chains[1].(*cosmos.CosmosChain)
+	dochain, gaia := chains[0].(*cosmos.CosmosChain), chains[1].(*cosmos.CosmosChain)
 
 	// Create relayer factory to utilize the go-relayer
 	rf := interchaintest.NewBuiltinRelayerFactory(ibc.CosmosRly, zaptest.NewLogger(t))
@@ -67,11 +67,11 @@ func TestTerraGaiaIBCTranfer(t *testing.T) {
 
 	// Create a new Interchain object which describes the chains, relayers, and IBC connections we want to use
 	ic := interchaintest.NewInterchain().
-		AddChain(terra).
+		AddChain(dochain).
 		AddChain(gaia).
 		AddRelayer(r, "relayer").
 		AddLink(interchaintest.InterchainLink{
-			Chain1:  terra,
+			Chain1:  dochain,
 			Chain2:  gaia,
 			Relayer: r,
 			Path:    pathTerraGaia,
@@ -105,17 +105,17 @@ func TestTerraGaiaIBCTranfer(t *testing.T) {
 	// Create and Fund User Wallets
 	taxAmount := taxRate.MulInt(sdkmath.NewInt(genesisWalletAmount)).TruncateInt()
 	receivedAmount := sdkmath.NewInt(genesisWalletAmount).Sub(taxAmount)
-	users := interchaintest.GetAndFundTestUsers(t, ctx, "default", sdkmath.NewInt(genesisWalletAmount), terra, gaia)
+	users := interchaintest.GetAndFundTestUsers(t, ctx, "default", sdkmath.NewInt(genesisWalletAmount), dochain, gaia)
 	terraUser := users[0]
 	gaiaUser := users[1]
 
 	terraUserAddr := terraUser.FormattedAddress()
 	gaiaUserAddr := gaiaUser.FormattedAddress()
 
-	err = testutil.WaitForBlocks(ctx, 10, terra, gaia)
+	err = testutil.WaitForBlocks(ctx, 10, dochain, gaia)
 	require.NoError(t, err)
 
-	terraUserInitialBal, err := terra.GetBalance(ctx, terraUserAddr, terra.Config().Denom)
+	terraUserInitialBal, err := dochain.GetBalance(ctx, terraUserAddr, dochain.Config().Denom)
 	require.NoError(t, err)
 	require.Equal(t, receivedAmount, terraUserInitialBal)
 
@@ -123,37 +123,37 @@ func TestTerraGaiaIBCTranfer(t *testing.T) {
 	require.NoError(t, err)
 	require.Equal(t, genesisWalletBalance, gaiaUserInitialBal)
 
-	// Compose an IBC transfer and send from Terra Classic -> Gaia
+	// Compose an IBC transfer and send from Do-Chain -> Gaia
 	transferAmount := math.NewInt(1000)
 	transfer := ibc.WalletAmount{
 		Address: gaiaUserAddr,
-		Denom:   terra.Config().Denom,
+		Denom:   dochain.Config().Denom,
 		Amount:  transferAmount,
 	}
 
 	// Query for the newly created channel
-	terraChannels, err := r.GetChannels(ctx, eRep, terra.Config().ChainID)
+	terraChannels, err := r.GetChannels(ctx, eRep, dochain.Config().ChainID)
 	require.NoError(t, err)
 
-	transferTx, err := terra.SendIBCTransfer(ctx, terraChannels[0].ChannelID, terraUserAddr, transfer, ibc.TransferOptions{})
+	transferTx, err := dochain.SendIBCTransfer(ctx, terraChannels[0].ChannelID, terraUserAddr, transfer, ibc.TransferOptions{})
 	require.NoError(t, err)
 
-	terraHeight, err := terra.Height(ctx)
+	terraHeight, err := dochain.Height(ctx)
 	require.NoError(t, err)
 
 	// Poll for the ack to know the transfer was successful
-	_, err = testutil.PollForAck(ctx, terra, terraHeight, terraHeight+10, transferTx.Packet)
+	_, err = testutil.PollForAck(ctx, dochain, terraHeight, terraHeight+10, transferTx.Packet)
 	require.NoError(t, err)
 
-	// Get the IBC denom for uluna on Gaia
-	terraTokenDenom := transfertypes.GetPrefixedDenom(terraChannels[0].Counterparty.PortID, terraChannels[0].Counterparty.ChannelID, terra.Config().Denom)
+	// Get the IBC denom for udo on Gaia
+	terraTokenDenom := transfertypes.GetPrefixedDenom(terraChannels[0].Counterparty.PortID, terraChannels[0].Counterparty.ChannelID, dochain.Config().Denom)
 	terraIBCDenom := transfertypes.ParseDenomTrace(terraTokenDenom).IBCDenom()
 
 	// the transfer is using 200000 gas, gas price is 28.325uluna
 	gasFee := math.LegacyNewDec(200000).Mul(math.LegacyNewDecWithPrec(28325, 3))
 
-	// Assert that the funds are no longer present in user acc on Terra Classic and are in the user acc on Gaia
-	terraUserUpdateBal, err := terra.GetBalance(ctx, terraUserAddr, terra.Config().Denom)
+	// Assert that the funds are no longer present in user acc on Do-Chain and are in the user acc on Gaia
+	terraUserUpdateBal, err := dochain.GetBalance(ctx, terraUserAddr, dochain.Config().Denom)
 	require.NoError(t, err)
 
 	// TODO: the gas fee is not fixed 200000 gas, so the below test is not working
@@ -164,7 +164,7 @@ func TestTerraGaiaIBCTranfer(t *testing.T) {
 	require.NoError(t, err)
 	require.Equal(t, transferAmount, gaiaUserUpdateBal)
 
-	// Compose an IBC transfer and send from Gaia -> Terra Classic
+	// Compose an IBC transfer and send from Gaia -> Do-Chain
 	transfer = ibc.WalletAmount{
 		Address: terraUserAddr,
 		Denom:   terraIBCDenom,
@@ -181,8 +181,8 @@ func TestTerraGaiaIBCTranfer(t *testing.T) {
 	_, err = testutil.PollForAck(ctx, gaia, gaiaHeight, gaiaHeight+10, transferTx.Packet)
 	require.NoError(t, err)
 
-	// Assert that the funds are now back on Terra Classic and not on Gaia (except gas fees paid of course)
-	terraUserUpdateBal, err = terra.GetBalance(ctx, terraUserAddr, terra.Config().Denom)
+	// Assert that the funds are now back on Do-Chain and not on Gaia (except gas fees paid of course)
+	terraUserUpdateBal, err = dochain.GetBalance(ctx, terraUserAddr, dochain.Config().Denom)
 	require.NoError(t, err)
 	// TODO: as above this test does not work as "gas" is set to auto.
 	// require.Equal(t, terraUserInitialBal.Sub(gasFee.RoundInt()), terraUserUpdateBal)
@@ -192,3 +192,6 @@ func TestTerraGaiaIBCTranfer(t *testing.T) {
 	require.NoError(t, err)
 	require.Equal(t, math.NewInt(0), gaiaUserUpdateBal)
 }
+
+
+

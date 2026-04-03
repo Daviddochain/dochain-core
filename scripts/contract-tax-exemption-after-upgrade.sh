@@ -2,7 +2,7 @@
 
 set +e
 
-BINARY=_build/new/terrad
+BINARY=_build/new/dochaind
 HACK_ATOM="./custom/auth/ante/testdata/hackatom.wasm"
 KEYRING_BACKEND="test"
 HOME=mytestnet
@@ -10,7 +10,7 @@ CHAIN_ID=localterra
 KEY="test0"
 KEY1="test1"
 KEY1="test2"
-DENOM=uluna
+DENOM=udo
 
 # store stargate-tester
 echo "... stores a wasm"
@@ -98,7 +98,7 @@ echo $out
 sleep 5
 
 while true; do
-    PROPOSAL_STATUS=$(./_build/new/terrad q gov proposal 1 --output=json | jq ".status" -r)
+    PROPOSAL_STATUS=$(./_build/new/dochaind q gov proposal 1 --output=json | jq ".status" -r)
     echo $PROPOSAL_STATUS
     if [ $PROPOSAL_STATUS = "PROPOSAL_STATUS_PASSED" ]; then
         break
@@ -112,7 +112,7 @@ echo "CHECK ADDRESS AFTER ADDING BURN TAX EXEMPTION LIST"
 echo ""
 
 # check burn tax exemption address
-./_build/new/terrad q treasury burn-tax-exemption-list -o json | jq ".addresses"
+./_build/new/dochaind q treasury burn-tax-exemption-list -o json | jq ".addresses"
 
 # execute release
 msg=$(jq -n '
@@ -132,3 +132,5 @@ echo "... print tax-proceeds before adding to tax exemption list"
 echo $tax_proceeds_0
 echo "... query tax-proceeds after adding to tax exemption list, should be the same as before"
 $BINARY q treasury tax-proceeds
+
+

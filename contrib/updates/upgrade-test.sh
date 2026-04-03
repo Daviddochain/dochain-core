@@ -3,8 +3,8 @@
 # should make this auto fetch upgrade name from app upgrades once many upgrades have been done
 # this command will retrieve the folder with the largest number in format v<number>
 SOFTWARE_UPGRADE_NAME=$(ls -d -- ./app/upgrades/v* | sort -Vr | head -n 1 | xargs basename)
-NODE1_HOME=node1/terrad
-BINARY_OLD="docker exec terradnode1 ./old/terrad"
+NODE1_HOME=node1/dochaind
+BINARY_OLD="docker exec terradnode1 ./old/dochaind"
 TESTNET_NVAL=${1:-7}
 
 # sleep to wait for localnet to come up
@@ -17,14 +17,14 @@ CHAIN_ID=${STATUS_INFO[0]}
 UPGRADE_HEIGHT=$((STATUS_INFO[1] + 20))
 echo $UPGRADE_HEIGHT
 
-docker exec terradnode1 tar -cf ./terrad.tar -C . terrad
-SUM=$(docker exec terradnode1 sha256sum ./terrad.tar | cut -d ' ' -f1)
+docker exec terradnode1 tar -cf ./dochaind.tar -C . dochaind
+SUM=$(docker exec terradnode1 sha256sum ./dochaind.tar | cut -d ' ' -f1)
 DOCKER_BASE_PATH=$(docker exec terradnode1 pwd)
 echo $SUM
 UPGRADE_INFO=$(jq -n '
 {
     "binaries": {
-        "linux/amd64": "file://'$DOCKER_BASE_PATH'/terrad.tar?checksum=sha256:'"$SUM"'",
+        "linux/amd64": "file://'$DOCKER_BASE_PATH'/dochaind.tar?checksum=sha256:'"$SUM"'",
     }
 }')
 
@@ -40,7 +40,7 @@ sleep 5
 for (( i=0; i<$TESTNET_NVAL; i++ )); do
     # check if docker for node i is running
     if [[ $(docker ps -a | grep terradnode$i | wc -l) -eq 1 ]]; then
-        $BINARY_OLD tx gov vote 1 yes --from node$i --keyring-backend test --chain-id $CHAIN_ID --home "node$i/terrad" -y
+        $BINARY_OLD tx gov vote 1 yes --from node$i --keyring-backend test --chain-id $CHAIN_ID --home "node$i/dochaind" -y
         sleep 5
     fi
 done
@@ -77,7 +77,7 @@ while true; do
     fi
 
     if [[ $BLOCK_HEIGHT -ge $UPGRADE_HEIGHT ]]; then
-        # assuming running only 1 terrad
+        # assuming running only 1 dochaind
         echo "UPGRADE REACHED, CONTINUING NEW CHAIN"
         break
     else
@@ -97,7 +97,7 @@ sleep 40
 # check all nodes are online after upgrade
 for (( i=0; i<$TESTNET_NVAL; i++ )); do
     if [[ $(docker ps -a | grep terradnode$i | wc -l) -eq 1 ]]; then
-        docker exec terradnode$i ./terrad status --home "node$i/terrad"
+        docker exec terradnode$i ./dochaind status --home "node$i/dochaind"
         if [[ "${PIPESTATUS[0]}" != "0" ]]; then
             echo "node$i is not online"
             docker logs terradnode$i
@@ -109,3 +109,5 @@ for (( i=0; i<$TESTNET_NVAL; i++ )); do
         exit 1
     fi
 done
+
+

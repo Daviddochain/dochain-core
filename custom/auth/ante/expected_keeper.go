@@ -44,3 +44,6 @@ type GovKeeper interface {
 type TaxKeeper interface {
 	GetBurnTaxRate(ctx sdk.Context) sdkmath.LegacyDec
 }
+
+
+

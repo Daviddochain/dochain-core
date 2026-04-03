@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"cosmossdk.io/math"
-	oracle "github.com/classic-terra/core/v4/x/oracle/types"
+	oracle "github.com/Daviddochain/dochain-core/v4/x/oracle/types"
 	cryptocodec "github.com/cosmos/cosmos-sdk/crypto/codec"
 	"github.com/cosmos/cosmos-sdk/types/module/testutil"
 	govv1 "github.com/cosmos/cosmos-sdk/x/gov/types/v1"
@@ -15,8 +15,8 @@ import (
 )
 
 var (
-	TerraClassicE2ERepo  = "terra-classic/core-e2e"
-	TerraClassicMainRepo = "terra-classic/core"
+	TerraClassicE2ERepo  = "dochain-classic/core-e2e"
+	TerraClassicMainRepo = "dochain-classic/core"
 
 	repo, version = GetDockerImageInfo()
 
@@ -26,8 +26,8 @@ var (
 		UIDGID:     "1025:1025",
 	}
 
-	pathTerraGaia        = "terra-gaia"
-	pathTerraOsmo        = "terra-osmo"
+	pathTerraGaia        = "dochain-gaia"
+	pathTerraOsmo        = "dochain-osmo"
 	pathGaiaOsmo         = "gaia-osmo"
 	genesisWalletAmount  = int64(10000000000)
 	genesisWalletBalance = math.NewInt(genesisWalletAmount)
@@ -42,9 +42,9 @@ func createConfig() (ibc.ChainConfig, error) {
 			Name:                "core",
 			ChainID:             "core-1",
 			Images:              []ibc.DockerImage{TerraClassicImage},
-			Bin:                 "terrad",
-			Bech32Prefix:        "terra",
-			Denom:               "uluna",
+			Bin:                 "dochaind",
+			Bech32Prefix:        "dochain",
+			Denom:               "udo",
 			GasPrices:           "28.325uluna",
 			GasAdjustment:       2.5,
 			TrustingPeriod:      "112h",
@@ -74,7 +74,7 @@ func createGaiaConfig() ibc.ChainConfig {
 	}
 }
 
-// coreEncoding registers the Terra Classic specific module codecs so that the associated types and msgs
+// coreEncoding registers the Do-Chain specific module codecs so that the associated types and msgs
 // will be supported when writing to the blocksdb sqlite database.
 func coreEncoding() *testutil.TestEncodingConfig {
 	cfg := cosmos.DefaultEncoding()
@@ -122,3 +122,6 @@ func ModifyGenesis() func(ibc.ChainConfig, []byte) ([]byte, error) {
 		return out, nil
 	}
 }
+
+
+

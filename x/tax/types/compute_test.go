@@ -33,7 +33,7 @@ func TestComputeTaxes_IBCDenomExcluded(t *testing.T) {
 
 func TestComputeTaxes_NativeDenomTaxWithCap(t *testing.T) {
 	ctx := sdk.Context{}
-	denom := "uluna"
+	denom := "udo"
 	principal := sdk.NewCoins(sdk.NewInt64Coin(denom, 1_000_000))
 	// taxRate 2% => raw tax 20_000, but cap at 5_000 applies
 	caps := mockCaps{caps: map[string]cosmosmath.Int{denom: cosmosmath.NewInt(5_000)}}
@@ -43,7 +43,7 @@ func TestComputeTaxes_NativeDenomTaxWithCap(t *testing.T) {
 
 func TestComputeTaxes_SimulateMinTax(t *testing.T) {
 	ctx := sdk.Context{}
-	denom := "uluna"
+	denom := "udo"
 	principal := sdk.NewCoins(sdk.NewInt64Coin(denom, 1))
 	// Very small rate -> would compute 0 tax, but simulate=true enforces min 100
 	tinyRate := sdkmath.LegacyNewDecWithPrec(1, 10) // 0.0000000001
@@ -59,3 +59,6 @@ func TestComputeTaxes_SkipBondDenom(t *testing.T) {
 	taxes := ComputeTaxes(ctx, principal, sdkmath.LegacyNewDecWithPrec(1, 2), false, mockCaps{}) // 1%
 	require.True(t, taxes.Empty(), "bond denom must be skipped")
 }
+
+
+

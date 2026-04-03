@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/classic-terra/core/v4/test/interchaintest/helpers"
+	"github.com/Daviddochain/dochain-core/v4/test/interchaintest/helpers"
 	"github.com/cosmos/cosmos-sdk/codec"
 	cryptotypes "github.com/cosmos/cosmos-sdk/crypto/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -27,7 +27,7 @@ func TestValidator(t *testing.T) {
 	}
 	t.Parallel()
 
-	// Create chain factory with Terra Classic
+	// Create chain factory with Do-Chain
 	numVals := 5
 	numFullNodes := 3
 
@@ -36,7 +36,7 @@ func TestValidator(t *testing.T) {
 
 	cf := interchaintest.NewBuiltinChainFactory(zaptest.NewLogger(t), []*interchaintest.ChainSpec{
 		{
-			Name:          "terra",
+			Name:          "dochain",
 			ChainConfig:   config,
 			NumValidators: &numVals,
 			NumFullNodes:  &numFullNodes,
@@ -47,10 +47,10 @@ func TestValidator(t *testing.T) {
 	chains, err := cf.Chains(t.Name())
 	require.NoError(t, err)
 
-	terra := chains[0].(*cosmos.CosmosChain)
+	dochain := chains[0].(*cosmos.CosmosChain)
 
 	// Create a new Interchain object which describes the chains, relayers, and IBC connections we want to use
-	ic := interchaintest.NewInterchain().AddChain(terra)
+	ic := interchaintest.NewInterchain().AddChain(dochain)
 
 	rep := testreporter.NewNopReporter()
 	eRep := rep.RelayerExecReporter(t)
@@ -72,20 +72,20 @@ func TestValidator(t *testing.T) {
 	})
 
 	// let chain produce some blocks
-	require.NoError(t, testutil.WaitForBlocks(ctx, 1, terra))
+	require.NoError(t, testutil.WaitForBlocks(ctx, 1, dochain))
 
 	// stop one validator so it starts missing votes
-	require.NoError(t, terra.Validators[1].StopContainer(ctx))
+	require.NoError(t, dochain.Validators[1].StopContainer(ctx))
 
-	stdout, _, err := terra.Validators[1].ExecBin(ctx, "status")
+	stdout, _, err := dochain.Validators[1].ExecBin(ctx, "status")
 	require.Error(t, err)
 	require.Empty(t, stdout)
 
 	// wait long enough to trip slashing window
-	require.NoError(t, testutil.WaitForBlocks(ctx, 21, terra))
+	require.NoError(t, testutil.WaitForBlocks(ctx, 21, dochain))
 
 	// --- Query all validators
-	stdout, _, err = terra.Validators[0].ExecQuery(
+	stdout, _, err = dochain.Validators[0].ExecQuery(
 		ctx, "staking", "validators",
 		"--output", "json",
 	)
@@ -112,7 +112,7 @@ func TestValidator(t *testing.T) {
 	consAddrBytes := sdk.ConsAddress(val1PubKey.Address())
 
 	// --- Get Slashing Params ---
-	stdout, _, err = terra.Validators[0].ExecQuery(ctx, "slashing", "params", "--output", "json")
+	stdout, _, err = dochain.Validators[0].ExecQuery(ctx, "slashing", "params", "--output", "json")
 	require.NoError(t, err)
 	require.NotEmpty(t, stdout)
 
@@ -121,7 +121,7 @@ func TestValidator(t *testing.T) {
 	require.Equal(t, int64(20), signedBlocksWindow)
 
 	// --- Get Signing Infos ---
-	stdout, _, err = terra.Validators[0].ExecQuery(ctx, "slashing", "signing-infos", "--output", "json")
+	stdout, _, err = dochain.Validators[0].ExecQuery(ctx, "slashing", "signing-infos", "--output", "json")
 	require.NoError(t, err)
 	require.NotEmpty(t, stdout)
 
@@ -143,3 +143,6 @@ func TestValidator(t *testing.T) {
 	}
 	require.Equal(t, 1, count)
 }
+
+
+

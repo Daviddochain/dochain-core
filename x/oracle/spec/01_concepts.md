@@ -14,7 +14,7 @@ Validators must first pre-commit to a exchange rate, then in the subsequent `Vot
 
     Let `P_t` be the current time interval of duration defined by `VotePeriod` (currently set to 30 seconds) during which validators must submit two messages:
 
-    * A `MsgAggregateExchangeRatePrevote`, containing the SHA256 hash of the exchange rates of Luna with respect to a Terra peg. A prevote must be submitted for all different denomination on which to report a Luna exchange rates.
+    * A `MsgAggregateExchangeRatePrevote`, containing the SHA256 hash of the exchange rates of Luna with respect to a dochain peg. A prevote must be submitted for all different denomination on which to report a Luna exchange rates.
     * A `MsgAggregateExchangeRateVote`, containing the salt used to create the hash for the aggreagte prevote submitted in the previous interval `P_t-1`.
 
 * Vote Tally
@@ -58,3 +58,6 @@ A validator may abstain from voting by submitting a non-positive integer for the
 ## Messages
 
 > The control flow for vote-tallying, Luna exchange rate updates, ballot rewards and slashing happens at the end of every `VotePeriod`, and is found at the [end-block ABCI](./03_end_block.md) function rather than inside message handlers.
+
+
+

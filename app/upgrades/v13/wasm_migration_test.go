@@ -9,8 +9,8 @@ import (
 	storetypes "cosmossdk.io/store/types"
 	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
 	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
-	apptesting "github.com/classic-terra/core/v4/app/testing"
-	v13 "github.com/classic-terra/core/v4/app/upgrades/v13"
+	apptesting "github.com/Daviddochain/dochain-core/v4/app/testing"
+	v13 "github.com/Daviddochain/dochain-core/v4/app/upgrades/v13"
 	cmtproto "github.com/cometbft/cometbft/proto/tendermint/types"
 	dbm "github.com/cosmos/cosmos-db"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -35,7 +35,7 @@ type ComprehensiveMigrationTestSuite struct {
 
 func TestComprehensiveMigrationTestSuite(t *testing.T) {
 	sdk.GetConfig().SetAddressVerifier(wasmtypes.VerifyAddressLen())
-	sdk.GetConfig().SetBech32PrefixForAccount("terra", "terrapub")
+	sdk.GetConfig().SetBech32PrefixForAccount("dochain", "terrapub")
 
 	suite.Run(t, new(ComprehensiveMigrationTestSuite))
 }
@@ -68,7 +68,7 @@ func (s *ComprehensiveMigrationTestSuite) runMigration() {
 // TestKeySequenceCodeID tests the migration of key sequence code IDs.
 // It changes the prefix from 0x01 to 0x04+"lastCodeId"
 // https://github.com/CosmWasm/wasmd/blob/v0.46.0/x/wasm/types/keys.go#L47
-// https://github.com/classic-terra/wasmd/blob/release/v0.46.x-classic/x/wasm/types/keys.go#L27
+// https://github.com/classic-dochain/wasmd/blob/release/v0.46.x-classic/x/wasm/types/keys.go#L27
 func (s *ComprehensiveMigrationTestSuite) TestKeySequenceCodeID() {
 	oldKey := v13.LegacyPrefixes.KeySequenceCodeID
 	oldVal := []byte{0x10}
@@ -83,7 +83,7 @@ func (s *ComprehensiveMigrationTestSuite) TestKeySequenceCodeID() {
 
 // TestKeySequenceInstanceID tests the migration of key sequence instance IDs.
 // It changes the prefix from 0x02 to 0x04+"lastContractId"
-// https://github.com/classic-terra/wasmd/blob/release/v0.46.x-classic/x/wasm/types/keys.go#L28C2-L28C23
+// https://github.com/classic-dochain/wasmd/blob/release/v0.46.x-classic/x/wasm/types/keys.go#L28C2-L28C23
 // https://github.com/CosmWasm/wasmd/blob/v0.46.0/x/wasm/types/keys.go#L38
 func (s *ComprehensiveMigrationTestSuite) TestKeySequenceInstanceID() {
 	oldKey := v13.LegacyPrefixes.KeySequenceInstanceID
@@ -100,7 +100,7 @@ func (s *ComprehensiveMigrationTestSuite) TestKeySequenceInstanceID() {
 // TestContractKeyMigration_LengthPrefixed tests the migration of contract info keys.
 // It changes the prefix from 0x04 to 0x02 and address is changed from prefixed to unprefixed
 // https://github.com/CosmWasm/wasmd/blob/v0.46.0/x/wasm/types/keys.go#L47
-// https://github.com/classic-terra/wasmd/blob/release/v0.46.x-classic/x/wasm/types/keys.go#L47
+// https://github.com/classic-dochain/wasmd/blob/release/v0.46.x-classic/x/wasm/types/keys.go#L47
 func (s *ComprehensiveMigrationTestSuite) TestContractKeyMigration_LengthPrefixed() {
 	oldKey := v13.GetContractAddressKeyLegacy(s.testAddr1)
 	oldVal := []byte("contract-info-value")
@@ -115,7 +115,7 @@ func (s *ComprehensiveMigrationTestSuite) TestContractKeyMigration_LengthPrefixe
 
 // TestContractStoreMigration_LengthPrefixed tests the migration of contract store keys.
 // The prefix is changed from 0x05 to 0x03, and address is changed from prefixed to unprefixed
-// https://github.com/classic-terra/wasmd/blob/release/v0.46.x-classic/x/wasm/types/keys.go#L58
+// https://github.com/classic-dochain/wasmd/blob/release/v0.46.x-classic/x/wasm/types/keys.go#L58
 // https://github.com/CosmWasm/wasmd/blob/v0.46.0/x/wasm/types/keys.go#L77
 func (s *ComprehensiveMigrationTestSuite) TestContractStoreMigration_LengthPrefixed() {
 	oldKey := v13.GetContractStorePrefixLegacy(s.testAddr2)
@@ -132,7 +132,7 @@ func (s *ComprehensiveMigrationTestSuite) TestContractStoreMigration_LengthPrefi
 // TestContractHistoryMigration_Direct test the migration of contract history keys.
 // It changes the prefix from 0x06 to 0x05
 // https://github.com/CosmWasm/wasmd/blob/v0.46.0/x/wasm/types/keys.go#L110
-// https://github.com/classic-terra/wasmd/blob/release/v0.46.x-classic/x/wasm/types/keys.go#L109
+// https://github.com/classic-dochain/wasmd/blob/release/v0.46.x-classic/x/wasm/types/keys.go#L109
 func (s *ComprehensiveMigrationTestSuite) TestContractHistoryMigration_Direct() {
 	oldKey := v13.GetContractCodeHistoryElementKeyLegacy(s.testAddr3, 1)
 	oldVal := []byte("history-value")
@@ -148,7 +148,7 @@ func (s *ComprehensiveMigrationTestSuite) TestContractHistoryMigration_Direct() 
 // TestSecondaryIndexMigration_Direct tests the migration of secondary index keys.
 // It changes the prefix from 0x10 to 0x06, and address still un-prefixed
 // https://github.com/CosmWasm/wasmd/blob/v0.46.0/x/wasm/types/keys.go#L77
-// https://github.com/classic-terra/wasmd/blob/release/v0.46.x-classic/x/wasm/types/keys.go#L76
+// https://github.com/classic-dochain/wasmd/blob/release/v0.46.x-classic/x/wasm/types/keys.go#L76
 func (s *ComprehensiveMigrationTestSuite) TestSecondaryIndexMigration_Direct() {
 	contractCodeHistoryEntry := wasmtypes.ContractCodeHistoryEntry{
 		CodeID: 42,
@@ -172,7 +172,7 @@ func (s *ComprehensiveMigrationTestSuite) TestSecondaryIndexMigration_Direct() {
 // TestPinnedCodeIndexMigration tests the migration of the pinned code indexes
 // It stays the same after migration
 // https://github.com/CosmWasm/wasmd/blob/v0.46.0/x/wasm/types/keys.go#L32C2-L32C23
-// https://github.com/classic-terra/wasmd/blob/release/v0.46.x-classic/x/wasm/types/keys.go#L33
+// https://github.com/classic-dochain/wasmd/blob/release/v0.46.x-classic/x/wasm/types/keys.go#L33
 func (s *ComprehensiveMigrationTestSuite) TestPinnedCodeIndexMigration() {
 	codeID := uint64(10)
 
@@ -191,7 +191,7 @@ func (s *ComprehensiveMigrationTestSuite) TestPinnedCodeIndexMigration() {
 // TestTxCounterPrefixMigration tests the migration of the pinned code indexes
 // It stays the same after migration
 // https://github.com/CosmWasm/wasmd/blob/v0.46.0/x/wasm/types/keys.go#L33C2-L33C17
-// https://github.com/classic-terra/wasmd/blob/release/v0.46.x-classic/x/wasm/types/keys.go#L34
+// https://github.com/classic-dochain/wasmd/blob/release/v0.46.x-classic/x/wasm/types/keys.go#L34
 func (s *ComprehensiveMigrationTestSuite) TestTxCounterPrefixMigration() {
 	// Use legacy prefix
 	oldKey := v13.LegacyPrefixes.TXCounterPrefix
@@ -208,7 +208,7 @@ func (s *ComprehensiveMigrationTestSuite) TestTxCounterPrefixMigration() {
 // TestContractsByCreatorMigration_LengthPrefixed tests the migration of contracts by creator keys.
 // It stays the same after migration.
 // https://github.com/CosmWasm/wasmd/blob/v0.46.0/x/wasm/types/keys.go#L52
-// https://github.com/classic-terra/wasmd/blob/release/v0.46.x-classic/x/wasm/types/keys.go#L52
+// https://github.com/classic-dochain/wasmd/blob/release/v0.46.x-classic/x/wasm/types/keys.go#L52
 func (s *ComprehensiveMigrationTestSuite) TestContractsByCreatorMigration_LengthPrefixed() {
 	oldKey := v13.GetContractsByCreatorPrefixLegacy(s.testAddr1)
 	oldVal := []byte("creator-index-value")
@@ -359,3 +359,6 @@ func (s *ComprehensiveMigrationTestSuite) verifyLegacyDataRemoved() {
 
 	s.Require().Nil(s.kvStore.Get(v13.LegacyPrefixes.ParamsKey))
 }
+
+
+

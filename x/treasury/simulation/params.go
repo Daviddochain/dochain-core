@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"math/rand"
 
-	"github.com/classic-terra/core/v4/x/treasury/types"
+	"github.com/Daviddochain/dochain-core/v4/x/treasury/types"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
 )
@@ -55,3 +55,6 @@ func ParamChanges(*rand.Rand) []simtypes.LegacyParamChange {
 		),
 	}
 }
+
+
+

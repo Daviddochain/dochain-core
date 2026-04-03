@@ -1,10 +1,10 @@
 syntax = "proto3";
-package terra.market.v1beta1;
+package dochain.market.v1beta1;
 
 import "cosmos_proto/cosmos.proto";
 import "gogoproto/gogo.proto";
 
-option go_package = "github.com/classic-terra/core/v4/x/market/types";
+option go_package = "github.com/Daviddochain/dochain-core/v4/x/market/types";
 
 // Params defines the parameters for the market module.
 message Params {
@@ -25,3 +25,6 @@ message Params {
     (gogoproto.nullable)   = false
   ];
 }
+
+
+

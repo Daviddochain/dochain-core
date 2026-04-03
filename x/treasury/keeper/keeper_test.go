@@ -6,8 +6,8 @@ import (
 
 	"cosmossdk.io/math"
 	sdkmath "cosmossdk.io/math"
-	core "github.com/classic-terra/core/v4/types"
-	"github.com/classic-terra/core/v4/x/treasury/types"
+	core "github.com/Daviddochain/dochain-core/v4/types"
+	"github.com/Daviddochain/dochain-core/v4/x/treasury/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 )
@@ -156,3 +156,6 @@ func TestParams(t *testing.T) {
 	retrievedParams := input.TreasuryKeeper.GetParams(input.Ctx)
 	require.Equal(t, defaultParams, retrievedParams)
 }
+
+
+

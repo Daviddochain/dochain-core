@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	ColumbusChainID = "columbus-5"
+	ColumbusChainID = "cookie-1"
 )
 
 var _ stakingtypes.StakingHooks = &TerraStakingHooks{}
@@ -141,3 +141,6 @@ func (h TerraStakingHooks) AfterValidatorCreated(_ context.Context, _ sdk.ValAdd
 func (h TerraStakingHooks) BeforeDelegationRemoved(_ context.Context, _ sdk.AccAddress, _ sdk.ValAddress) error {
 	return nil
 }
+
+
+

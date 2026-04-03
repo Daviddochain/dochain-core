@@ -48,3 +48,6 @@ func TestGenesisValidation(t *testing.T) {
 	// Valid
 	require.NoError(t, ValidateGenesis(genState))
 }
+
+
+

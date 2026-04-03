@@ -71,7 +71,7 @@ func NewManager(isDebugLogEnabled bool) (docker *Manager, err error) {
 	if err != nil {
 		return nil, err
 	}
-	docker.network, err = docker.pool.CreateNetwork("terra-testnet")
+	docker.network, err = docker.pool.CreateNetwork("dochain-testnet")
 	if err != nil {
 		return nil, err
 	}
@@ -229,7 +229,7 @@ func (m *Manager) ExecQueryTxHash(t *testing.T, containerName, txHash string) (b
 		err    error
 	)
 
-	command := []string{"terrad", "query", "tx", txHash, "-o=json"}
+	command := []string{"dochaind", "query", "tx", txHash, "-o=json"}
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
 	defer cancel()
@@ -353,8 +353,8 @@ func (m *Manager) RunNodeResource(containerName, valCondifDir string) (*dockerte
 		User:       "root:root",
 		Cmd:        []string{"start"},
 		Mounts: []string{
-			fmt.Sprintf("%s/:/terra/.terra", valCondifDir),
-			fmt.Sprintf("%s/scripts:/terra", pwd),
+			fmt.Sprintf("%s/:/dochain/.dochain", valCondifDir),
+			fmt.Sprintf("%s/scripts:/dochain", pwd),
 		},
 	}
 
@@ -493,3 +493,6 @@ func parseTxResponse(outStr string) (txResponse TxResponse, err error) {
 	}
 	return txResponse, err
 }
+
+
+

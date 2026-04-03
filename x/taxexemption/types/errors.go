@@ -10,3 +10,6 @@ var (
 	ErrZoneNotExist              = errors.Register(ModuleName, 3, "zone not exist")
 	ErrZoneLengthInvalid         = errors.Register(ModuleName, 4, "length of zone list and addresses by zone must be equal")
 )
+
+
+

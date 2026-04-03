@@ -6,15 +6,15 @@ import (
 	sdkmath "cosmossdk.io/math"
 	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
 	wasmvmtypes "github.com/CosmWasm/wasmvm/v3/types"
-	core "github.com/classic-terra/core/v4/types"
-	"github.com/classic-terra/core/v4/wasmbinding/bindings"
-	markettypes "github.com/classic-terra/core/v4/x/market/types"
+	core "github.com/Daviddochain/dochain-core/v4/types"
+	"github.com/Daviddochain/dochain-core/v4/wasmbinding/bindings"
+	markettypes "github.com/Daviddochain/dochain-core/v4/x/market/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
-// go test -v -run ^TestSwap$ github.com/classic-terra/core/v4/wasmbinding/test
-// oracle rate: 1 uluna = 1.7 usdr
-// 1000 uluna from trader goes to contract
+// go test -v -run ^TestSwap$ github.com/Daviddochain/dochain-core/v4/wasmbinding/test
+// oracle rate: 1 udo = 1.7 usdr
+// 1000 udo from trader goes to contract
 // 1666 usdr (after 2% tax) is swapped into which goes back to contract
 func (s *WasmTestSuite) Swap(contractPath string, executeFunc func(contract sdk.AccAddress, sender sdk.AccAddress, msg bindings.TerraMsg, funds sdk.Coin) error) {
 	s.SetupTest()
@@ -59,9 +59,9 @@ func (s *WasmTestSuite) Swap(contractPath string, executeFunc func(contract sdk.
 	s.Require().Equal(contractBeforeSwap.AmountOf(core.MicroSDRDenom).Add(expectedSwappedSDR.TruncateInt()), contractAfterSwap.AmountOf(core.MicroSDRDenom))
 }
 
-// go test -v -run ^TestSwapSend$ github.com/classic-terra/core/v4/wasmbinding/test
-// oracle rate: 1 uluna = 1.7 usdr
-// 1000 uluna from trader goes to contract
+// go test -v -run ^TestSwapSend$ github.com/Daviddochain/dochain-core/v4/wasmbinding/test
+// oracle rate: 1 udo = 1.7 usdr
+// 1000 udo from trader goes to contract
 // 1666 usdr (after 2% tax) is swapped into which goes back to contract
 // 1666 usdr is sent to trader
 func (s *WasmTestSuite) SwapSend(contractPath string, executeFunc func(contract sdk.AccAddress, sender sdk.AccAddress, msg bindings.TerraMsg, funds sdk.Coin) error) {
@@ -181,3 +181,6 @@ func (s *WasmTestSuite) executeOldBindings(contract sdk.AccAddress, sender sdk.A
 	_, err := contractKeeper.Execute(s.Ctx, contract, sender, reflectBz, coins)
 	return err
 }
+
+
+

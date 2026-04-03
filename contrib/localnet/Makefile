@@ -1,9 +1,12 @@
-all: terrad-env terrad-upgrade-env
+all: dochaind-env dochaind-upgrade-env
 
-terrad-env:
-	docker build --platform linux/amd64 --no-cache --build-arg UID=$(shell id -u) --build-arg GID=$(shell id -g) --tag classic-terra/terrad-env terrad-env
+dochaind-env:
+	docker build --platform linux/amd64 --no-cache --build-arg UID=$(shell id -u) --build-arg GID=$(shell id -g) --tag classic-dochain/dochaind-env dochaind-env
 
-terrad-upgrade-env:
-	docker build --platform linux/amd64 --no-cache --build-arg UID=$(shell id -u) --build-arg GID=$(shell id -g) --build-arg entrypoint=cosmovisor-entrypoint.sh --tag classic-terra/terrad-upgrade-env terrad-env
+dochaind-upgrade-env:
+	docker build --platform linux/amd64 --no-cache --build-arg UID=$(shell id -u) --build-arg GID=$(shell id -g) --build-arg entrypoint=cosmovisor-entrypoint.sh --tag classic-dochain/dochaind-upgrade-env dochaind-env
 
-.PHONY: all terrad-env terrad-upgrade-env
+.PHONY: all dochaind-env dochaind-upgrade-env
+
+
+

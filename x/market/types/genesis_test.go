@@ -22,3 +22,6 @@ func TestGenesisValidation(t *testing.T) {
 	genState.Params.MinStabilitySpread = sdkmath.LegacyNewDec(-1)
 	require.Error(t, ValidateGenesis(genState))
 }
+
+
+

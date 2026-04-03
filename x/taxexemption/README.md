@@ -203,18 +203,18 @@ The tax exemption module provides governance-controlled functionalities to manag
 ----------------------------------------------------------------
 Before submitting a proposal, users must create a draft proposal. Each proposal type has a specific msg type. Examples:
 
-Add a tax-exempt zone: terra.taxexemption.v1.MsgAddTaxExemptionZone
+Add a tax-exempt zone: dochain.taxexemption.v1.MsgAddTaxExemptionZone
 
-Remove a tax-exempt zone: terra.taxexemption.v1.MsgRemoveTaxExemptionZone
+Remove a tax-exempt zone: dochain.taxexemption.v1.MsgRemoveTaxExemptionZone
 
-Remove addresses from tax-exempt list: terra.taxexemption.v1.MsgRemoveTaxExemptionAddress
+Remove addresses from tax-exempt list: dochain.taxexemption.v1.MsgRemoveTaxExemptionAddress
 
- Modify a tax exemption zone: terra.taxexemption.v1.MsgModifyTaxExemptionZone
+ Modify a tax exemption zone: dochain.taxexemption.v1.MsgModifyTaxExemptionZone
 
 
 The draft proposal creation command:
 ```bash
-terrad tx gov draft-proposal
+dochaind tx gov draft-proposal
 ```
 After creating a proposal, a JSON file will be generated that looks like the one below.
 
@@ -223,7 +223,7 @@ After creating a proposal, a JSON file will be generated that looks like the one
 {
   "messages": [
     {
-      "@type": "/terra.taxexemption.v1.MsgAddTaxExemptionZone",
+      "@type": "/dochain.taxexemption.v1.MsgAddTaxExemptionZone",
       "zone": "bnb",
       "outgoing": false,
       "incoming": false,
@@ -235,14 +235,14 @@ After creating a proposal, a JSON file will be generated that looks like the one
     }
   ],
   "metadata": "ipfs://CID",
-  "deposit": "1000000uluna",
+  "deposit": "1000000udo",
   "title": "add zone",
   "summary": "sum"
 }
 ```
 ### Submit Proposal
 ```bash
-terrad tx gov submit-proposal draft_proposal.json --from test0 --keyring-backend test --home mytestnet --fees 5665000uluna
+dochaind tx gov submit-proposal draft_proposal.json --from test0 --keyring-backend test --home mytestnet --fees 5665000udo
 ```
 ---------------------------------------------------------------------------
 ## 📌 GetCmdQueryTaxable
@@ -250,7 +250,7 @@ This command allows users to check whether a transaction from a given sender add
 ### 🧾 Syntax
 
 ```bash
-terrad query taxable [from-address] [to-address]
+dochaind query taxable [from-address] [to-address]
 ```
 
 ## 📌 GetCmdQueryZonelist
@@ -266,6 +266,9 @@ This command allows users to query and retrieve all tax-exempt addresses associa
 ### 🧾 Syntax
 
 ```bash
-terrad query taxable addresses [zone-name]
+dochaind query taxable addresses [zone-name]
 ```
+
+
+
 

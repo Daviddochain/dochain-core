@@ -4,7 +4,7 @@ import (
 	"context"
 
 	errorsmod "cosmossdk.io/errors"
-	"github.com/classic-terra/core/v4/x/taxexemption/types"
+	"github.com/Daviddochain/dochain-core/v4/x/taxexemption/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
@@ -59,3 +59,6 @@ func (q querier) TaxExemptionAddressList(c context.Context, req *types.QueryTaxE
 	}
 	return &types.QueryTaxExemptionAddressResponse{Addresses: addresses, Pagination: pageRes}, nil
 }
+
+
+

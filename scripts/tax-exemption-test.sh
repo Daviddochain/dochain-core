@@ -2,7 +2,7 @@
 
 # Default values
 DEFAULT_HOME="mytestnet"
-DEFAULT_BINARY="_build/new/terrad"
+DEFAULT_BINARY="_build/new/dochaind"
 DEFAULT_CHAIN_ID="localterra"
 
 # Parse command line arguments
@@ -38,7 +38,7 @@ echo "Using home directory: $HOME"
 echo "Using chain ID: $CHAIN_ID"
 
 ROOT=$(pwd)
-DENOM=uluna
+DENOM=udo
 KEY="test0"
 KEY1="test1"
 KEY2="test2"
@@ -288,3 +288,5 @@ $BINARY q treasury burn-tax-exemption-list -o json | jq ".addresses"
 
 echo ""
 echo "ALL TESTS COMPLETED" 
+
+

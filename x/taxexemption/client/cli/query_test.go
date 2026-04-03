@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/classic-terra/core/v4/x/taxexemption/client/cli"
+	"github.com/Daviddochain/dochain-core/v4/x/taxexemption/client/cli"
 )
 
 func (s *CLITestSuite) TestGetQueryCmd() {
@@ -595,3 +595,6 @@ func (s *CLITestSuite) TestGetCmdQueryExemptlist() {
 	s.Require().NotNil(flags.Lookup("reverse"))
 	s.Require().NotNil(flags.Lookup("output"))
 }
+
+
+

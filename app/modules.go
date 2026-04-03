@@ -8,39 +8,39 @@ import (
 	"cosmossdk.io/x/upgrade"
 	upgradetypes "cosmossdk.io/x/upgrade/types"
 	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
-	terraappparams "github.com/classic-terra/core/v4/app/params"
+	terraappparams "github.com/Daviddochain/dochain-core/v4/app/params"
 	// unnamed import of statik for swagger UI support
-	_ "github.com/classic-terra/core/v4/client/docs/statik"
-	customauth "github.com/classic-terra/core/v4/custom/auth"
-	customauthsim "github.com/classic-terra/core/v4/custom/auth/simulation"
-	customauthz "github.com/classic-terra/core/v4/custom/authz"
-	custombank "github.com/classic-terra/core/v4/custom/bank"
-	customdistr "github.com/classic-terra/core/v4/custom/distribution"
-	customevidence "github.com/classic-terra/core/v4/custom/evidence"
-	customfeegrant "github.com/classic-terra/core/v4/custom/feegrant"
-	customgov "github.com/classic-terra/core/v4/custom/gov"
-	custommint "github.com/classic-terra/core/v4/custom/mint"
-	customparams "github.com/classic-terra/core/v4/custom/params"
-	customslashing "github.com/classic-terra/core/v4/custom/slashing"
-	customstaking "github.com/classic-terra/core/v4/custom/staking"
-	customupgrade "github.com/classic-terra/core/v4/custom/upgrade"
-	customwasm "github.com/classic-terra/core/v4/custom/wasm"
-	"github.com/classic-terra/core/v4/x/dyncomm"
-	dyncommtypes "github.com/classic-terra/core/v4/x/dyncomm/types"
-	"github.com/classic-terra/core/v4/x/market"
-	markettypes "github.com/classic-terra/core/v4/x/market/types"
-	"github.com/classic-terra/core/v4/x/oracle"
-	oracletypes "github.com/classic-terra/core/v4/x/oracle/types"
-	taxmodule "github.com/classic-terra/core/v4/x/tax/module"
-	taxbank "github.com/classic-terra/core/v4/x/tax/modules/bank"
-	taxmarket "github.com/classic-terra/core/v4/x/tax/modules/market"
-	taxtypes "github.com/classic-terra/core/v4/x/tax/types"
-	"github.com/classic-terra/core/v4/x/taxexemption"
-	taxexemptiontypes "github.com/classic-terra/core/v4/x/taxexemption/types"
-	"github.com/classic-terra/core/v4/x/treasury"
-	treasuryclient "github.com/classic-terra/core/v4/x/treasury/client"
-	treasurytypes "github.com/classic-terra/core/v4/x/treasury/types"
-	"github.com/classic-terra/core/v4/x/vesting"
+	_ "github.com/Daviddochain/dochain-core/v4/client/docs/statik"
+	customauth "github.com/Daviddochain/dochain-core/v4/custom/auth"
+	customauthsim "github.com/Daviddochain/dochain-core/v4/custom/auth/simulation"
+	customauthz "github.com/Daviddochain/dochain-core/v4/custom/authz"
+	custombank "github.com/Daviddochain/dochain-core/v4/custom/bank"
+	customdistr "github.com/Daviddochain/dochain-core/v4/custom/distribution"
+	customevidence "github.com/Daviddochain/dochain-core/v4/custom/evidence"
+	customfeegrant "github.com/Daviddochain/dochain-core/v4/custom/feegrant"
+	customgov "github.com/Daviddochain/dochain-core/v4/custom/gov"
+	custommint "github.com/Daviddochain/dochain-core/v4/custom/mint"
+	customparams "github.com/Daviddochain/dochain-core/v4/custom/params"
+	customslashing "github.com/Daviddochain/dochain-core/v4/custom/slashing"
+	customstaking "github.com/Daviddochain/dochain-core/v4/custom/staking"
+	customupgrade "github.com/Daviddochain/dochain-core/v4/custom/upgrade"
+	customwasm "github.com/Daviddochain/dochain-core/v4/custom/wasm"
+	"github.com/Daviddochain/dochain-core/v4/x/dyncomm"
+	dyncommtypes "github.com/Daviddochain/dochain-core/v4/x/dyncomm/types"
+	"github.com/Daviddochain/dochain-core/v4/x/market"
+	markettypes "github.com/Daviddochain/dochain-core/v4/x/market/types"
+	"github.com/Daviddochain/dochain-core/v4/x/oracle"
+	oracletypes "github.com/Daviddochain/dochain-core/v4/x/oracle/types"
+	taxmodule "github.com/Daviddochain/dochain-core/v4/x/tax/module"
+	taxbank "github.com/Daviddochain/dochain-core/v4/x/tax/modules/bank"
+	taxmarket "github.com/Daviddochain/dochain-core/v4/x/tax/modules/market"
+	taxtypes "github.com/Daviddochain/dochain-core/v4/x/tax/types"
+	"github.com/Daviddochain/dochain-core/v4/x/taxexemption"
+	taxexemptiontypes "github.com/Daviddochain/dochain-core/v4/x/taxexemption/types"
+	"github.com/Daviddochain/dochain-core/v4/x/treasury"
+	treasuryclient "github.com/Daviddochain/dochain-core/v4/x/treasury/client"
+	treasurytypes "github.com/Daviddochain/dochain-core/v4/x/treasury/types"
+	"github.com/Daviddochain/dochain-core/v4/x/vesting"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	"github.com/cosmos/cosmos-sdk/x/auth"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
@@ -226,7 +226,7 @@ func orderBeginBlockers() []string {
 		ibctransfertypes.ModuleName,
 		icatypes.ModuleName,
 		ibchookstypes.ModuleName,
-		// Terra Classic modules
+		// Do-Chain modules
 		oracletypes.ModuleName,
 		treasurytypes.ModuleName,
 		taxexemptiontypes.ModuleName,
@@ -260,7 +260,7 @@ func orderEndBlockers() []string {
 		ibctransfertypes.ModuleName,
 		icatypes.ModuleName,
 		ibchookstypes.ModuleName,
-		// Terra Classic modules
+		// Do-Chain modules
 		oracletypes.ModuleName,
 		treasurytypes.ModuleName,
 		taxexemptiontypes.ModuleName,
@@ -294,7 +294,7 @@ func orderInitGenesis() []string {
 		ibctransfertypes.ModuleName,
 		icatypes.ModuleName,
 		ibchookstypes.ModuleName,
-		// Terra Classic modules
+		// Do-Chain modules
 		markettypes.ModuleName,
 		oracletypes.ModuleName,
 		treasurytypes.ModuleName,
@@ -306,3 +306,6 @@ func orderInitGenesis() []string {
 		consensusparamtypes.ModuleName,
 	}
 }
+
+
+

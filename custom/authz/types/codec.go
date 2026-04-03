@@ -16,3 +16,6 @@ func RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
 	cdc.RegisterInterface((*authz.Authorization)(nil), nil)
 	cdc.RegisterConcrete(&authz.GenericAuthorization{}, "msgauth/GenericAuthorization", nil)
 }
+
+
+

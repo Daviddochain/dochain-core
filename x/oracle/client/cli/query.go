@@ -4,7 +4,7 @@ import (
 	"context"
 	"strings"
 
-	"github.com/classic-terra/core/v4/x/oracle/types"
+	"github.com/Daviddochain/dochain-core/v4/x/oracle/types"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -46,11 +46,11 @@ func GetCmdQueryExchangeRates() *cobra.Command {
 Query the current exchange rate of Luna with an asset. 
 You can find the current list of active denoms by running
 
-$ terrad query oracle exchange-rates 
+$ dochaind query oracle exchange-rates 
 
 Or, can filter with denom
 
-$ terrad query oracle exchange-rates ukrw
+$ dochaind query oracle exchange-rates ukrw
 `),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientQueryContext(cmd)
@@ -90,11 +90,11 @@ func GetCmdQueryActives() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "actives",
 		Args:  cobra.NoArgs,
-		Short: "Query the active list of Terra assets recognized by the oracle",
+		Short: "Query the active list of dochain assets recognized by the oracle",
 		Long: strings.TrimSpace(`
-Query the active list of Terra assets recognized by the types.
+Query the active list of dochain assets recognized by the types.
 
-$ terrad query oracle actives
+$ dochaind query oracle actives
 `),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientQueryContext(cmd)
@@ -151,7 +151,7 @@ func GetCmdQueryFeederDelegation() *cobra.Command {
 		Long: strings.TrimSpace(`
 Query the account the validator's oracle voting right is delegated to.
 
-$ terrad query oracle feeder terravaloper...
+$ dochaind query oracle feeder terravaloper...
 `),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientQueryContext(cmd)
@@ -191,7 +191,7 @@ func GetCmdQueryMissCounter() *cobra.Command {
 		Long: strings.TrimSpace(`
 Query the # of vote periods missed in this oracle slash window.
 
-$ terrad query oracle miss terravaloper...
+$ dochaind query oracle miss terravaloper...
 `),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientQueryContext(cmd)
@@ -231,11 +231,11 @@ func GetCmdQueryAggregatePrevote() *cobra.Command {
 		Long: strings.TrimSpace(`
 Query outstanding oracle aggregate prevotes.
 
-$ terrad query oracle aggregate-prevotes
+$ dochaind query oracle aggregate-prevotes
 
 Or, can filter with voter address
 
-$ terrad query oracle aggregate-prevotes terravaloper...
+$ dochaind query oracle aggregate-prevotes terravaloper...
 `),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientQueryContext(cmd)
@@ -287,11 +287,11 @@ func GetCmdQueryAggregateVote() *cobra.Command {
 		Long: strings.TrimSpace(`
 Query outstanding oracle aggregate vote.
 
-$ terrad query oracle aggregate-votes 
+$ dochaind query oracle aggregate-votes 
 
 Or, can filter with voter address
 
-$ terrad query oracle aggregate-votes terravaloper...
+$ dochaind query oracle aggregate-votes terravaloper...
 `),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientQueryContext(cmd)
@@ -372,11 +372,11 @@ func GetCmdQueryTobinTaxes() *cobra.Command {
 		Long: strings.TrimSpace(`
 Query the current Oracle tobin taxes.
 
-$ terrad query oracle tobin-taxes
+$ dochaind query oracle tobin-taxes
 
 Or, can filter with denom
 
-$ terrad query oracle tobin-taxes ukrw
+$ dochaind query oracle tobin-taxes ukrw
 
 Or, can 
 `),
@@ -415,3 +415,6 @@ Or, can
 	flags.AddQueryFlagsToCmd(cmd)
 	return cmd
 }
+
+
+

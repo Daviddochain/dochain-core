@@ -7,10 +7,10 @@ import (
 	"math/rand"
 
 	"cosmossdk.io/math"
-	"github.com/classic-terra/core/v4/x/dyncomm/client/cli"
-	"github.com/classic-terra/core/v4/x/dyncomm/keeper"
-	"github.com/classic-terra/core/v4/x/dyncomm/types"
-	"github.com/classic-terra/core/v4/x/market/simulation"
+	"github.com/Daviddochain/dochain-core/v4/x/dyncomm/client/cli"
+	"github.com/Daviddochain/dochain-core/v4/x/dyncomm/keeper"
+	"github.com/Daviddochain/dochain-core/v4/x/dyncomm/types"
+	"github.com/Daviddochain/dochain-core/v4/x/market/simulation"
 	abci "github.com/cometbft/cometbft/abci/types"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec"
@@ -183,3 +183,6 @@ func (am AppModule) EndBlock(ctx context.Context) ([]abci.ValidatorUpdate, error
 	EndBlocker(sdkCtx, am.keeper)
 	return []abci.ValidatorUpdate{}, nil
 }
+
+
+

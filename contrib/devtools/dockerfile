@@ -19,3 +19,6 @@ RUN GO111MODULE=on go get \
 RUN GO111MODULE=on go get -u github.com/pseudomuto/protoc-gen-doc/cmd/protoc-gen-doc
 
 COPY --from=BUILDER /usr/local/bin /usr/local/bin
+
+
+

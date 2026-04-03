@@ -1,10 +1,10 @@
 package legacy
 
-import core "github.com/classic-terra/core/v4/types"
+import core "github.com/Daviddochain/dochain-core/v4/types"
 
 const (
-	MainnetUpgradeHeightV1 = int64(13215800) // columbus-5 mainnet upgrade height to v4
-	MainnetUpgradeHeightV2 = int64(18303000) // columbus-5 mainnet upgrade height to v8
+	MainnetUpgradeHeightV1 = int64(13215800) // cookie-1 mainnet upgrade height to v4
+	MainnetUpgradeHeightV2 = int64(18303000) // cookie-1 mainnet upgrade height to v8
 	TestnetUpgradeHeightV1 = int64(14584970) // rebel-2 testnet upgrade height to v4
 	TestnetUpgradeHeightV2 = int64(19354000) // rebel-2 testnet upgrade height to v8
 	LegacyUpgradeHeightV1  = int64(0)        // This is not included in the local testing as it would need v3 as a basis
@@ -55,3 +55,6 @@ func GetLegacyHandling(chainID string, blockHeight int64) LegacyHandlingVersion 
 
 	return LegacyHandlingNone
 }
+
+
+

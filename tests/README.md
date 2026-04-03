@@ -15,7 +15,7 @@ For a distributed system, the FLP theorem dictates properties of a consensus net
 
 2. a full - fledged e2e test flow through ci that does following flow
 * upgrade testing:
-    * for chain (if exists, else use current terrad): do an upgrade gov test to newer chain binary
+    * for chain (if exists, else use current dochaind): do an upgrade gov test to newer chain binary
     * for wasm (if there are changes to wasm, else use current wasm files): change to newer wasm files
 * regression testing (change to system should not break existing one)
     * backend: 
@@ -53,7 +53,7 @@ This will affect currently test.yml and sims.yml
 1. go test: see if the code passes all unit testing
     * check if newly created function has test with it (if not, error)
     * new unit test must aim to break and error, not aim to pass. We have enjoyed false positive from unit test. Recently, we have falsely believed that tax split test works due to favourable input.
-    * I recently discovered that Terra wasm query testing doesn't work since Till provided it with blank contract bindings_tester.wasm and it still passes. That is way too false positive.
+    * I recently discovered that dochain wasm query testing doesn't work since Till provided it with blank contract bindings_tester.wasm and it still passes. That is way too false positive.
 2. go build binary: see if the binary can be built.
 3. liveness test:
     * liveness test is an __overall attack__ on FLP theorem by randomly shut down nodes.
@@ -75,7 +75,7 @@ This will affect currently test.yml and sims.yml
     * test-sim-after-import
     * test-sim-import-export
     * test-sim-nondeterminism
-    * test sim smart contract (for terra query request since we maintain a custom implementation of this)
+    * test sim smart contract (for dochain query request since we maintain a custom implementation of this)
 
 ## Non - functional continous integration
 
@@ -86,7 +86,7 @@ This will affect currently test.yml and sims.yml
 ## Continous delivery
 
 Goal: 
-* check terrad in production environment. All layers rely on the chain should function normally. If not, propose migration code.
+* check dochaind in production environment. All layers rely on the chain should function normally. If not, propose migration code.
 
 Question:
 * how to actually do all this in an automatic fashion
@@ -100,3 +100,5 @@ Question:
 2. mantlemint functions normally
 3. station functions normally
 4. LocalTerra functions normally
+
+

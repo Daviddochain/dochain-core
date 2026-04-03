@@ -7,8 +7,8 @@ import (
 	"strings"
 
 	"cosmossdk.io/math"
-	core "github.com/classic-terra/core/v4/types"
-	"github.com/classic-terra/core/v4/x/market/types"
+	core "github.com/Daviddochain/dochain-core/v4/types"
+	"github.com/Daviddochain/dochain-core/v4/x/market/types"
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/codec"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
@@ -204,3 +204,6 @@ func SimulateMsgSwapSend(
 		return simtypes.NewOperationMsg(msg, true, ""), nil, nil
 	}
 }
+
+
+

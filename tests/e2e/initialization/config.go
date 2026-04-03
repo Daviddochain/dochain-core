@@ -7,9 +7,9 @@ import (
 	"time"
 
 	sdkmath "cosmossdk.io/math"
-	"github.com/classic-terra/core/v4/tests/e2e/util"
-	taxtypes "github.com/classic-terra/core/v4/x/tax/types"
-	treasurytypes "github.com/classic-terra/core/v4/x/treasury/types"
+	"github.com/Daviddochain/dochain-core/v4/tests/e2e/util"
+	taxtypes "github.com/Daviddochain/dochain-core/v4/x/tax/types"
+	treasurytypes "github.com/Daviddochain/dochain-core/v4/x/treasury/types"
 	tmjson "github.com/cometbft/cometbft/libs/json"
 	tmtypes "github.com/cometbft/cometbft/types"
 	"github.com/cosmos/cosmos-sdk/server"
@@ -41,26 +41,26 @@ type NodeConfig struct {
 
 const (
 	// common
-	TerraDenom          = "uluna"
+	TerraDenom          = "udo"
 	AtomDenom           = "uatom"
 	TerraIBCDenom       = "ibc/4627AD2524E3E0523047E35BB76CC90E37D9D57ACF14F0FCBCEB2480705F3CB8"
 	MinGasPrice         = "0.000"
 	IbcSendAmount       = 3300000000
 	ValidatorWalletName = "val"
 	// chainA
-	ChainAID      = "terra-test-a"
+	ChainAID      = "dochain-test-a"
 	TerraBalanceA = 20000000000000
 	StakeBalanceA = 110000000000
 	StakeAmountA  = 100000000000
 	// chainB
-	ChainBID          = "terra-test-b"
+	ChainBID          = "dochain-test-b"
 	TerraBalanceB     = 500000000000
 	StakeBalanceB     = 440000000000
 	StakeAmountB      = 400000000000
 	GenesisFeeBalance = 100000000000
 	WalletFeeBalance  = 100000000
 	// // chainC
-	// ChainCID      = "terra-test-c"
+	// ChainCID      = "dochain-test-c"
 	// TerraBalanceC = 500000000000
 	// StakeBalanceC = 440000000000
 	// StakeAmountC  = 400000000000
@@ -392,3 +392,6 @@ func setDenomMetadata(genState *banktypes.GenesisState, denom string) {
 		},
 	})
 }
+
+
+

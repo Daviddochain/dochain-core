@@ -5,8 +5,8 @@ import (
 	"testing"
 
 	sdkmath "cosmossdk.io/math"
-	core "github.com/classic-terra/core/v4/types"
-	"github.com/classic-terra/core/v4/x/oracle/types"
+	core "github.com/Daviddochain/dochain-core/v4/types"
+	"github.com/Daviddochain/dochain-core/v4/x/oracle/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	stakingkeeper "github.com/cosmos/cosmos-sdk/x/staking/keeper"
 	"github.com/stretchr/testify/require"
@@ -176,12 +176,15 @@ func TestApplyWhitelist(t *testing.T) {
 	require.Equal(t, metadata.Base, "uusd")
 	require.Equal(t, metadata.Display, "usd")
 	require.Equal(t, len(metadata.DenomUnits), 3)
-	require.Equal(t, metadata.Description, "The native stable token of the Terra Columbus.")
+	require.Equal(t, metadata.Description, "The native stable token of the dochain Columbus.")
 
 	metadata, ok = input.BankKeeper.GetDenomMetaData(input.Ctx, "ukrw")
 	require.True(t, ok)
 	require.Equal(t, metadata.Base, "ukrw")
 	require.Equal(t, metadata.Display, "krw")
 	require.Equal(t, len(metadata.DenomUnits), 3)
-	require.Equal(t, metadata.Description, "The native stable token of the Terra Columbus.")
+	require.Equal(t, metadata.Description, "The native stable token of the dochain Columbus.")
 }
+
+
+

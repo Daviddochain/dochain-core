@@ -6,9 +6,9 @@
 
 The `e2e` package defines an integration testing suite used for full
 end-to-end testing functionality. This package is decoupled from
-depending on the Terra codebase. It initializes the chains for testing
+depending on the dochain codebase. It initializes the chains for testing
 via Docker files. As a result, the test suite may provide the desired
-Terra version to Docker containers during the initialization.
+dochain version to Docker containers during the initialization.
 
 The file e2e\_setup\_test.go defines the testing suite and contains the
 core bootstrapping logic that creates a testing environment via Docker
@@ -36,7 +36,7 @@ To run all e2e-tests in the package, run:
 
 The `initialization` package introduces the logic necessary for initializing a
 chain by creating a genesis file and all required configuration files
-such as the `app.toml`. This package directly depends on the Terra
+such as the `app.toml`. This package directly depends on the dochain
 codebase.
 
 ## `upgrade` Package
@@ -45,7 +45,7 @@ The `upgrade` package starts chain initialization. In addition, there is
 a Dockerfile `init.Dockerfile`. When executed, its container
 produces all files necessary for starting up a new chain. These
 resulting files can be mounted on a volume and propagated to our
-production Terra container to start the `terrad` service.
+production dochain container to start the `dochaind` service.
 
 The decoupling between chain initialization and start-up allows to
 minimize the differences between our test suite and the production
@@ -66,7 +66,7 @@ in the `chain` package.
 make docker-build-e2e-init-chain
 ```
 
-### To build the debug Terra image
+### To build the debug dochain image
 
 ```sh
     make docker-build-e2e-debug
@@ -129,3 +129,6 @@ Please note that if the tests are stopped mid-way, the e2e framework might fail 
 containers are removed before running the tests again: `docker containers rm -f $(docker containers ls -a -q)`.
 
 Additionally, Docker networks do not get auto-removed. Therefore, you can manually remove them by running `docker network prune`.
+
+
+

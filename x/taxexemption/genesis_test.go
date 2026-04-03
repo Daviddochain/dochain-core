@@ -4,9 +4,9 @@ import (
 	"slices"
 	"testing"
 
-	taxexemption "github.com/classic-terra/core/v4/x/taxexemption"
-	util "github.com/classic-terra/core/v4/x/taxexemption/keeper"
-	"github.com/classic-terra/core/v4/x/taxexemption/types"
+	taxexemption "github.com/Daviddochain/dochain-core/v4/x/taxexemption"
+	util "github.com/Daviddochain/dochain-core/v4/x/taxexemption/keeper"
+	"github.com/Daviddochain/dochain-core/v4/x/taxexemption/types"
 	"github.com/stretchr/testify/require"
 )
 
@@ -154,3 +154,6 @@ func TestValidateGenesis_Failure(t *testing.T) {
 	err = taxexemption.ValidateGenesis(genesis)
 	require.ErrorContains(t, err, "zone not exist")
 }
+
+
+

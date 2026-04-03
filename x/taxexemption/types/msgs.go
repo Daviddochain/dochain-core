@@ -276,3 +276,6 @@ func (msg MsgRemoveTaxExemptionAddress) ValidateBasic() error {
 	}
 	return nil
 }
+
+
+

@@ -44,3 +44,6 @@ func ConvertSdkCoinToWasmCoin(coin sdk.Coin) wasmvmtypes.Coin {
 		Amount: coin.Amount.String(),
 	}
 }
+
+
+

@@ -5,9 +5,9 @@ import (
 	"sync"
 
 	wasmvmtypes "github.com/CosmWasm/wasmvm/v3/types"
-	markettypes "github.com/classic-terra/core/v4/x/market/types"
-	oracletypes "github.com/classic-terra/core/v4/x/oracle/types"
-	treasurytypes "github.com/classic-terra/core/v4/x/treasury/types"
+	markettypes "github.com/Daviddochain/dochain-core/v4/x/market/types"
+	oracletypes "github.com/Daviddochain/dochain-core/v4/x/oracle/types"
+	treasurytypes "github.com/Daviddochain/dochain-core/v4/x/treasury/types"
 	"github.com/cosmos/cosmos-sdk/codec"
 )
 
@@ -20,14 +20,14 @@ var stargateWhitelist sync.Map
 
 func init() {
 	// market
-	setWhitelistedQuery("/terra.market.v1beta1.Query/Swap", &markettypes.QuerySwapResponse{})
+	setWhitelistedQuery("/dochain.market.v1beta1.Query/Swap", &markettypes.QuerySwapResponse{})
 
 	// treasury
-	setWhitelistedQuery("/terra.treasury.v1beta1.Query/TaxCap", &treasurytypes.QueryTaxCapResponse{})
-	setWhitelistedQuery("/terra.treasury.v1beta1.Query/TaxRate", &treasurytypes.QueryTaxRateResponse{})
+	setWhitelistedQuery("/dochain.treasury.v1beta1.Query/TaxCap", &treasurytypes.QueryTaxCapResponse{})
+	setWhitelistedQuery("/dochain.treasury.v1beta1.Query/TaxRate", &treasurytypes.QueryTaxRateResponse{})
 
 	// oracle
-	setWhitelistedQuery("/terra.oracle.v1beta1.Query/ExchangeRate", &oracletypes.QueryExchangeRateResponse{})
+	setWhitelistedQuery("/dochain.oracle.v1beta1.Query/ExchangeRate", &oracletypes.QueryExchangeRateResponse{})
 }
 
 // GetWhitelistedQuery returns the whitelisted query at the provided path.
@@ -47,3 +47,6 @@ func GetWhitelistedQuery(queryPath string) (codec.ProtoMarshaler, error) {
 func setWhitelistedQuery(queryPath string, protoType codec.ProtoMarshaler) {
 	stargateWhitelist.Store(queryPath, protoType)
 }
+
+
+

@@ -19,3 +19,6 @@ var (
 	TaxExemptionZonePrefix = []byte{0x10} // prefix for burn tax zone list
 	TaxExemptionListPrefix = []byte{0x20} // prefix for burn tax exemption list
 )
+
+
+

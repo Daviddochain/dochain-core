@@ -24,7 +24,7 @@ get_token_balance() {
     
     >&2 echo "Token: $token"
     >&2 echo "Address: $address"
-    if [[ $token == terra* ]]; then
+    if [[ $token == dochain* ]]; then
         get_cw20_token_balance "$address" "$token"
     else
         get_native_token_balance "$address" "$token"
@@ -39,3 +39,5 @@ get_address_from_key() {
     local address=$($BINARY keys show $key --output json --keyring-backend $KEYRING --home $HOME | jq -r '.address')
     printf "%s" "$address"
 }
+
+

@@ -8,7 +8,7 @@ import (
 
 	"cosmossdk.io/math"
 	sdkmath "cosmossdk.io/math"
-	"github.com/classic-terra/core/v4/test/interchaintest/helpers"
+	"github.com/Daviddochain/dochain-core/v4/test/interchaintest/helpers"
 	transfertypes "github.com/cosmos/ibc-go/v10/modules/apps/transfer/types"
 	"github.com/cosmos/interchaintest/v10"
 	"github.com/cosmos/interchaintest/v10/chain/cosmos"
@@ -27,7 +27,7 @@ func TestTerraIBCHooks(t *testing.T) {
 
 	t.Parallel()
 
-	// Create chain factory with Terra Classic
+	// Create chain factory with Do-Chain
 	numVals := 3
 	numFullNodes := 3
 
@@ -44,13 +44,13 @@ func TestTerraIBCHooks(t *testing.T) {
 
 	cf := interchaintest.NewBuiltinChainFactory(zaptest.NewLogger(t), []*interchaintest.ChainSpec{
 		{
-			Name:          "terra",
+			Name:          "dochain",
 			ChainConfig:   config1,
 			NumValidators: &numVals,
 			NumFullNodes:  &numFullNodes,
 		},
 		{
-			Name:          "terra",
+			Name:          "dochain",
 			ChainConfig:   config2,
 			NumValidators: &numVals,
 			NumFullNodes:  &numFullNodes,
@@ -65,7 +65,7 @@ func TestTerraIBCHooks(t *testing.T) {
 	chains, err := cf.Chains(t.Name())
 	require.NoError(t, err)
 
-	terra, terra2 := chains[0].(*cosmos.CosmosChain), chains[1].(*cosmos.CosmosChain)
+	dochain, terra2 := chains[0].(*cosmos.CosmosChain), chains[1].(*cosmos.CosmosChain)
 
 	// Create relayer factory to utilize the go-relayer
 	r := interchaintest.NewBuiltinRelayerFactory(ibc.CosmosRly, zaptest.NewLogger(t)).
@@ -73,11 +73,11 @@ func TestTerraIBCHooks(t *testing.T) {
 
 	// Create a new Interchain object which describes the chains, relayers, and IBC connections we want to use
 	ic := interchaintest.NewInterchain().
-		AddChain(terra).
+		AddChain(dochain).
 		AddChain(terra2).
 		AddRelayer(r, "relayer").
 		AddLink(interchaintest.InterchainLink{
-			Chain1:  terra,
+			Chain1:  dochain,
 			Chain2:  terra2,
 			Relayer: r,
 			Path:    path,
@@ -109,23 +109,23 @@ func TestTerraIBCHooks(t *testing.T) {
 	)
 
 	// Create and Fund User Wallets
-	users := interchaintest.GetAndFundTestUsers(t, ctx, "default", sdkmath.NewInt(genesisWalletAmount), terra, terra2)
+	users := interchaintest.GetAndFundTestUsers(t, ctx, "default", sdkmath.NewInt(genesisWalletAmount), dochain, terra2)
 	terraUser, terra2User := users[0], users[1]
 
 	terraUserAddr := terraUser.FormattedAddress()
 
 	// Wait a few blocks for relayer to start and for user accounts to be created
-	err = testutil.WaitForBlocks(ctx, 5, terra, terra2)
+	err = testutil.WaitForBlocks(ctx, 5, dochain, terra2)
 	require.NoError(t, err)
 
-	channel, err := ibc.GetTransferChannel(ctx, r, eRep, terra.Config().ChainID, terra2.Config().ChainID)
+	channel, err := ibc.GetTransferChannel(ctx, r, eRep, dochain.Config().ChainID, terra2.Config().ChainID)
 	require.NoError(t, err)
 
 	_, contractAddr := helpers.SetupContract(t, ctx, terra2, terra2User.KeyName(), "bytecode/counter.wasm", `{"count":0}`)
 
 	transfer := ibc.WalletAmount{
 		Address: contractAddr,
-		Denom:   terra.Config().Denom,
+		Denom:   dochain.Config().Denom,
 		Amount:  math.OneInt(),
 	}
 
@@ -134,25 +134,25 @@ func TestTerraIBCHooks(t *testing.T) {
 	}
 
 	// Initial transfer. Account is created by the wasm execute is not so we must do this twice to properly set up
-	transferTx, err := terra.SendIBCTransfer(ctx, channel.ChannelID, terraUser.KeyName(), transfer, memo)
+	transferTx, err := dochain.SendIBCTransfer(ctx, channel.ChannelID, terraUser.KeyName(), transfer, memo)
 	require.NoError(t, err)
-	terraHeight, err := terra.Height(ctx)
+	terraHeight, err := dochain.Height(ctx)
 	require.NoError(t, err)
 
-	_, err = testutil.PollForAck(ctx, terra, terraHeight-5, terraHeight+25, transferTx.Packet)
+	_, err = testutil.PollForAck(ctx, dochain, terraHeight-5, terraHeight+25, transferTx.Packet)
 	require.NoError(t, err)
 
 	// Second time, this will make the counter == 1 since the account is now created.
-	transferTx, err = terra.SendIBCTransfer(ctx, channel.ChannelID, terraUser.KeyName(), transfer, memo)
+	transferTx, err = dochain.SendIBCTransfer(ctx, channel.ChannelID, terraUser.KeyName(), transfer, memo)
 	require.NoError(t, err)
-	terraHeight, err = terra.Height(ctx)
+	terraHeight, err = dochain.Height(ctx)
 	require.NoError(t, err)
 
-	_, err = testutil.PollForAck(ctx, terra, terraHeight-5, terraHeight+25, transferTx.Packet)
+	_, err = testutil.PollForAck(ctx, dochain, terraHeight-5, terraHeight+25, transferTx.Packet)
 	require.NoError(t, err)
 
 	// Get the address on the other chain's side
-	addr := helpers.GetIBCHooksUserAddress(t, ctx, terra, channel.ChannelID, terraUserAddr)
+	addr := helpers.GetIBCHooksUserAddress(t, ctx, dochain, channel.ChannelID, terraUserAddr)
 	require.NotEmpty(t, addr)
 
 	// Get funds on the receiving chain
@@ -168,12 +168,12 @@ func TestTerraIBCHooks(t *testing.T) {
 	}
 	require.NotEmpty(t, ibcDenom)
 
-	channelsTerra, err := r.GetChannels(ctx, eRep, terra.Config().ChainID)
+	channelsTerra, err := r.GetChannels(ctx, eRep, dochain.Config().ChainID)
 	require.NoError(t, err)
 	channelTerraTerra2 := channelsTerra[0]
 	require.NotEmpty(t, channelTerraTerra2.ChannelID)
 
-	terraOnTerra2TokenDenom := transfertypes.GetPrefixedDenom(channelTerraTerra2.Counterparty.PortID, channelTerraTerra2.Counterparty.ChannelID, terra.Config().Denom)
+	terraOnTerra2TokenDenom := transfertypes.GetPrefixedDenom(channelTerraTerra2.Counterparty.PortID, channelTerraTerra2.Counterparty.ChannelID, dochain.Config().Denom)
 	terraOnTerra2IBCDenom := transfertypes.ParseDenomTrace(terraOnTerra2TokenDenom).IBCDenom()
 	require.Equal(t, ibcDenom, terraOnTerra2IBCDenom)
 
@@ -181,3 +181,6 @@ func TestTerraIBCHooks(t *testing.T) {
 	count := helpers.GetIBCHookCount(t, ctx, terra2, contractAddr, addr)
 	require.Equal(t, int64(1), count.Data.Count)
 }
+
+
+

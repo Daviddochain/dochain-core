@@ -3,8 +3,8 @@ package gov
 import (
 	"encoding/json"
 
-	customtypes "github.com/classic-terra/core/v4/custom/gov/types"
-	core "github.com/classic-terra/core/v4/types"
+	customtypes "github.com/Daviddochain/dochain-core/v4/custom/gov/types"
+	core "github.com/Daviddochain/dochain-core/v4/types"
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	"github.com/cosmos/cosmos-sdk/x/gov"
@@ -33,9 +33,12 @@ func (AppModuleBasic) RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
 // DefaultGenesis returns default genesis state as raw bytes for the gov
 // module.
 func (am AppModuleBasic) DefaultGenesis(cdc codec.JSONCodec) json.RawMessage {
-	// customize to set default genesis state deposit denom to uluna
+	// customize to set default genesis state deposit denom to udo
 	defaultGenesisState := v1.DefaultGenesisState()
 	defaultGenesisState.Params.MinDeposit[0].Denom = core.MicroLunaDenom
 
 	return cdc.MustMarshalJSON(defaultGenesisState)
 }
+
+
+

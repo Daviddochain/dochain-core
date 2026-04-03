@@ -38,3 +38,6 @@ RECEIVED_AMOUNT=$(execute_swap "$ROUTER_CONTRACT_ADDRESS" "$NATIVE_TOKEN" "$SWAP
 
 # Balance after
 echo "TOKEN_BALANCE_AFTER: $(get_token_balance $(get_address_from_key $KEY) $TOKEN_CONTRACT_ADDRESS)"
+
+
+

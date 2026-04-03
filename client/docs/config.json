@@ -1,8 +1,8 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "Terra Classic - gRPC Gateway docs",
-    "description": "REST interface for Terra Classic https://github.com/classic-terra/core",
+    "title": "Do-Chain - gRPC Gateway docs",
+    "description": "REST interface for Do-Chain https://github.com/classic-dochain/core",
     "version": "2.2.1"
   },
   "apis": [
@@ -108,13 +108,13 @@
       }
     },
     {
-      "url": "./tmp-swagger-gen/terra/tx/v1beta1/service.swagger.json",
+      "url": "./tmp-swagger-gen/dochain/tx/v1beta1/service.swagger.json",
       "dereference": {
         "circular": "ignore"
       }
     },
     {
-      "url": "./tmp-swagger-gen/terra/market/v1beta1/query.swagger.json",
+      "url": "./tmp-swagger-gen/dochain/market/v1beta1/query.swagger.json",
       "operationIds": {
         "rename": {
           "Params": "MarketParams"
@@ -122,7 +122,7 @@
       }
     },
     {
-      "url": "./tmp-swagger-gen/terra/oracle/v1beta1/query.swagger.json",
+      "url": "./tmp-swagger-gen/dochain/oracle/v1beta1/query.swagger.json",
       "operationIds": {
         "rename": {
           "Params": "OracleParams"
@@ -130,7 +130,7 @@
       }
     },
     {
-      "url": "./tmp-swagger-gen/terra/treasury/v1beta1/query.swagger.json",
+      "url": "./tmp-swagger-gen/dochain/treasury/v1beta1/query.swagger.json",
       "operationIds": {
         "rename": {
           "Params": "TreasuryParams"
@@ -138,7 +138,7 @@
       }
     },
     {
-      "url": "./tmp-swagger-gen/terra/taxexemption/v1/query.swagger.json",
+      "url": "./tmp-swagger-gen/dochain/taxexemption/v1/query.swagger.json",
       "operationIds": {
         "rename": {
           "Params": "TaxExemptionParams"
@@ -146,7 +146,7 @@
       }
     },
     {
-      "url": "./tmp-swagger-gen/terra/dyncomm/v1beta1/query.swagger.json",
+      "url": "./tmp-swagger-gen/dochain/dyncomm/v1beta1/query.swagger.json",
       "operationIds": {
         "rename": {
           "Params": "DyncommParams"
@@ -201,3 +201,6 @@
     }
   ]
 }
+
+
+

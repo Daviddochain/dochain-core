@@ -12,5 +12,7 @@ echo "CONTRACTS = ${CONTRACTS[@]}"
 # loop through OLD_TXHASH
 for i in "${CONTRACTS[@]}"; do
     echo "getting new state of contract $i"
-    ./_build/new/terrad q wasm contract-state all $i --output json --home $HOME > scripts/wasm/contract_states/new_$i.json
+    ./_build/new/dochaind q wasm contract-state all $i --output json --home $HOME > scripts/wasm/contract_states/new_$i.json
 done
+
+

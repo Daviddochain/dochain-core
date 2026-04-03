@@ -17,3 +17,6 @@ const (
 func IsPeriodLastBlock(ctx sdk.Context, blocksPerPeriod uint64) bool {
 	return ((uint64)(ctx.BlockHeight())+1)%blocksPerPeriod == 0
 }
+
+
+

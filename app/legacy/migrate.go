@@ -8,7 +8,7 @@ import (
 	"time"
 
 	evtypes "cosmossdk.io/x/evidence/types"
-	oracletypes "github.com/classic-terra/core/v4/x/oracle/types"
+	oracletypes "github.com/Daviddochain/dochain-core/v4/x/oracle/types"
 	tmjson "github.com/cometbft/cometbft/libs/json"
 	tmtypes "github.com/cometbft/cometbft/types"
 	"github.com/cosmos/cosmos-sdk/client"
@@ -38,7 +38,7 @@ func MigrateGenesisCmd() *cobra.Command {
 		Long: `Migrate the source genesis into the target version and print to STDOUT.
 
 Example:
-$ terrad migrate /path/to/genesis.json --chain-id=cosmoshub-4 --genesis-time=2019-04-22T17:00:00Z --initial-height=5000
+$ dochaind migrate /path/to/genesis.json --chain-id=cosmoshub-4 --genesis-time=2019-04-22T17:00:00Z --initial-height=5000
 `,
 		Args: cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -70,7 +70,7 @@ $ terrad migrate /path/to/genesis.json --chain-id=cosmoshub-4 --genesis-time=201
 				return errors.Wrap(err, "failed to JSON unmarshal initial genesis state")
 			}
 
-			// TODO: Migrate Terra specific state
+			// TODO: Migrate dochain specific state
 			// newGenState := legacy05.Migrate(initialState, clientCtx)
 			newGenState := initialState
 
@@ -84,13 +84,13 @@ $ terrad migrate /path/to/genesis.json --chain-id=cosmoshub-4 --genesis-time=201
 			// Register whitelist denom list
 			denomMetadata := make([]banktypes.Metadata, len(oracleGenesis.Params.Whitelist)+1)
 			denomMetadata[0] = banktypes.Metadata{
-				Description: "The native staking token of the Terra Columbus.",
+				Description: "The native staking token of the dochain Columbus.",
 				DenomUnits: []*banktypes.DenomUnit{
-					{Denom: "uluna", Exponent: uint32(0), Aliases: []string{"microluna"}},
+					{Denom: "udo", Exponent: uint32(0), Aliases: []string{"microluna"}},
 					{Denom: "mluna", Exponent: uint32(3), Aliases: []string{"milliluna"}},
 					{Denom: "luna", Exponent: uint32(6), Aliases: []string{}},
 				},
-				Base:    "uluna",
+				Base:    "udo",
 				Display: "luna",
 				Name:    "LUNA",
 				Symbol:  "LUNA",
@@ -100,7 +100,7 @@ $ terrad migrate /path/to/genesis.json --chain-id=cosmoshub-4 --genesis-time=201
 				base := w.Name
 				display := base[1:]
 				denomMetadata[i+1] = banktypes.Metadata{
-					Description: "The native stable token of the Terra Columbus.",
+					Description: "The native stable token of the dochain Columbus.",
 					DenomUnits: []*banktypes.DenomUnit{
 						{Denom: "u" + display, Exponent: uint32(0), Aliases: []string{"micro" + display}},
 						{Denom: "m" + display, Exponent: uint32(3), Aliases: []string{"milli" + display}},
@@ -108,7 +108,7 @@ $ terrad migrate /path/to/genesis.json --chain-id=cosmoshub-4 --genesis-time=201
 					},
 					Base:    base,
 					Display: display,
-					Name:    fmt.Sprintf("%s TERRA", strings.ToUpper(display)),
+					Name:    fmt.Sprintf("%s dochain", strings.ToUpper(display)),
 					Symbol:  fmt.Sprintf("%sT", strings.ToUpper(display[:len(display)-1])),
 				}
 			}
@@ -189,3 +189,6 @@ $ terrad migrate /path/to/genesis.json --chain-id=cosmoshub-4 --genesis-time=201
 
 	return cmd
 }
+
+
+

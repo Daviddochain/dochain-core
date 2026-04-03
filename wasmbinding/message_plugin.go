@@ -6,9 +6,9 @@ import (
 	errorsmod "cosmossdk.io/errors"
 	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
 	wasmvmtypes "github.com/CosmWasm/wasmvm/v3/types"
-	"github.com/classic-terra/core/v4/wasmbinding/bindings"
-	marketkeeper "github.com/classic-terra/core/v4/x/market/keeper"
-	markettypes "github.com/classic-terra/core/v4/x/market/types"
+	"github.com/Daviddochain/dochain-core/v4/wasmbinding/bindings"
+	marketkeeper "github.com/Daviddochain/dochain-core/v4/x/market/keeper"
+	markettypes "github.com/Daviddochain/dochain-core/v4/x/market/types"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
@@ -35,7 +35,7 @@ func (m *CustomMessenger) DispatchMsg(ctx sdk.Context, contractAddr sdk.AccAddre
 	if msg.Custom != nil {
 		var contractMsg bindings.TerraMsg
 		if err := json.Unmarshal(msg.Custom, &contractMsg); err != nil {
-			return nil, nil, nil, errorsmod.Wrap(err, "terra msg")
+			return nil, nil, nil, errorsmod.Wrap(err, "dochain msg")
 		}
 
 		switch {
@@ -54,7 +54,7 @@ func (m *CustomMessenger) DispatchMsg(ctx sdk.Context, contractAddr sdk.AccAddre
 			return nil, bz, nil, nil
 
 		default:
-			return nil, nil, nil, wasmvmtypes.UnsupportedRequest{Kind: "unknown terra msg variant"}
+			return nil, nil, nil, wasmvmtypes.UnsupportedRequest{Kind: "unknown dochain msg variant"}
 		}
 	}
 	return m.wrapped.DispatchMsg(ctx, contractAddr, contractIBCPortID, msg)
@@ -144,3 +144,6 @@ func PerformSwapSend(f *marketkeeper.Keeper, ctx sdk.Context, contractAddr sdk.A
 	}
 	return res, nil
 }
+
+
+

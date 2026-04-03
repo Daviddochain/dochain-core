@@ -2,7 +2,7 @@ package evidence
 
 import (
 	"cosmossdk.io/x/evidence"
-	customtypes "github.com/classic-terra/core/v4/custom/evidence/types"
+	customtypes "github.com/Daviddochain/dochain-core/v4/custom/evidence/types"
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/types/module"
 )
@@ -18,3 +18,6 @@ type AppModuleBasic struct {
 func (AppModuleBasic) RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
 	customtypes.RegisterLegacyAminoCodec(cdc)
 }
+
+
+

@@ -3,9 +3,9 @@ package configurer
 import (
 	"testing"
 
-	"github.com/classic-terra/core/v4/tests/e2e/configurer/chain"
-	"github.com/classic-terra/core/v4/tests/e2e/containers"
-	"github.com/classic-terra/core/v4/tests/e2e/initialization"
+	"github.com/Daviddochain/dochain-core/v4/tests/e2e/configurer/chain"
+	"github.com/Daviddochain/dochain-core/v4/tests/e2e/containers"
+	"github.com/Daviddochain/dochain-core/v4/tests/e2e/initialization"
 )
 
 type Configurer interface {
@@ -127,7 +127,7 @@ var (
 
 // New returns a new Configurer depending on the values of its parameters.
 // - If only isIBCEnabled, we want to have 2 chains initialized at the current
-// Git branch version of Terra  codebase.
+// Git branch version of dochain  codebase.
 func New(t *testing.T, isIBCEnabled, isDebugLogEnabled bool) (Configurer, error) {
 	containerManager, err := containers.NewManager(isDebugLogEnabled)
 	if err != nil {
@@ -155,3 +155,6 @@ func New(t *testing.T, isIBCEnabled, isDebugLogEnabled bool) (Configurer, error)
 		containerManager,
 	), nil
 }
+
+
+

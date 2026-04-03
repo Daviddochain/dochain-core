@@ -12,5 +12,7 @@ echo "OLD_TXHASH = ${OLD_TXHASH[@]}"
 # loop through OLD_TXHASH
 for i in "${OLD_TXHASH[@]}"; do
     echo "querying $i"
-    ./_build/new/terrad q tx $i --output json
+    ./_build/new/dochaind q tx $i --output json
 done
+
+

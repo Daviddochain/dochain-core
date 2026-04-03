@@ -1,7 +1,7 @@
 package keeper
 
 import (
-	"github.com/classic-terra/core/v4/x/treasury/types"
+	"github.com/Daviddochain/dochain-core/v4/x/treasury/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
@@ -81,3 +81,6 @@ func (m Migrator) Migrate2to3(ctx sdk.Context) error {
 
 	return nil
 }
+
+
+

@@ -64,3 +64,6 @@ type QueryBurnTaxExemptionListParams struct {
 func NewQueryBurnTaxExemptionListParams(page, limit int) QueryBurnTaxExemptionListParams {
 	return QueryBurnTaxExemptionListParams{page, limit}
 }
+
+
+

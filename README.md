@@ -1,37 +1,37 @@
-## What is Terra Classic?
+## What is Do-Chain?
 
-**[Terra](https://terra.money)** is a public, open-source blockchain protocol that provides fundamental infrastructure for a decentralized economy and enables open participation in the creation of new financial primitives to power the innovation of money.
+**[dochain](https://dochain.money)** is a public, open-source blockchain protocol that provides fundamental infrastructure for a decentralized economy and enables open participation in the creation of new financial primitives to power the innovation of money.
 
 
-**Classic** is the reference implementation of the Terra protocol, written in Golang. Terra Core is built atop [Cosmos SDK](https://github.com/cosmos/cosmos-sdk) and uses [Tendermint](https://github.com/tendermint/tendermint) BFT consensus. If you intend to work on Terra Core source, it is recommended that you familiarize yourself with the concepts in those projects.
+**Classic** is the reference implementation of the dochain protocol, written in Golang. dochain Core is built atop [Cosmos SDK](https://github.com/cosmos/cosmos-sdk) and uses [Tendermint](https://github.com/tendermint/tendermint) BFT consensus. If you intend to work on dochain Core source, it is recommended that you familiarize yourself with the concepts in those projects.
 
 ## Installation
 
 ### Binaries
 
-The easiest way to get started is by downloading a pre-built binary for your operating system. You can find the latest binaries on the [releases](https://github.com/classic-terra/core/releases) page.
+The easiest way to get started is by downloading a pre-built binary for your operating system. You can find the latest binaries on the [releases](https://github.com/classic-dochain/core/releases) page.
 
 ### From Source
 
 **Step 1. Install Golang**
 
-Go v1.22 is required for Terra Core.
+Go v1.22 is required for dochain Core.
 
 If you haven't already, install Golang by following the [official docs](https://golang.org/doc/install). Make sure that your `GOPATH` and `GOBIN` environment variables are properly set up.
 
-**Step 2: Get Terra Core source code**
+**Step 2: Get dochain Core source code**
 
-Use `git` to retrieve Terra Core from the [official repo](https://github.com/terra-money/core/) and checkout the `main` branch. This branch contains the latest stable release, which will install the `terrad` binary.
+Use `git` to retrieve dochain Core from the [official repo](https://github.com/dochain-money/core/) and checkout the `main` branch. This branch contains the latest stable release, which will install the `dochaind` binary.
 
 ```bash
-git clone https://github.com/classic-terra/core/
+git clone https://github.com/classic-dochain/core/
 cd core
 git checkout main
 ```
 
-**Step 3: Build Terra core**
+**Step 3: Build dochain core**
 
-Run the following command to install the executable `terrad` to your `GOPATH` and build Terra Core. `terrad` is the node daemon and CLI for interacting with a Terra node.
+Run the following command to install the executable `dochaind` to your `GOPATH` and build dochain Core. `dochaind` is the node daemon and CLI for interacting with a dochain node.
 
 ```bash
 # COSMOS_BUILD_OPTIONS=rocksdb make install
@@ -40,17 +40,17 @@ make install
 
 **Step 4: Verify your installation**
 
-Verify that you've installed terrad successfully by running the following command:
+Verify that you've installed dochaind successfully by running the following command:
 
 ```bash
-terrad version --long
+dochaind version --long
 ```
 
-If terrad is installed correctly, the following information is returned:
+If dochaind is installed correctly, the following information is returned:
 
 ```bash
-name: terra
-server_name: terrad
+name: dochain
+server_name: dochaind
 version: <version>
 commit: <git commit hash>
 ..
@@ -58,20 +58,20 @@ commit: <git commit hash>
 ....
 ```
 
-## `terrad`
+## `dochaind`
 
-**NOTE:** `terracli` has been deprecated and all of its functionalities have been merged into `terrad`.
+**NOTE:** `terracli` has been deprecated and all of its functionalities have been merged into `dochaind`.
 
-`terrad` is the all-in-one command for operating and interacting with a running Terra node. For comprehensive coverage on each of the available functions, see [the terrad reference information](https://docs.terra.money/docs/develop/how-to/terrad/README.html). To view various subcommands and their expected arguments, use the `$ terrad --help` command:
+`dochaind` is the all-in-one command for operating and interacting with a running dochain node. For comprehensive coverage on each of the available functions, see [the dochaind reference information](https://docs.dochain.money/docs/develop/how-to/dochaind/README.html). To view various subcommands and their expected arguments, use the `$ dochaind --help` command:
 
 <pre>
         <div align="left">
-        <b>$ terrad --help</b>
+        <b>$ dochaind --help</b>
 
-        Stargate Terra App
+        Stargate dochain App
 
         Usage:
-          terrad [command]
+          dochaind [command]
 
         Available Commands:
           add-genesis-account Add a genesis account to genesis.json
@@ -88,55 +88,55 @@ commit: <git commit hash>
           start               Run the full node
           status              Query remote node for status
           tendermint          Tendermint subcommands
-          testnet             Initialize files for a terrad testnet
+          testnet             Initialize files for a dochaind testnet
           tx                  Transactions subcommands
           unsafe-reset-all    Resets the blockchain database, removes address book files, and resets data/priv_validator_state.json to the genesis state
           validate-genesis    validates the genesis file at the default location or at the location passed as an arg
           version             Print the application binary version information
 
         Flags:
-          -h, --help                help for terrad
-              --home string         directory for config and data (default "/Users/$HOME/.terra")
+          -h, --help                help for dochaind
+              --home string         directory for config and data (default "/Users/$HOME/.dochain")
               --log_format string   The logging format (json|plain) (default "plain")
               --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
               --trace               print out full stack trace on errors
 
-        <b>Use "terrad [command] --help" for more information about a command.</b>
+        <b>Use "dochaind [command] --help" for more information about a command.</b>
         </div>
 </pre>
 
 ## Node Setup
 
-Once you have `terrad` installed, you will need to set up your node to be part of the network.
+Once you have `dochaind` installed, you will need to set up your node to be part of the network.
 
 ### Join the mainnet
 
-The following requirements are recommended for running a `columbus-5` mainnet node:
+The following requirements are recommended for running a `cookie-1` mainnet node:
 
 - **4 or more** CPU cores
 - At least **2TB** of disk storage
 - At least **100mbps** network bandwidth
 - An Linux distribution
 
-For configuration and migration instructions for setting up a Columbus-5 mainnet node, visit [The mainnet repo](https://github.com/terra-money/mainnet).
+For configuration and migration instructions for setting up a cookie-1 mainnet node, visit [The mainnet repo](https://github.com/dochain-money/mainnet).
 
-**Terra Node Quick Start**
+**dochain Node Quick Start**
 ```
-terrad init nodename
-wget -O ~/.terra/config/genesis.json https://cloudflare-ipfs.com/ipfs/QmZAMcdu85Qr8saFuNpL9VaxVqqLGWNAs72RVFhchL9jWs
-curl https://network.terra.dev/addrbook.json > ~/.terrad/config/addrbook.json
-terrad start
+dochaind init nodename
+wget -O ~/.dochain/config/genesis.json https://cloudflare-ipfs.com/ipfs/QmZAMcdu85Qr8saFuNpL9VaxVqqLGWNAs72RVFhchL9jWs
+curl https://network.dochain.dev/addrbook.json > ~/.dochaind/config/addrbook.json
+dochaind start
 ```
 
 ### Join a testnet
 
-Several testnets might exist simultaneously. Ensure that your version of `terrad` is compatible with the network you want to join.
+Several testnets might exist simultaneously. Ensure that your version of `dochaind` is compatible with the network you want to join.
 
-To set up a node on the latest testnet, visit [the testnet repo](https://github.com/terra-money/testnet).
+To set up a node on the latest testnet, visit [the testnet repo](https://github.com/dochain-money/testnet).
 
 ### Run a local testnet
 
-The easiest way to set up a local testing environment is to run [LocalTerra](https://github.com/terra-money/LocalTerra), which automatically orchestrates a complete testing environment suited for development with zero configuration.
+The easiest way to set up a local testing environment is to run [LocalTerra](https://github.com/dochain-money/LocalTerra), which automatically orchestrates a complete testing environment suited for development with zero configuration.
 
 ### Run a single node testnet
 
@@ -148,13 +148,13 @@ You can also run a local testnet using a single node. On a local testnet, you wi
 First, initialize your genesis file to bootstrap your network. Create a name for your local testnet and provide a moniker to refer to your node:
 
 ```bash
-terrad init --chain-id=<testnet_name> <node_moniker>
+dochaind init --chain-id=<testnet_name> <node_moniker>
 ```
 
-Next, create a Terra account by running the following command:
+Next, create a dochain account by running the following command:
 
 ```bash
-terrad keys add <account_name>
+dochaind keys add <account_name>
 ```
 
 **Step 2. Add account to genesis**
@@ -162,32 +162,32 @@ terrad keys add <account_name>
 Next, add your account to genesis and set an initial balance to start. Run the following commands to add your account and set the initial balance:
 
 ```bash
-terrad add-genesis-account $(terrad keys show <account_name> -a) 100000000uluna,1000usd
-terrad gentx <account_name> 10000000uluna --chain-id=<testnet_name>
-terrad collect-gentxs
+dochaind add-genesis-account $(dochaind keys show <account_name> -a) 100000000uluna,1000usd
+dochaind gentx <account_name> 10000000uluna --chain-id=<testnet_name>
+dochaind collect-gentxs
 ```
 
-**Step 3. Run Terra daemon**
+**Step 3. Run dochain daemon**
 
-Now you can start your private Terra network:
+Now you can start your private dochain network:
 
 ```bash
-terrad start
+dochaind start
 ```
 
-Your `terrad` node will be running a node on `tcp://localhost:26656`, listening for incoming transactions and signing blocks.
+Your `dochaind` node will be running a node on `tcp://localhost:26656`, listening for incoming transactions and signing blocks.
 
-Congratulations, you've successfully set up your local Terra network!
+Congratulations, you've successfully set up your local dochain network!
 
 ## Set up a production environment
 
-**NOTE**: This guide only covers general settings for a production-level full node. You can find further details on considerations for operating a validator node by visiting the [Terra validator guide](https://docs.terra.money/docs/full-node/manage-a-terra-validator/README.html).
+**NOTE**: This guide only covers general settings for a production-level full node. You can find further details on considerations for operating a validator node by visiting the [dochain validator guide](https://docs.dochain.money/docs/full-node/manage-a-dochain-validator/README.html).
 
 This guide has been tested against Linux distributions only. To ensure you successfully set up your production environment, consider setting it up on an Linux system.
 
 ### Increase maximum open files
 
-`terrad` can't open more than 1024 files (the default maximum) concurrently.
+`dochaind` can't open more than 1024 files (the default maximum) concurrently.
 
 You can increase this limit by modifying `/etc/security/limits.conf` and raising the `nofile` capability.
 
@@ -198,17 +198,17 @@ You can increase this limit by modifying `/etc/security/limits.conf` and raising
 
 ### Create a dedicated user
 
-It is recommended that you run `terrad` as a normal user. Super-user accounts are only recommended during setup to create and modify files.
+It is recommended that you run `dochaind` as a normal user. Super-user accounts are only recommended during setup to create and modify files.
 
 ### Port configuration
 
-`terrad` uses several TCP ports for different purposes.
+`dochaind` uses several TCP ports for different purposes.
 
 - `26656`: The default port for the P2P protocol. Use this port to communicate with other nodes. While this port must be open to join a network, it does not have to be open to the public. Validator nodes should configure `persistent_peers` and close this port to the public.
 
-- `26657`: The default port for the RPC protocol. This port is used for querying / sending transactions and must be open to serve queries from `terrad`. **DO NOT** open this port to the public unless you are planning to run a public node.
+- `26657`: The default port for the RPC protocol. This port is used for querying / sending transactions and must be open to serve queries from `dochaind`. **DO NOT** open this port to the public unless you are planning to run a public node.
 
-- `1317`: The default port for [Lite Client Daemon](https://docs.terra.money/docs/develop/how-to/start-lcd.html) (LCD), which can be enabled in `~/.terra/config/app.toml`. The LCD provides an HTTP RESTful API layer to allow applications and services to interact with your `terrad` instance through RPC. Check the [Terra REST API](https://lcd.terra.dev/swagger/#/) for usage examples. Don't open this port unless you need to use the LCD.
+- `1317`: The default port for [Lite Client Daemon](https://docs.dochain.money/docs/develop/how-to/start-lcd.html) (LCD), which can be enabled in `~/.dochain/config/app.toml`. The LCD provides an HTTP RESTful API layer to allow applications and services to interact with your `dochaind` instance through RPC. Check the [dochain REST API](https://lcd.dochain.dev/swagger/#/) for usage examples. Don't open this port unless you need to use the LCD.
 
 - `26660`: The default port for interacting with the [Prometheus](https://prometheus.io) database. You can use Promethues to monitor an environment. This port is closed by default.
 
@@ -216,24 +216,24 @@ It is recommended that you run `terrad` as a normal user. Super-user accounts ar
 
 **Important**:
 
-Keep `terrad` running at all times. The simplest solution is to register `terrad` as a `systemd` service so that it automatically starts after system reboots and other events.
+Keep `dochaind` running at all times. The simplest solution is to register `dochaind` as a `systemd` service so that it automatically starts after system reboots and other events.
 
 
-### Register terrad as a service
+### Register dochaind as a service
 
 First, create a service definition file in `/etc/systemd/system`.
 
-**Sample file: `/etc/systemd/system/terrad.service`**
+**Sample file: `/etc/systemd/system/dochaind.service`**
 
 ```
 [Unit]
-Description=Terra Daemon
+Description=dochain Daemon
 After=network.target
 
 [Service]
 Type=simple
-User=terra
-ExecStart=/data/terra/go/bin/terrad start
+User=dochain
+ExecStart=/data/dochain/go/bin/dochaind start
 Restart=on-abort
 
 [Install]
@@ -254,22 +254,22 @@ Use `systemctl` to control (start, stop, restart)
 
 ```bash
 # Start
-systemctl start terrad
+systemctl start dochaind
 # Stop
-systemctl stop terrad
+systemctl stop dochaind
 # Restart
-systemctl restart terrad
+systemctl restart dochaind
 ```
 
 ### Access logs
 
 ```bash
 # Entire log
-journalctl -t terrad
+journalctl -t dochaind
 # Entire log reversed
-journalctl -t terrad -r
+journalctl -t dochaind -r
 # Latest and continuous
-journalctl -t terrad -f
+journalctl -t dochaind -f
 ```
 
 ## Using `docker compose`
@@ -294,7 +294,7 @@ journalctl -t terrad -f
 	docker compose exec node sh /keys-add.sh
 	```
 
-6. Copy your terra wallet address and go to the terra faucet here -> http://45.79.139.229:3000/ Put your address in and give yourself luna coins.
+6. Copy your dochain wallet address and go to the dochain faucet here -> http://45.79.139.229:3000/ Put your address in and give yourself luna coins.
 
 7. Start the validator
 	```bash
@@ -321,10 +321,10 @@ docker compose down
 docker compose logs -f
 ```
 
-#### Run Terrad Commands Example
+#### Run dochaind Commands Example
 
 ```bash
-docker compose exec node terrad status
+docker compose exec node dochaind status
 ```
 
 #### Upgrade
@@ -338,39 +338,39 @@ docker compose up -d
 #### Build from source
 
 ```sh
-make build-all -f contrib/terra-operator/Makefile
+make build-all -f contrib/dochain-operator/Makefile
 ```
 
 ## Resources
 
 - Developer Tools
 
-  - Terra developer documentation(https://docs.terra.money)
-  - [TerraWiki.org](https://terrawiki.org) - The Terra community wiki.
+  - dochain developer documentation(https://docs.dochain.money)
+  - [TerraWiki.org](https://terrawiki.org) - The dochain community wiki.
   - SDKs
-    - [Terra.js](https://www.github.com/terra-money/terra.js) for JavaScript
-    - [terra-sdk-python](https://www.github.com/terra-money/terra-sdk-python) for Python
-  - [Faucet](https://faucet.terra.money) can be used to get tokens for testnets
-  - [LocalTerra](https://www.github.com/terra-money/LocalTerra) can be used to set up a private local testnet with configurable world state
+    - [dochain.js](https://www.github.com/dochain-money/dochain.js) for JavaScript
+    - [dochain-sdk-python](https://www.github.com/dochain-money/dochain-sdk-python) for Python
+  - [Faucet](https://faucet.dochain.money) can be used to get tokens for testnets
+  - [LocalTerra](https://www.github.com/dochain-money/LocalTerra) can be used to set up a private local testnet with configurable world state
 
 - Developer Forums
-  - [Terra Developer Discord](https://discord.com/channels/464241079042965516/591812948867940362)
-  - [Terra DEveloper Telegram room](https://t.me/+gCxCPohmVBkyNDRl)
+  - [dochain Developer Discord](https://discord.com/channels/464241079042965516/591812948867940362)
+  - [dochain DEveloper Telegram room](https://t.me/+gCxCPohmVBkyNDRl)
 
 
 - Block Explorers
 
-  - [Terra Finder](https://finder.terra.money) - Terra's basic block explorer.
+  - [dochain Finder](https://finder.dochain.money) - dochain's basic block explorer.
   - [Terrascope](https://terrascope.info/) - A community-run block explorer with extra features.
-  - [Stake ID](https://terra.stake.id) - A block explorer made by Staking Fund
-  - [Hubble](https://hubble.figment.network/terra/chains/columbus-5) - by Figment
+  - [Stake ID](https://dochain.stake.id) - A block explorer made by Staking Fund
+  - [Hubble](https://hubble.figment.network/dochain/chains/cookie-1) - by Figment
 
 - Wallets
 
-  - [Terra Station](https://station.terra.money) - The official Terra wallet.
-  - Terra Station Mobile
-    - [iOS](https://apps.apple.com/us/app/terra-station/id1548434735)
-    - [Android](https://play.google.com/store/apps/details?id=money.terra.station&hl=en_US&gl=US)
+  - [dochain Station](https://station.dochain.money) - The official dochain wallet.
+  - dochain Station Mobile
+    - [iOS](https://apps.apple.com/us/app/dochain-station/id1548434735)
+    - [Android](https://play.google.com/store/apps/details?id=money.dochain.station&hl=en_US&gl=US)
     
   - [Falcon Wallet](https://falconwallet.app/)
   - [Leap Wallet](https://chrome.google.com/webstore/detail/leap-wallet/aijcbedoijmgnlmjeegjaglmepbmpkpi/?utm_source=Leap&utm_medium=Bio&utm_campaign=Leap)
@@ -379,12 +379,12 @@ make build-all -f contrib/terra-operator/Makefile
 
 - Research
 
-  - [Agora](https://agora.terra.money) - Research forum
+  - [Agora](https://agora.dochain.money) - Research forum
   - [White Paper](https://assets.website-files.com/611153e7af981472d8da199c/618b02d13e938ae1f8ad1e45_Terra_White_paper.pdf)
 
 ## Community
 
-- [Offical Website](https://terra.money)
+- [Offical Website](https://dochain.money)
 - [Discord](https://discord.gg/e29HWwC2Mz)
 - [Telegram](https://t.me/terra_announcements)
 - [Twitter](https://twitter.com/terra_money)
@@ -392,7 +392,7 @@ make build-all -f contrib/terra-operator/Makefile
 
 ## Contributing
 
-If you are interested in contributing to Terra Core source, please review our [code of conduct](./CODE_OF_CONDUCT.md).
+If you are interested in contributing to dochain Core source, please review our [code of conduct](./CODE_OF_CONDUCT.md).
 
 ## License
 
@@ -404,8 +404,11 @@ This software is licensed under the Apache 2.0 license. Read more about it [here
 
 <p>&nbsp;</p>
 <p align="center">
-    <a href="https://terra.money/"><img src="https://assets.website-files.com/611153e7af981472d8da199c/61794f2b6b1c7a1cb9444489_symbol-terra-blue.svg" align="center" width=200/></a>
+    <a href="https://dochain.money/"><img src="https://assets.website-files.com/611153e7af981472d8da199c/61794f2b6b1c7a1cb9444489_symbol-dochain-blue.svg" align="center" width=200/></a>
 </p>
 <div align="center">
   <sub><em>Powering the innovation of money.</em></sub>
 </div>
+
+
+

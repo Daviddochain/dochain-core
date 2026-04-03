@@ -1,8 +1,8 @@
 package authz
 
 import (
-	customcli "github.com/classic-terra/core/v4/custom/authz/client/cli"
-	customtypes "github.com/classic-terra/core/v4/custom/authz/types"
+	customcli "github.com/Daviddochain/dochain-core/v4/custom/authz/client/cli"
+	customtypes "github.com/Daviddochain/dochain-core/v4/custom/authz/types"
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	authz "github.com/cosmos/cosmos-sdk/x/authz/module"
@@ -25,3 +25,6 @@ func (AppModuleBasic) RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
 func (AppModuleBasic) GetTxCmd() *cobra.Command {
 	return customcli.GetTxCmd()
 }
+
+
+

@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"cosmossdk.io/math"
-	feeutils "github.com/classic-terra/core/v4/custom/auth/client/utils"
+	feeutils "github.com/Daviddochain/dochain-core/v4/custom/auth/client/utils"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
@@ -181,3 +181,6 @@ Using the '--split' flag, the [amount] is split equally between the addresses.`,
 
 	return cmd
 }
+
+
+

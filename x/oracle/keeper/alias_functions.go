@@ -1,7 +1,7 @@
 package keeper
 
 import (
-	"github.com/classic-terra/core/v4/x/oracle/types"
+	"github.com/Daviddochain/dochain-core/v4/x/oracle/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 )
@@ -22,3 +22,6 @@ func (k Keeper) GetRewardPoolLegacy(ctx sdk.Context) sdk.Coins {
 	acc := k.accountKeeper.GetModuleAccount(ctx, types.ModuleName)
 	return k.bankKeeper.GetAllBalances(ctx, acc.GetAddress())
 }
+
+
+

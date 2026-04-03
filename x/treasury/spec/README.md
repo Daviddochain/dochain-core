@@ -1,8 +1,8 @@
 ## Abstract 
 
-The Treasury module acts as the "central bank" of the Terra economy, measuring macroeconomic activity by [observing indicators](./01_concepts.md#Observed-Indicators) and adjusting [monetary policy levers](./01_concepts.md#Monetary-Policy-Levers) to modulate miner incentives toward stable, long-term growth.
+The Treasury module acts as the "central bank" of the dochain economy, measuring macroeconomic activity by [observing indicators](./01_concepts.md#Observed-Indicators) and adjusting [monetary policy levers](./01_concepts.md#Monetary-Policy-Levers) to modulate miner incentives toward stable, long-term growth.
 
-> While the Treasury stabilizes miner demand through adjusting rewards, the [Market](../market/spec/README.md) is responsible for Terra price-stability through arbitrage and market maker.
+> While the Treasury stabilizes miner demand through adjusting rewards, the [Market](../market/spec/README.md) is responsible for dochain price-stability through arbitrage and market maker.
 
 ## Contents
 1. **[Concepts](01_concepts.md)**
@@ -29,3 +29,6 @@ The Treasury module acts as the "central bank" of the Terra economy, measuring m
     - [EndBlocker](05_events.md#EndBlocker)
     - [Proposals](05_events.md#Proposals)
 6. **[Parameters](06_params.md)**
+
+
+

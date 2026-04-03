@@ -21,13 +21,13 @@ func RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
 
 func RegisterInterfaces(registry types.InterfaceRegistry) {
 	// register legacy wasm msgs (to be used in archives)
-	registry.RegisterInterface("terra.wasm.v1beta1.MsgInstantiateContract", (*sdk.Msg)(nil), &MsgInstantiateContract{})
-	registry.RegisterInterface("terra.wasm.v1beta1.MsgExecuteContract", (*sdk.Msg)(nil), &MsgExecuteContract{})
-	registry.RegisterInterface("terra.wasm.v1beta1.MsgStoreCode", (*sdk.Msg)(nil), &MsgStoreCode{})
-	registry.RegisterInterface("terra.wasm.v1beta1.MsgExecuteContract", (*sdk.Msg)(nil), &MsgMigrateCode{})
-	registry.RegisterInterface("terra.wasm.v1beta1.MsgMigrateCode", (*sdk.Msg)(nil), &MsgMigrateContract{})
-	registry.RegisterInterface("terra.wasm.v1beta1.MsgUpdateContractAdmin", (*sdk.Msg)(nil), &MsgUpdateContractAdmin{})
-	registry.RegisterInterface("terra.wasm.v1beta1.MsgClearContractAdmin", (*sdk.Msg)(nil), &MsgClearContractAdmin{})
+	registry.RegisterInterface("dochain.wasm.v1beta1.MsgInstantiateContract", (*sdk.Msg)(nil), &MsgInstantiateContract{})
+	registry.RegisterInterface("dochain.wasm.v1beta1.MsgExecuteContract", (*sdk.Msg)(nil), &MsgExecuteContract{})
+	registry.RegisterInterface("dochain.wasm.v1beta1.MsgStoreCode", (*sdk.Msg)(nil), &MsgStoreCode{})
+	registry.RegisterInterface("dochain.wasm.v1beta1.MsgExecuteContract", (*sdk.Msg)(nil), &MsgMigrateCode{})
+	registry.RegisterInterface("dochain.wasm.v1beta1.MsgMigrateCode", (*sdk.Msg)(nil), &MsgMigrateContract{})
+	registry.RegisterInterface("dochain.wasm.v1beta1.MsgUpdateContractAdmin", (*sdk.Msg)(nil), &MsgUpdateContractAdmin{})
+	registry.RegisterInterface("dochain.wasm.v1beta1.MsgClearContractAdmin", (*sdk.Msg)(nil), &MsgClearContractAdmin{})
 }
 
 var (
@@ -40,3 +40,6 @@ func init() {
 	cryptocodec.RegisterCrypto(amino)
 	amino.Seal()
 }
+
+
+

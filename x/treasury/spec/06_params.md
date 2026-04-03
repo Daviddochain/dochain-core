@@ -17,3 +17,6 @@ The treasury module contains the following parameters:
 | windowlong              | string (int)      | "52"                   |
 | windowprobation         | string (int)      | "12"                   |
 | burntaxsplit            | string (dec)      | "0.500000000000000000" |
+
+
+

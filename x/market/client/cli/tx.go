@@ -3,8 +3,8 @@ package cli
 import (
 	"strings"
 
-	feeutils "github.com/classic-terra/core/v4/custom/auth/client/utils"
-	"github.com/classic-terra/core/v4/x/market/types"
+	feeutils "github.com/Daviddochain/dochain-core/v4/custom/auth/client/utils"
+	"github.com/Daviddochain/dochain-core/v4/x/market/types"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
@@ -38,11 +38,11 @@ func GetSwapCmd() *cobra.Command {
 		Long: strings.TrimSpace(`
 Swap the offer-coin to the ask-denom currency at the oracle's effective exchange rate. 
 
-$ terrad market swap "1000ukrw" "uusd"
+$ dochaind market swap "1000ukrw" "uusd"
 
 The to-address can be specified. A default to-address is trader.
 
-$ terrad market swap "1000ukrw" "uusd" "terra1..."
+$ dochaind market swap "1000ukrw" "uusd" "terra1..."
 `),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientTxContext(cmd)
@@ -99,3 +99,6 @@ $ terrad market swap "1000ukrw" "uusd" "terra1..."
 
 	return cmd
 }
+
+
+

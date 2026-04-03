@@ -34,7 +34,7 @@ func forwardMemo(receiver, port, channel string, timeout string) string {
 	return string(bz)
 }
 
-// TestTerraGaiaOsmoPFM validates a multi-hop MsgTransfer from Terra -> Osmosis -> Gaia via Packet Forward Middleware.
+// TestTerraGaiaOsmoPFM validates a multi-hop MsgTransfer from dochain -> Osmosis -> Gaia via Packet Forward Middleware.
 // Mirrors TestTerraPFM behavior and logging.
 func TestTerraGaiaOsmoPFM(t *testing.T) {
 	if testing.Short() {
@@ -49,14 +49,14 @@ func TestTerraGaiaOsmoPFM(t *testing.T) {
 	client, network := interchaintest.DockerSetup(t)
 	ctx := context.Background()
 
-	// Terra (source)
+	// dochain (source)
 	terraCfg, err := createConfig()
 	require.NoError(t, err)
 
-	// Build chains: Terra, Osmosis, Gaia
+	// Build chains: dochain, Osmosis, Gaia
 	cf := interchaintest.NewBuiltinChainFactory(zaptest.NewLogger(t), []*interchaintest.ChainSpec{
 		{
-			Name:          "terra",
+			Name:          "dochain",
 			ChainConfig:   terraCfg,
 			NumValidators: &numVals,
 			NumFullNodes:  &numFullNodes,
@@ -78,23 +78,23 @@ func TestTerraGaiaOsmoPFM(t *testing.T) {
 
 	chains, err := cf.Chains(t.Name())
 	require.NoError(t, err)
-	terra := chains[0].(*cosmos.CosmosChain) // source
+	dochain := chains[0].(*cosmos.CosmosChain) // source
 	osmo := chains[1].(*cosmos.CosmosChain)  // hop with PFM
 	gaia := chains[2].(*cosmos.CosmosChain)  // destination
 
 	r := interchaintest.NewBuiltinRelayerFactory(ibc.CosmosRly, zaptest.NewLogger(t)).Build(t, client, network)
 
 	const (
-		pathTerraOsmo = "terra-osmo"
+		pathTerraOsmo = "dochain-osmo"
 		pathOsmoGaia  = "osmo-gaia"
 	)
 
 	ic := interchaintest.NewInterchain().
-		AddChain(terra).
+		AddChain(dochain).
 		AddChain(osmo).
 		AddChain(gaia).
 		AddRelayer(r, "relayer").
-		AddLink(interchaintest.InterchainLink{Chain1: terra, Chain2: osmo, Relayer: r, Path: pathTerraOsmo}).
+		AddLink(interchaintest.InterchainLink{Chain1: dochain, Chain2: osmo, Relayer: r, Path: pathTerraOsmo}).
 		AddLink(interchaintest.InterchainLink{Chain1: osmo, Chain2: gaia, Relayer: r, Path: pathOsmoGaia})
 
 	rep := testreporter.NewNopReporter()
@@ -106,21 +106,21 @@ func TestTerraGaiaOsmoPFM(t *testing.T) {
 	t.Cleanup(func() { _ = r.StopRelayer(ctx, eRep) })
 
 	// Users on each chain
-	users := interchaintest.GetAndFundTestUsers(t, ctx, "default", math.NewInt(genesisWalletAmount), terra, osmo, gaia)
+	users := interchaintest.GetAndFundTestUsers(t, ctx, "default", math.NewInt(genesisWalletAmount), dochain, osmo, gaia)
 	terraUser := users[0]
 	osmoUser := users[1]
 	gaiaUser := users[2]
 
-	require.NoError(t, testutil.WaitForBlocks(ctx, 8, terra, osmo, gaia))
+	require.NoError(t, testutil.WaitForBlocks(ctx, 8, dochain, osmo, gaia))
 
 	// Channels for both hops
-	chTerraOsmo, err := ibc.GetTransferChannel(ctx, r, eRep, terra.Config().ChainID, osmo.Config().ChainID)
+	chTerraOsmo, err := ibc.GetTransferChannel(ctx, r, eRep, dochain.Config().ChainID, osmo.Config().ChainID)
 	require.NoError(t, err)
 	chOsmoGaia, err := ibc.GetTransferChannel(ctx, r, eRep, osmo.Config().ChainID, gaia.Config().ChainID)
 	require.NoError(t, err)
 
 	// Compute final IBC denom on gaia after two hops (before sending)
-	osmoFirstHopPath := transfertypes.GetPrefixedDenom(chTerraOsmo.Counterparty.PortID, chTerraOsmo.Counterparty.ChannelID, terra.Config().Denom)
+	osmoFirstHopPath := transfertypes.GetPrefixedDenom(chTerraOsmo.Counterparty.PortID, chTerraOsmo.Counterparty.ChannelID, dochain.Config().Denom)
 	secondHopFullPath := transfertypes.GetPrefixedDenom(chOsmoGaia.PortID, chOsmoGaia.ChannelID, osmoFirstHopPath)
 	dt2 := transfertypes.ParseDenomTrace(secondHopFullPath)
 	finalIBCDenom := dt2.IBCDenom()
@@ -129,44 +129,44 @@ func TestTerraGaiaOsmoPFM(t *testing.T) {
 	osmoIbcDenom := dtOsmo.IBCDenom()
 
 	// Capture initial balances
-	terraBalBefore, err := terra.GetBalance(ctx, terraUser.FormattedAddress(), terra.Config().Denom)
+	terraBalBefore, err := dochain.GetBalance(ctx, terraUser.FormattedAddress(), dochain.Config().Denom)
 	require.NoError(t, err)
 	gaiaBefore, err := gaia.GetBalance(ctx, gaiaUser.FormattedAddress(), finalIBCDenom)
 	require.NoError(t, err)
 	osmoBefore, err := osmo.GetBalance(ctx, osmoUser.FormattedAddress(), osmoIbcDenom)
 	require.NoError(t, err)
-	t.Logf("initial balances: terra(%s)=%s, gaia(%s)=%s, osmo(%s)=%s",
-		terra.Config().Denom, terraBalBefore.String(),
+	t.Logf("initial balances: dochain(%s)=%s, gaia(%s)=%s, osmo(%s)=%s",
+		dochain.Config().Denom, terraBalBefore.String(),
 		finalIBCDenom, gaiaBefore.String(),
 		osmoIbcDenom, osmoBefore.String())
 
 	// Build memo to forward from osmosis -> gaia (use Osmosis-side port/channel)
 	memo := forwardMemo(gaiaUser.FormattedAddress(), chOsmoGaia.PortID, chOsmoGaia.ChannelID, "600s")
-	t.Logf("PFM memo (terra->osmo->gaia): %s", memo)
-	t.Logf("terra->osmo channel (terra side)=%s, (osmo side)=%s", chTerraOsmo.ChannelID, chTerraOsmo.Counterparty.ChannelID)
+	t.Logf("PFM memo (dochain->osmo->gaia): %s", memo)
+	t.Logf("dochain->osmo channel (dochain side)=%s, (osmo side)=%s", chTerraOsmo.ChannelID, chTerraOsmo.Counterparty.ChannelID)
 	t.Logf("osmo->gaia channel (osmo side)=%s, (gaia side)=%s", chOsmoGaia.ChannelID, chOsmoGaia.Counterparty.ChannelID)
 
 	amount := math.NewInt(1_234)
-	transfer := ibc.WalletAmount{Address: osmoUser.FormattedAddress(), Denom: terra.Config().Denom, Amount: amount}
-	transferTx, err := terra.SendIBCTransfer(ctx, chTerraOsmo.ChannelID, terraUser.KeyName(), transfer, ibc.TransferOptions{Memo: memo})
+	transfer := ibc.WalletAmount{Address: osmoUser.FormattedAddress(), Denom: dochain.Config().Denom, Amount: amount}
+	transferTx, err := dochain.SendIBCTransfer(ctx, chTerraOsmo.ChannelID, terraUser.KeyName(), transfer, ibc.TransferOptions{Memo: memo})
 	require.NoError(t, err)
 
-	terraH, err := terra.Height(ctx)
+	terraH, err := dochain.Height(ctx)
 	require.NoError(t, err)
-	_, err = testutil.PollForAck(ctx, terra, terraH-5, terraH+200, transferTx.Packet)
+	_, err = testutil.PollForAck(ctx, dochain, terraH-5, terraH+200, transferTx.Packet)
 	if err != nil {
-		t.Logf("PollForAck timed out on first hop (Terra->Osmosis); continuing to wait for second hop: %v", err)
+		t.Logf("PollForAck timed out on first hop (dochain->Osmosis); continuing to wait for second hop: %v", err)
 	}
-	require.NoError(t, testutil.WaitForBlocks(ctx, 24, terra, osmo, gaia))
+	require.NoError(t, testutil.WaitForBlocks(ctx, 24, dochain, osmo, gaia))
 
 	// Validate balances changed as expected on source
-	terraBalAfter, err := terra.GetBalance(ctx, terraUser.FormattedAddress(), terra.Config().Denom)
+	terraBalAfter, err := dochain.GetBalance(ctx, terraUser.FormattedAddress(), dochain.Config().Denom)
 	require.NoError(t, err)
 	require.LessOrEqual(t, terraBalAfter.Int64(), terraBalBefore.Sub(amount).Int64())
-	t.Logf("source balance after send: terra(%s)=%s", terra.Config().Denom, terraBalAfter.String())
+	t.Logf("source balance after send: dochain(%s)=%s", dochain.Config().Denom, terraBalAfter.String())
 
 	// Destination (gaia) balance should reflect forwarded amount within a small window
-	if waitBalanceEq(t, ctx, gaia, gaiaUser.FormattedAddress(), finalIBCDenom, gaiaBefore.Add(amount), 30, terra, osmo, gaia) {
+	if waitBalanceEq(t, ctx, gaia, gaiaUser.FormattedAddress(), finalIBCDenom, gaiaBefore.Add(amount), 30, dochain, osmo, gaia) {
 		gaiaAfter, err := gaia.GetBalance(ctx, gaiaUser.FormattedAddress(), finalIBCDenom)
 		require.NoError(t, err)
 		osmoAfter, err := osmo.GetBalance(ctx, osmoUser.FormattedAddress(), osmoIbcDenom)
@@ -554,8 +554,8 @@ func waitBalanceEq(t *testing.T, ctx context.Context, chain *cosmos.CosmosChain,
 	return false
 }
 
-// TestTerraPFM validates a multi-hop MsgTransfer from Terra -> Osmosis -> Terra2 via Packet Forward Middleware.
-// Both Terra chains run Cosmos SDK v0.53, satisfying the requirement to validate between two v0.53 chains.
+// TestTerraPFM validates a multi-hop MsgTransfer from dochain -> Osmosis -> Terra2 via Packet Forward Middleware.
+// Both dochain chains run Cosmos SDK v0.53, satisfying the requirement to validate between two v0.53 chains.
 func TestTerraPFM(t *testing.T) {
 	if testing.Short() {
 		t.Skip()
@@ -569,18 +569,18 @@ func TestTerraPFM(t *testing.T) {
 	client, network := interchaintest.DockerSetup(t)
 	ctx := context.Background()
 
-	// Terra (source)
+	// dochain (source)
 	terraCfg1, err := createConfig()
 	require.NoError(t, err)
 
-	// Terra (destination)
+	// dochain (destination)
 	terraCfg2 := terraCfg1.Clone()
 	terraCfg2.Name = "core-counterparty"
 	terraCfg2.ChainID = "core-counterparty-1"
 
 	cf := interchaintest.NewBuiltinChainFactory(zaptest.NewLogger(t), []*interchaintest.ChainSpec{
 		{
-			Name:          "terra",
+			Name:          "dochain",
 			ChainConfig:   terraCfg1,
 			NumValidators: &numVals,
 			NumFullNodes:  &numFullNodes,
@@ -592,7 +592,7 @@ func TestTerraPFM(t *testing.T) {
 			NumFullNodes:  &numFullNodes,
 		},
 		{
-			Name:          "terra",
+			Name:          "dochain",
 			ChainConfig:   terraCfg2,
 			NumValidators: &numVals,
 			NumFullNodes:  &numFullNodes,
@@ -608,7 +608,7 @@ func TestTerraPFM(t *testing.T) {
 	r := interchaintest.NewBuiltinRelayerFactory(ibc.CosmosRly, zaptest.NewLogger(t)).Build(t, client, network)
 
 	const (
-		pathTerraOsmo  = "terra-osmo"
+		pathTerraOsmo  = "dochain-osmo"
 		pathOsmoTerra2 = "osmo-terra2"
 	)
 
@@ -643,7 +643,7 @@ func TestTerraPFM(t *testing.T) {
 	require.NoError(t, err)
 
 	// Compute final IBC denom on terra2 after two hops (before sending)
-	// Use the actual Osmosis-side first-hop path (counterparty of Terra's channel), then prefix the second hop.
+	// Use the actual Osmosis-side first-hop path (counterparty of dochain's channel), then prefix the second hop.
 	osmoFirstHopPath := transfertypes.GetPrefixedDenom(chTerra1Osmo.Counterparty.PortID, chTerra1Osmo.Counterparty.ChannelID, terra1.Config().Denom)
 	secondHopFullPath := transfertypes.GetPrefixedDenom(chOsmoTerra2.PortID, chOsmoTerra2.ChannelID, osmoFirstHopPath)
 	dt2 := transfertypes.ParseDenomTrace(secondHopFullPath)
@@ -681,7 +681,7 @@ func TestTerraPFM(t *testing.T) {
 	require.NoError(t, err)
 	_, err = testutil.PollForAck(ctx, terra1, terra1H-5, terra1H+200, transferTx.Packet)
 	if err != nil {
-		t.Logf("PollForAck timed out on first hop (Terra->Osmosis); continuing to wait for second hop: %v", err)
+		t.Logf("PollForAck timed out on first hop (dochain->Osmosis); continuing to wait for second hop: %v", err)
 	}
 	// Give the second hop extra time to complete
 	require.NoError(t, testutil.WaitForBlocks(ctx, 24, terra1, osmo, terra2))
@@ -719,7 +719,7 @@ func TestTerraPFM(t *testing.T) {
 			t.Logf("second hop packet_data (osmo->terra2): seq=%d receiver=%s denom=%s amount=%s", seq2, pkt2.Receiver, pkt2.Denom, pkt2.Amount)
 			require.Equal(t, terra2User.FormattedAddress(), pkt2.Receiver)
 			require.Equal(t, amount.String(), pkt2.Amount)
-			// Denom in packet_data on Osmosis must use Osmosis-side channel (counterparty of Terra's channel)
+			// Denom in packet_data on Osmosis must use Osmosis-side channel (counterparty of dochain's channel)
 			require.Equal(t, osmoFirstHopPath, pkt2.Denom)
 			// Scan destination chain for recv_packet with matching sequence
 			terra2H, _ := terra2.Height(ctx)
@@ -751,3 +751,6 @@ func TestTerraPFM(t *testing.T) {
 		t.Skipf("skipping: osmosis forwarded but delivery to terra2 did not complete within window; likely relayer nondelivery")
 	}
 }
+
+
+

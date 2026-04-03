@@ -6,8 +6,8 @@ import (
 
 	sdkmath "cosmossdk.io/math"
 	"cosmossdk.io/store/prefix"
-	core "github.com/classic-terra/core/v4/types"
-	"github.com/classic-terra/core/v4/x/treasury/types"
+	core "github.com/Daviddochain/dochain-core/v4/types"
+	"github.com/Daviddochain/dochain-core/v4/x/treasury/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"
 	"google.golang.org/grpc/codes"
@@ -146,3 +146,6 @@ func (q querier) BurnTaxExemptionList(c context.Context, req *types.QueryBurnTax
 
 	return &types.QueryBurnTaxExemptionListResponse{Addresses: addresses, Pagination: pageRes}, nil
 }
+
+
+

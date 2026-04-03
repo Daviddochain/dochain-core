@@ -2,7 +2,7 @@
 
 set +e
 
-BINARY=_build/new/terrad
+BINARY=_build/new/dochaind
 STARGATE_TESTER="wasmbinding/testdata/stargate_tester.wasm"
 KEYRING_BACKEND="test"
 HOME=mytestnet
@@ -45,3 +45,5 @@ echo "... query tax rate"
 msg='{"tax_rate":{}}'
 out=$($BINARY query wasm contract-state smart $contract_addr $msg --output json)
 echo $out
+
+

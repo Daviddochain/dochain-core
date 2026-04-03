@@ -7,7 +7,7 @@ echo "PRE-DEX: Adding pair"
 ## Wasmd migration blockheight. With 3.6.0 implemented, the configuration is 200
 POST_WASM_MIGRATION_BLOCKHEIGHT=200
 while true; do
-    BLOCK_HEIGHT=$(./_build/old/terrad status | jq '.SyncInfo.latest_block_height' -r)
+    BLOCK_HEIGHT=$(./_build/old/dochaind status | jq '.SyncInfo.latest_block_height' -r)
     echo "Waiting til post-wasmd migration blockheight: BLOCK_HEIGHT: $BLOCK_HEIGHT"
     if [ "$BLOCK_HEIGHT" -ge $POST_WASM_MIGRATION_BLOCKHEIGHT ]; then
         break
@@ -36,5 +36,8 @@ RECEIVED_AMOUNT=$(execute_swap "$ROUTER_CONTRACT_ADDRESS" "$NATIVE_TOKEN" "$SWAP
 
 # Balance after
 echo "TOKEN_BALANCE_AFTER: $(get_token_balance $(get_address_from_key $KEY) $TOKEN_CONTRACT_ADDRESS)"
+
+
+
 
 

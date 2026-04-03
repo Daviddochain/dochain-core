@@ -3,12 +3,12 @@
 # the upgrade is a fork, "true" otherwise
 FORK=${FORK:-"false"}
 
-# $(curl --silent "https://api.github.com/repos/classic-terra/core/releases/latest" | jq -r '.tag_name')
+# $(curl --silent "https://api.github.com/repos/classic-dochain/core/releases/latest" | jq -r '.tag_name')
 
 OLD_VERSION=${OLD_VERSION:-v3.6.2}
 HOME=mytestnet
 ROOT=$(pwd)
-DENOM=uluna
+DENOM=udo
 CHAIN_ID=localterra
 SOFTWARE_UPGRADE_NAME=${SOFTWARE_UPGRADE_NAME:-"v14_1"}
 ADDITIONAL_PRE_SCRIPTS=${ADDITIONAL_PRE_SCRIPTS:-""}
@@ -34,7 +34,7 @@ export GOMODCACHE=$ROOT/_build/gocache
 
 # install old source if not exist
 if [ ! -f "_build/$OLD_VERSION.zip" ]; then
-    wget -c "https://github.com/classic-terra/core/archive/refs/tags/${OLD_VERSION}.zip" -O _build/${OLD_VERSION}.zip
+    wget -c "https://github.com/classic-dochain/core/archive/refs/tags/${OLD_VERSION}.zip" -O _build/${OLD_VERSION}.zip
 fi
 
 if [ ! -d "_build/core-${OLD_VERSION:1}" ]; then
@@ -48,7 +48,7 @@ if [ $# -eq 1 ] && [ "$1" == "--reinstall-old" ]; then
     REINSTALL_OLD="true"
 fi
 
-if [[ "$REINSTALL_OLD" == "true" ]] || [ ! -x "_build/old/terrad" ] || [ ! -f "$OLD_BUILD_MARKER" ] || [ "$(cat "$OLD_BUILD_MARKER" 2>/dev/null)" != "$OLD_VERSION" ]; then
+if [[ "$REINSTALL_OLD" == "true" ]] || [ ! -x "_build/old/dochaind" ] || [ ! -f "$OLD_BUILD_MARKER" ] || [ "$(cat "$OLD_BUILD_MARKER" 2>/dev/null)" != "$OLD_VERSION" ]; then
     mkdir -p _build/old
     cd ./_build/core-${OLD_VERSION:1}
     GOBIN="$ROOT/_build/old" go install -mod=readonly ./...
@@ -57,7 +57,7 @@ if [[ "$REINSTALL_OLD" == "true" ]] || [ ! -x "_build/old/terrad" ] || [ ! -f "$
 fi
 
 # install new binary
-if [ ! -x "_build/new/terrad" ]; then
+if [ ! -x "_build/new/dochaind" ]; then
     mkdir -p ./_build/new
     GOBIN="$ROOT/_build/new" go install -mod=readonly ./...
     cd ../..
@@ -73,9 +73,9 @@ fi
 
 # run old node
 if [[ "$OSTYPE" == "darwin"* ]]; then
-    screen -L -dmS node1 bash scripts/run-node.sh _build/old/terrad $DENOM
+    screen -L -dmS node1 bash scripts/run-node.sh _build/old/dochaind $DENOM
 else
-    screen -L -Logfile $HOME/log-screen.txt -dmS node1 bash scripts/run-node.sh _build/old/terrad $DENOM
+    screen -L -Logfile $HOME/log-screen.txt -dmS node1 bash scripts/run-node.sh _build/old/dochaind $DENOM
 fi
 
 sleep 20
@@ -102,7 +102,7 @@ run_fork () {
     LAST_BLOCK_HEIGHT=""
     STALLED_ROUNDS=0
     while true; do
-        BLOCK_HEIGHT=$(./_build/old/terrad status --home $HOME | jq -r '.SyncInfo.latest_block_height // .sync_info.latest_block_height')
+        BLOCK_HEIGHT=$(./_build/old/dochaind status --home $HOME | jq -r '.SyncInfo.latest_block_height // .sync_info.latest_block_height')
         if [ ! -z "$BLOCK_HEIGHT" ] && [ "$BLOCK_HEIGHT" != "null" ]; then
             echo "BLOCK_HEIGHT = $BLOCK_HEIGHT"
             if [ "$BLOCK_HEIGHT" == "$LAST_BLOCK_HEIGHT" ]; then
@@ -113,7 +113,7 @@ run_fork () {
             fi
             if [ "$STALLED_ROUNDS" -ge 3 ]; then
                 echo "Block height stalled at $BLOCK_HEIGHT, node halted. Forking."
-                pkill terrad
+                pkill dochaind
                 break
             fi
             sleep 10
@@ -127,27 +127,27 @@ run_fork () {
 run_upgrade () {
     echo "upgrading"
 
-    CURRENT_HEIGHT=$(./_build/old/terrad status --home $HOME | jq -r '.SyncInfo.latest_block_height // .sync_info.latest_block_height')
+    CURRENT_HEIGHT=$(./_build/old/dochaind status --home $HOME | jq -r '.SyncInfo.latest_block_height // .sync_info.latest_block_height')
     if [ -z "$CURRENT_HEIGHT" ] || [ "$CURRENT_HEIGHT" == "null" ]; then
-        echo "could not fetch latest block height from terrad status"
+        echo "could not fetch latest block height from dochaind status"
         exit 1
     fi
     UPGRADE_HEIGHT=$((CURRENT_HEIGHT + 100))
     echo "UPGRADE_HEIGHT = $UPGRADE_HEIGHT"
 
-    tar -cf ./_build/new/terrad.tar -C ./_build/new terrad
-    SUM=$(shasum -a 256 ./_build/new/terrad.tar | cut -d ' ' -f1)
+    tar -cf ./_build/new/dochaind.tar -C ./_build/new dochaind
+    SUM=$(shasum -a 256 ./_build/new/dochaind.tar | cut -d ' ' -f1)
     UPGRADE_INFO=$(jq -n '
     {
         "binaries": {
-            "linux/amd64": "file://'$(pwd)'/_build/new/terrad.tar?checksum=sha256:'"$SUM"'",
+            "linux/amd64": "file://'$(pwd)'/_build/new/dochaind.tar?checksum=sha256:'"$SUM"'",
         }
     }')
 
-    ./_build/old/terrad keys list --home $HOME --keyring-backend test
+    ./_build/old/dochaind keys list --home $HOME --keyring-backend test
 
     # Get the gov module authority address
-    GOV_AUTHORITY=$(./_build/old/terrad q auth module-account gov --home $HOME --output json | jq -r '.account.value.address // .account.base_account.address // .account.address')
+    GOV_AUTHORITY=$(./_build/old/dochaind q auth module-account gov --home $HOME --output json | jq -r '.account.value.address // .account.base_account.address // .account.address')
 
     # Create the upgrade proposal JSON file
     cat > $HOME/upgrade_proposal.json <<EOF
@@ -170,20 +170,20 @@ run_upgrade () {
 }
 EOF
 
-    ./_build/old/terrad tx gov submit-proposal $HOME/upgrade_proposal.json --from test1 --keyring-backend test --chain-id $CHAIN_ID --home $HOME --gas-prices $GAS_PRICE --gas auto --gas-adjustment 1.5 -y
+    ./_build/old/dochaind tx gov submit-proposal $HOME/upgrade_proposal.json --from test1 --keyring-backend test --chain-id $CHAIN_ID --home $HOME --gas-prices $GAS_PRICE --gas auto --gas-adjustment 1.5 -y
 
     sleep 2
 
     # Deposit is included in the proposal JSON, but add more if needed
-    ./_build/old/terrad tx gov deposit 1 "20000000${DENOM}" --from test1 --keyring-backend test --chain-id $CHAIN_ID --home $HOME --gas-prices $GAS_PRICE -y
+    ./_build/old/dochaind tx gov deposit 1 "20000000${DENOM}" --from test1 --keyring-backend test --chain-id $CHAIN_ID --home $HOME --gas-prices $GAS_PRICE -y
 
     sleep 2
 
-    ./_build/old/terrad tx gov vote 1 yes --from test0 --keyring-backend test --chain-id $CHAIN_ID --home $HOME --gas-prices $GAS_PRICE -y
+    ./_build/old/dochaind tx gov vote 1 yes --from test0 --keyring-backend test --chain-id $CHAIN_ID --home $HOME --gas-prices $GAS_PRICE -y
 
     sleep 2
 
-    ./_build/old/terrad tx gov vote 1 yes --from test1 --keyring-backend test --chain-id $CHAIN_ID --home $HOME --gas-prices $GAS_PRICE -y
+    ./_build/old/dochaind tx gov vote 1 yes --from test1 --keyring-backend test --chain-id $CHAIN_ID --home $HOME --gas-prices $GAS_PRICE -y
 
     sleep 2
 
@@ -191,7 +191,7 @@ EOF
     LAST_BLOCK_HEIGHT=""
     STALLED_ROUNDS=0
     while true; do 
-        BLOCK_HEIGHT=$(./_build/old/terrad status --home $HOME | jq -r '.SyncInfo.latest_block_height // .sync_info.latest_block_height')
+        BLOCK_HEIGHT=$(./_build/old/dochaind status --home $HOME | jq -r '.SyncInfo.latest_block_height // .sync_info.latest_block_height')
 
         if [ -z "$BLOCK_HEIGHT" ] || [ "$BLOCK_HEIGHT" == "null" ]; then
             echo "failed to fetch block height from old node"
@@ -211,12 +211,12 @@ EOF
         fi
 
         if [ "$BLOCK_HEIGHT" = "$UPGRADE_HEIGHT" ]; then
-            # assuming running only 1 terrad
+            # assuming running only 1 dochaind
             echo "BLOCK HEIGHT = $UPGRADE_HEIGHT REACHED, KILLING OLD ONE"
-            pkill terrad
+            pkill dochaind
             break
         else
-            PROPOSAL_STATUS=$(./_build/old/terrad q gov proposal 1 --output=json | jq -r '.status // .proposal.status // "UNKNOWN"')
+            PROPOSAL_STATUS=$(./_build/old/dochaind q gov proposal 1 --output=json | jq -r '.status // .proposal.status // "UNKNOWN"')
             echo "$PROPOSAL_STATUS"
             if [ "$PROPOSAL_STATUS" = "PROPOSAL_STATUS_FAILED" ] || [ "$PROPOSAL_STATUS" = "PROPOSAL_STATUS_REJECTED" ]; then
                 echo "upgrade proposal is not passable in this run"
@@ -240,14 +240,14 @@ sleep 5
 
 # run new node
 if [[ "$OSTYPE" == "darwin"* ]]; then
-    CONTINUE="true" screen -L -dmS node1 bash scripts/run-node.sh _build/new/terrad $DENOM
+    CONTINUE="true" screen -L -dmS node1 bash scripts/run-node.sh _build/new/dochaind $DENOM
 else
-    CONTINUE="true" screen -L -Logfile $HOME/log-screen.txt -dmS node1 bash scripts/run-node.sh _build/new/terrad $DENOM
+    CONTINUE="true" screen -L -Logfile $HOME/log-screen.txt -dmS node1 bash scripts/run-node.sh _build/new/dochaind $DENOM
 fi
 
 echo "Waiting for new node to be ready..."
 for i in $(seq 1 60); do
-    if ./_build/new/terrad status --home $HOME > /dev/null 2>&1; then
+    if ./_build/new/dochaind status --home $HOME > /dev/null 2>&1; then
         echo "New node is ready (attempt $i)"
         break
     fi
@@ -273,3 +273,5 @@ if [ ! -z "$ADDITIONAL_AFTER_SCRIPTS" ]; then
         fi
     done
 fi
+
+

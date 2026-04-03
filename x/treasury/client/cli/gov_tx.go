@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/classic-terra/core/v4/x/treasury/types"
+	"github.com/Daviddochain/dochain-core/v4/x/treasury/types"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/tx"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -125,3 +125,6 @@ $ %s tx gov submit-proposal remove-burn-tax-exemption-address terra1dczz24r33fwl
 	cmd.Flags().String(cli.FlagDeposit, "", "Deposit of proposal")
 	return cmd
 }
+
+
+

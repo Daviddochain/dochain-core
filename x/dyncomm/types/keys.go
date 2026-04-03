@@ -16,3 +16,6 @@ var MinCommissionRatesPrefix = []byte{0x01} // prefix for each MinCommissionRate
 func GetMinCommissionRatesKey(addr string) []byte {
 	return append(MinCommissionRatesPrefix, []byte(addr)...)
 }
+
+
+

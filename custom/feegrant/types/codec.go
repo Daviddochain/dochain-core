@@ -17,3 +17,6 @@ func RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
 	cdc.RegisterConcrete(&feegrant.PeriodicAllowance{}, "feegrant/PeriodicAllowance", nil)
 	cdc.RegisterConcrete(&feegrant.AllowedMsgAllowance{}, "feegrant/AllowedMsgAllowance", nil)
 }
+
+
+

@@ -1,11 +1,11 @@
 package post
 
 import (
-	dyncommkeeper "github.com/classic-terra/core/v4/x/dyncomm/keeper"
-	dyncommpost "github.com/classic-terra/core/v4/x/dyncomm/post"
-	taxkeeper "github.com/classic-terra/core/v4/x/tax/keeper"
-	taxpost "github.com/classic-terra/core/v4/x/tax/post"
-	treasurykeeper "github.com/classic-terra/core/v4/x/treasury/keeper"
+	dyncommkeeper "github.com/Daviddochain/dochain-core/v4/x/dyncomm/keeper"
+	dyncommpost "github.com/Daviddochain/dochain-core/v4/x/dyncomm/post"
+	taxkeeper "github.com/Daviddochain/dochain-core/v4/x/tax/keeper"
+	taxpost "github.com/Daviddochain/dochain-core/v4/x/tax/post"
+	treasurykeeper "github.com/Daviddochain/dochain-core/v4/x/treasury/keeper"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	accountkeeper "github.com/cosmos/cosmos-sdk/x/auth/keeper"
 	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
@@ -28,3 +28,6 @@ func NewPostHandler(options HandlerOptions) (sdk.PostHandler, error) {
 		taxpost.NewTaxDecorator(options.TaxKeeper, options.BankKeeper, options.AccountKeeper, options.TreasuryKeeper),
 	), nil
 }
+
+
+

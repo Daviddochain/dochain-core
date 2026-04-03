@@ -38,3 +38,6 @@ func (s *CLITestSuite) SetupSuite() {
 		WithOutput(io.Discard).
 		WithChainID("test-chain")
 }
+
+
+

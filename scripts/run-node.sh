@@ -12,10 +12,10 @@ if [ "$CONTINUE" == "true" ]; then
 fi
 
 rm -rf mytestnet
-pkill terrad
+pkill dochaind
 
-# check DENOM is set. If not, set to uluna
-DENOM=${2:-uluna}
+# check DENOM is set. If not, set to udo
+DENOM=${2:-udo}
 
 COMMISSION_RATE=0.01
 COMMISSION_MAX_RATE=0.02
@@ -34,10 +34,10 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     fi
 fi
 
-# check BINARY is set. If not, build terrad and set BINARY
+# check BINARY is set. If not, build dochaind and set BINARY
 if [ -z "$BINARY" ]; then
     make build
-    BINARY=build/terrad
+    BINARY=build/dochaind
 fi
 
 CHAIN_ID="localterra"
@@ -102,3 +102,5 @@ if [ -n "$TERRAD_HALT_HEIGHT" ]; then
 fi
 
 $BINARY start --home $HOME_DIR $EXTRA_FLAGS
+
+

@@ -47,3 +47,6 @@ func (pv PV) SignProposal(chainID string, proposal *tmproto.Proposal) error {
 	proposal.Signature = sig
 	return nil
 }
+
+
+

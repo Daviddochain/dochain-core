@@ -6,9 +6,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/classic-terra/core/v4/tests/e2e/configurer/config"
-	"github.com/classic-terra/core/v4/tests/e2e/containers"
-	"github.com/classic-terra/core/v4/tests/e2e/initialization"
+	"github.com/Daviddochain/dochain-core/v4/tests/e2e/configurer/config"
+	"github.com/Daviddochain/dochain-core/v4/tests/e2e/containers"
+	"github.com/Daviddochain/dochain-core/v4/tests/e2e/initialization"
 	coretypes "github.com/cometbft/cometbft/rpc/core/types"
 	"github.com/stretchr/testify/require"
 )
@@ -239,3 +239,6 @@ func (c *Config) AddBurnTaxExemptionAddressProposal(chainANode *NodeConfig, addr
 		return status == StatusPassed
 	}, initialization.OneMin, 10*time.Millisecond)
 }
+
+
+

@@ -3,7 +3,7 @@ package cli
 import (
 	"strings"
 
-	feeutils "github.com/classic-terra/core/v4/custom/auth/client/utils"
+	feeutils "github.com/Daviddochain/dochain-core/v4/custom/auth/client/utils"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	authclient "github.com/cosmos/cosmos-sdk/x/auth/client"
@@ -19,7 +19,7 @@ func GetTxFeesEstimateCommand() *cobra.Command {
 		Long: strings.TrimSpace(`
 Estimate fees for the given stdTx
 
-$ terrad tx estimate-fee [file] --gas-adjustment 1.4 --gas-prices 0.015uluna
+$ dochaind tx estimate-fee [file] --gas-adjustment 1.4 --gas-prices 0.015udo
 `),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientTxContext(cmd)
@@ -45,3 +45,6 @@ $ terrad tx estimate-fee [file] --gas-adjustment 1.4 --gas-prices 0.015uluna
 	flags.AddTxFlagsToCmd(cmd)
 	return cmd
 }
+
+
+

@@ -32,3 +32,6 @@ func TestKeeper_IsVoteTarget(t *testing.T) {
 		require.True(t, input.OracleKeeper.IsVoteTarget(input.Ctx, target))
 	}
 }
+
+
+

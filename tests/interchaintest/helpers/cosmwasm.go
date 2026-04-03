@@ -136,3 +136,6 @@ func QueryContract(ctx context.Context, chain *cosmos.CosmosChain, contractAddre
 	err = json.Unmarshal([]byte(stdout), response)
 	return err
 }
+
+
+

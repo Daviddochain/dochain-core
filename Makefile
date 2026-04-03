@@ -9,7 +9,7 @@ LEDGER_ENABLED ?= true
 BINDIR ?= $(GOPATH)/bin
 BUILDDIR ?= $(CURDIR)/build
 SIMAPP = ./app
-HTTPS_GIT := https://github.com/classic-terra/core.git
+HTTPS_GIT := https://github.com/classic-dochain/core.git
 DOCKER := $(shell which docker)
 DOCKER_BUF := $(DOCKER) run --rm -v $(CURDIR):/workspace --workdir /workspace bufbuild/buf
 GO_VERSION := $(shell cat go.mod | grep -E 'go [0-9].[0-9]+' | cut -d ' ' -f 2)
@@ -120,21 +120,21 @@ build: go.sum
 ifeq ($(OS),Windows_NT)
 	exit 1
 else
-	go build -mod=readonly $(BUILD_FLAGS) -o build/dochaind ./cmd/terrad
+	go build -mod=readonly $(BUILD_FLAGS) -o build/dochaind ./cmd/dochaind
 endif
 
 build-linux:
 	mkdir -p $(BUILDDIR)
-	docker build --platform linux/amd64 --no-cache --tag classic-terra/core ./
-	docker create --platform linux/amd64 --name temp classic-terra/core:latest
-	docker cp temp:/usr/local/bin/terrad $(BUILDDIR)/
+	docker build --platform linux/amd64 --no-cache --tag classic-dochain/core ./
+	docker create --platform linux/amd64 --name temp classic-dochain/core:latest
+	docker cp temp:/usr/local/bin/dochaind $(BUILDDIR)/
 	docker rm temp
 
 build-linux-with-shared-library:
 	mkdir -p $(BUILDDIR)
-	docker build --platform linux/amd64 --no-cache --tag classic-terra/core-shared ./ -f ./shared.Dockerfile
-	docker create --platform linux/amd64 --name temp classic-terra/core-shared:latest
-	docker cp temp:/usr/local/bin/terrad $(BUILDDIR)/
+	docker build --platform linux/amd64 --no-cache --tag classic-dochain/core-shared ./ -f ./shared.Dockerfile
+	docker create --platform linux/amd64 --name temp classic-dochain/core-shared:latest
+	docker cp temp:/usr/local/bin/dochaind $(BUILDDIR)/
 	docker cp temp:/lib/libwasmvm.so $(BUILDDIR)/
 	docker rm temp
 
@@ -156,9 +156,9 @@ build-release-amd64: go.sum
 		-f Dockerfile .
 	$(DOCKER) rm -f core-builder || true
 	$(DOCKER) create -ti --name core-builder core:local-amd64
-	$(DOCKER) cp core-builder:/usr/local/bin/terrad $(BUILDDIR)/release/terrad
-	tar -czvf $(BUILDDIR)/release/terra_$(VERSION)_Linux_x86_64.tar.gz -C $(BUILDDIR)/release/ terrad
-	rm $(BUILDDIR)/release/terrad
+	$(DOCKER) cp core-builder:/usr/local/bin/dochaind $(BUILDDIR)/release/dochaind
+	tar -czvf $(BUILDDIR)/release/terra_$(VERSION)_Linux_x86_64.tar.gz -C $(BUILDDIR)/release/ dochaind
+	rm $(BUILDDIR)/release/dochaind
 	$(DOCKER) rm -f core-builder
 
 build-release-arm64: go.sum
@@ -177,19 +177,19 @@ build-release-arm64: go.sum
 		-f Dockerfile .
 	$(DOCKER) rm -f core-builder || true
 	$(DOCKER) create -ti --name core-builder core:local-arm64
-	$(DOCKER) cp core-builder:/usr/local/bin/terrad $(BUILDDIR)/release/terrad 
-	tar -czvf $(BUILDDIR)/release/terra_$(VERSION)_Linux_arm64.tar.gz -C $(BUILDDIR)/release/ terrad 
-	rm $(BUILDDIR)/release/terrad
+	$(DOCKER) cp core-builder:/usr/local/bin/dochaind $(BUILDDIR)/release/dochaind 
+	tar -czvf $(BUILDDIR)/release/terra_$(VERSION)_Linux_arm64.tar.gz -C $(BUILDDIR)/release/ dochaind 
+	rm $(BUILDDIR)/release/dochaind
 	$(DOCKER) rm -f core-builder
 
 install: go.sum
-	go install -mod=readonly $(BUILD_FLAGS) ./cmd/terrad
+	go install -mod=readonly $(BUILD_FLAGS) ./cmd/dochaind
 
 gen-swagger-docs:
 	bash scripts/protoc-swagger-gen.sh
 
 update-swagger-docs: statik
-	$(BINDIR)/statik -src=client/docs/swagger-ui -dest=client/docs -f -m -ns=terrad
+	$(BINDIR)/statik -src=client/docs/swagger-ui -dest=client/docs -f -m -ns=dochaind
 	@if [ -n "$(git status --porcelain)" ]; then \
         echo "Swagger docs are out of sync!";\
         exit 1;\
@@ -215,7 +215,7 @@ go.sum: go.mod
 draw-deps:
 	@# requires brew install graphviz or apt-get install graphviz
 	go get github.com/RobotsAndPencils/goviz
-	@goviz -i ./cmd/terrad -d 2 | dot -Tpng -o dependency-graph.png
+	@goviz -i ./cmd/dochaind -d 2 | dot -Tpng -o dependency-graph.png
 
 distclean: clean tools-clean
 clean:
@@ -269,7 +269,7 @@ ictest-ibc-hooks: ictest-build
 ictest-ibc-pfm: ictest-build
 	@cd tests/interchaintest && go test -race -v -run TestTerraGaiaOsmoPFM .
 
-ictest-ibc-pfm-terra: ictest-build
+ictest-ibc-pfm-dochain: ictest-build
 	@cd tests/interchaintest && go test -race -v -run TestTerraPFM .
 
 ictest-oracle: ictest-build
@@ -280,7 +280,7 @@ ictest-ibc-v2: ictest-build
 
 ictest-upgrade-ibc: ictest-build
 	@cd tests/interchaintest && go test -race -v -run TestTerraClassicUpgradeIBC .
-ictest-all: ictest-start ictest-validator ictest-ibc ictest-ibc-hooks ictest-ibc-pfm ictest-ibc-pfm-terra ictest-oracle ictest-ibc-v2 ictest-upgrade-ibc		
+ictest-all: ictest-start ictest-validator ictest-ibc ictest-ibc-hooks ictest-ibc-pfm ictest-ibc-pfm-dochain ictest-oracle ictest-ibc-v2 ictest-upgrade-ibc		
 
 ictest-build: 
 	@DOCKER_BUILDKIT=1 docker build -t core:local -f ictest.Dockerfile .
@@ -339,20 +339,20 @@ proto-check-breaking:
 
 # Run a 7-node testnet locally by default
 localnet-start: localnet-stop build-linux
-	$(if $(shell $(DOCKER) inspect -f '{{ .Id }}' classic-terra/terrad-env 2>/dev/null),$(info found image classic-terra/terrad-env),$(MAKE) -C contrib/localnet terrad-env)
-	if ! [ -f build/node0/terrad/config/genesis.json ]; then $(DOCKER) run --platform linux/amd64 --rm \
+	$(if $(shell $(DOCKER) inspect -f '{{ .Id }}' classic-dochain/dochaind-env 2>/dev/null),$(info found image classic-dochain/dochaind-env),$(MAKE) -C contrib/localnet dochaind-env)
+	if ! [ -f build/node0/dochaind/config/genesis.json ]; then $(DOCKER) run --platform linux/amd64 --rm \
 		--user $(shell id -u):$(shell id -g) \
-		-v $(BUILDDIR):/terrad:Z \
+		-v $(BUILDDIR):/dochaind:Z \
 		-v /etc/group:/etc/group:ro \
 		-v /etc/passwd:/etc/passwd:ro \
 		-v /etc/shadow:/etc/shadow:ro \
-		classic-terra/terrad-env testnet --chain-id ${TESTNET_CHAINID} --v ${TESTNET_NVAL} -o . --starting-ip-address 192.168.10.2 --keyring-backend=test; \
+		classic-dochain/dochaind-env testnet --chain-id ${TESTNET_CHAINID} --v ${TESTNET_NVAL} -o . --starting-ip-address 192.168.10.2 --keyring-backend=test; \
 	fi
 	docker compose up -d
 
 localnet-start-upgrade: localnet-upgrade-stop build-linux
 	$(MAKE) -C contrib/updates build-cosmovisor-linux BUILDDIR=$(BUILDDIR)
-	$(if $(shell $(DOCKER) inspect -f '{{ .Id }}' classic-terra/terrad-upgrade-env 2>/dev/null),$(info found image classic-terra/terrad-upgrade-env),$(MAKE) -C contrib/localnet terrad-upgrade-env)
+	$(if $(shell $(DOCKER) inspect -f '{{ .Id }}' classic-dochain/dochaind-upgrade-env 2>/dev/null),$(info found image classic-dochain/dochaind-upgrade-env),$(MAKE) -C contrib/localnet dochaind-upgrade-env)
 	bash contrib/updates/prepare_cosmovisor.sh $(BUILDDIR) ${TESTNET_NVAL} ${TESTNET_CHAINID}
 	docker compose -f ./contrib/updates/docker-compose.yml up -d
 
@@ -375,11 +375,14 @@ localnet-stop:
 build-operator-img-all: build-operator-img-core build-operator-img-node
 
 build-operator-img-core:
-	docker compose -f contrib/terra-operator/docker-compose.build.yml build core --no-cache
+	docker compose -f contrib/dochain-operator/docker-compose.build.yml build core --no-cache
 
 build-operator-img-node:
-	@if ! docker image inspect public.ecr.aws/classic-terra/core:${NODE_VERSION} &>/dev/null ; then make build-operator-img-core ; fi
-	docker compose -f contrib/terra-operator/docker-compose.build.yml build node --no-cache
+	@if ! docker image inspect public.ecr.aws/classic-dochain/core:${NODE_VERSION} &>/dev/null ; then make build-operator-img-core ; fi
+	docker compose -f contrib/dochain-operator/docker-compose.build.yml build node --no-cache
 
 .PHONY: build-operator-img-all build-operator-img-core build-operator-img-node
+
+
+
 

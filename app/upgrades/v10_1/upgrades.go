@@ -6,9 +6,9 @@ import (
 
 	sdkmath "cosmossdk.io/math"
 	upgradetypes "cosmossdk.io/x/upgrade/types"
-	"github.com/classic-terra/core/v4/app/keepers"
-	"github.com/classic-terra/core/v4/app/upgrades"
-	taxtypes "github.com/classic-terra/core/v4/x/tax/types"
+	"github.com/Daviddochain/dochain-core/v4/app/keepers"
+	"github.com/Daviddochain/dochain-core/v4/app/upgrades"
+	taxtypes "github.com/Daviddochain/dochain-core/v4/x/tax/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 )
@@ -32,3 +32,6 @@ func CreateV101UpgradeHandler(
 		return mm.RunMigrations(ctx, cfg, fromVM)
 	}
 }
+
+
+

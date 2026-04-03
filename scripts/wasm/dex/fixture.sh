@@ -102,7 +102,7 @@ echo "----------------------------------------"
 echo "Setting up the config"
 echo "CONFIG: Adding the native token decimals"
 
-msg="{\"add_native_token_decimals\":{\"denom\":\"uluna\",\"decimals\":6}}"
+msg="{\"add_native_token_decimals\":{\"denom\":\"udo\",\"decimals\":6}}"
 
 out=$($BINARY tx wasm execute $FACTORY_CONTRACT_ADDRESS \
     "$msg" \
@@ -131,3 +131,5 @@ EOL
 
 # Make it executable
 chmod +x scripts/wasm/dex/deployment_info.sh
+
+

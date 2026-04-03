@@ -23,3 +23,6 @@ var (
 	// Minimum deposit value for proposal to be submitted.
 	InitialMinDeposit = MinDepositValue / 4
 )
+
+
+
