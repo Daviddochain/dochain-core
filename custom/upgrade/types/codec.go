@@ -1,0 +1,25 @@
+package types
+
+import (
+	"cosmossdk.io/x/upgrade/types"
+	govtypes "github.com/Daviddochain/dochain-core/v4/custom/gov/types"
+	"github.com/cosmos/cosmos-sdk/codec"
+)
+
+// RegisterLegacyAminoCodec registers concrete types on the LegacyAmino codec
+func RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
+	cdc.RegisterConcrete(types.Plan{}, "upgrade/Plan", nil)
+	cdc.RegisterConcrete(&types.SoftwareUpgradeProposal{}, "upgrade/SoftwareUpgradeProposal", nil)
+	cdc.RegisterConcrete(&types.CancelSoftwareUpgradeProposal{}, "upgrade/CancelSoftwareUpgradeProposal", nil)
+}
+
+func init() {
+	govtypes.RegisterProposalTypeCodec(&types.SoftwareUpgradeProposal{}, "upgrade/SoftwareUpgradeProposal")
+	govtypes.RegisterProposalTypeCodec(&types.CancelSoftwareUpgradeProposal{}, "upgrade/CancelSoftwareUpgradeProposal")
+}
+
+
+
+
+
+

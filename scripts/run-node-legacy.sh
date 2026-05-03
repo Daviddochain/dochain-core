@@ -1,0 +1,97 @@
+#!/bin/bash
+
+BINARY=$1
+CONTINUE=${CONTINUE:-"false"}
+HOME_DIR=mytestnet
+ENV=${ENV:-""}
+
+if [ "$CONTINUE" == "true" ]; then
+    "$BINARY" start --home "$HOME_DIR" --log_level debug >> /tmp/node_logs 2>&1
+    exit 0
+fi
+
+rm -rf "$HOME_DIR"
+pkill dochaind 2>/dev/null || true
+
+# check DENOM is set. If not, set to udo
+DENOM=${2:-udo}
+
+COMMISSION_RATE=0.01
+COMMISSION_MAX_RATE=0.02
+
+SED_BINARY=sed
+# check if this is OS X
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    # check if gsed is installed
+    if ! command -v gsed &> /dev/null; then
+        echo "gsed could not be found. Please install it with 'brew install gnu-sed'"
+        exit 1
+    else
+        SED_BINARY=gsed
+    fi
+fi
+
+# check BINARY is set. If not, build dochaind and set BINARY
+if [ -z "$BINARY" ]; then
+    make build
+    BINARY=build/dochaind
+fi
+
+CHAIN_ID="localdo-legacy"
+KEYRING="test"
+KEY="test0"
+KEY1="test1"
+KEY2="test2"
+
+# Function updates the config based on a jq argument as a string
+update_test_genesis () {
+    cat "$HOME_DIR/config/genesis.json" | jq "$1" > "$HOME_DIR/config/tmp_genesis.json" && mv "$HOME_DIR/config/tmp_genesis.json" "$HOME_DIR/config/genesis.json"
+}
+
+"$BINARY" init --chain-id "$CHAIN_ID" moniker --home "$HOME_DIR"
+
+"$BINARY" keys add "$KEY" --keyring-backend "$KEYRING" --home "$HOME_DIR"
+"$BINARY" keys add "$KEY1" --keyring-backend "$KEYRING" --home "$HOME_DIR"
+"$BINARY" keys add "$KEY2" --keyring-backend "$KEYRING" --home "$HOME_DIR"
+
+# Allocate genesis accounts
+"$BINARY" add-genesis-account "$KEY"  "100000000000000000${DENOM}" --keyring-backend "$KEYRING" --home "$HOME_DIR"
+"$BINARY" add-genesis-account "$KEY1" "100000000000000000${DENOM}" --keyring-backend "$KEYRING" --home "$HOME_DIR"
+"$BINARY" add-genesis-account "$KEY2" "100000000000000000${DENOM}" --keyring-backend "$KEYRING" --home "$HOME_DIR"
+
+update_test_genesis '.app_state["gov"]["voting_params"]["voting_period"]="10s"'
+update_test_genesis '.app_state["mint"]["params"]["mint_denom"] = "'"$DENOM"'"'
+# update_test_genesis '.app_state["gov"]["deposit_params"]["min_deposit"]=[{"denom":"'"$DENOM"'","amount":"0"}]'
+update_test_genesis '.app_state["crisis"]["constant_fee"]={"denom":"'"$DENOM"'","amount":"1000"}'
+update_test_genesis '.app_state["staking"]["params"]["bond_denom"] = "'"$DENOM"'"'
+
+# enable rest server and swagger
+"$SED_BINARY" -i '0,/enable = false/s//enable = true/' "$HOME_DIR/config/app.toml"
+"$SED_BINARY" -i 's/swagger = false/swagger = true/' "$HOME_DIR/config/app.toml"
+
+# keep all historical states to allow reliable historic queries across multiple upgrades
+# default pruning keeps only the last 100 heights which would prune early heights (e.g. 35)
+"$SED_BINARY" -i 's/^pruning = ".*"/pruning = "nothing"/' "$HOME_DIR/config/app.toml"
+
+# speed up consensus by reducing timeouts (faster blocks)
+"$SED_BINARY" -i 's/^timeout_propose = ".*"/timeout_propose = "500ms"/' "$HOME_DIR/config/config.toml"
+"$SED_BINARY" -i 's/^timeout_propose_delta = ".*"/timeout_propose_delta = "500ms"/' "$HOME_DIR/config/config.toml"
+"$SED_BINARY" -i 's/^timeout_prevote = ".*"/timeout_prevote = "500ms"/' "$HOME_DIR/config/config.toml"
+"$SED_BINARY" -i 's/^timeout_precommit = ".*"/timeout_precommit = "500ms"/' "$HOME_DIR/config/config.toml"
+"$SED_BINARY" -i 's/^timeout_commit = ".*"/timeout_commit = "1s"/' "$HOME_DIR/config/config.toml"
+
+# Sign genesis transaction
+"$BINARY" gentx "$KEY" "1000000${DENOM}" \
+  --commission-rate="$COMMISSION_RATE" \
+  --commission-max-rate="$COMMISSION_MAX_RATE" \
+  --keyring-backend "$KEYRING" \
+  --chain-id "$CHAIN_ID" \
+  --home "$HOME_DIR"
+
+# Collect genesis tx
+"$BINARY" collect-gentxs --home "$HOME_DIR"
+
+# Run this to ensure everything worked and that the genesis file is setup correctly
+"$BINARY" validate-genesis --home "$HOME_DIR"
+
+"$BINARY" start --home "$HOME_DIR" >> /tmp/node_logs 2>&1

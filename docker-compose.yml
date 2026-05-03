@@ -1,0 +1,144 @@
+version: '3.8'
+
+services:
+  dochainnode0:
+    platform: linux/amd64
+    container_name: dochainnode0
+    image: daviddochain/dochaind-env
+    restart: always
+    ports:
+      - "1317:1317"
+      - "9090:9090"
+      - "26656-26657:26656-26657"
+    environment:
+      - ID=0
+      - LOG=dochaind.log
+    volumes:
+      - ./build:/dochaind:Z
+    networks:
+      localnet:
+        ipv4_address: 192.168.10.2
+
+  dochainnode1:
+    platform: linux/amd64
+    container_name: dochainnode1
+    image: daviddochain/dochaind-env
+    restart: always
+    ports:
+      - "1318:1317"
+      - "9091:9090"
+      - "26659-26660:26656-26657"
+    environment:
+      - ID=1
+      - LOG=dochaind.log
+    volumes:
+      - ./build:/dochaind:Z
+    networks:
+      localnet:
+        ipv4_address: 192.168.10.3
+
+  dochainnode2:
+    platform: linux/amd64
+    container_name: dochainnode2
+    image: daviddochain/dochaind-env
+    restart: always
+    environment:
+      - ID=2
+      - LOG=dochaind.log
+    ports:
+      - "1319:1317"
+      - "9092:9090"
+      - "26661-26662:26656-26657"
+    volumes:
+      - ./build:/dochaind:Z
+    networks:
+      localnet:
+        ipv4_address: 192.168.10.4
+
+  dochainnode3:
+    platform: linux/amd64
+    container_name: dochainnode3
+    image: daviddochain/dochaind-env
+    restart: always
+    environment:
+      - ID=3
+      - LOG=dochaind.log
+    ports:
+      - "1320:1317"
+      - "9093:9090"
+      - "26663-26664:26656-26657"
+    volumes:
+      - ./build:/dochaind:Z
+    networks:
+      localnet:
+        ipv4_address: 192.168.10.5
+
+  dochainnode4:
+    platform: linux/amd64
+    container_name: dochainnode4
+    image: daviddochain/dochaind-env
+    restart: always
+    environment:
+      - ID=4
+      - LOG=dochaind.log
+    ports:
+      - "1321:1317"
+      - "9094:9090"
+      - "26665-26666:26656-26657"
+    volumes:
+      - ./build:/dochaind:Z
+    networks:
+      localnet:
+        ipv4_address: 192.168.10.6
+
+  dochainnode5:
+    platform: linux/amd64
+    container_name: dochainnode5
+    image: daviddochain/dochaind-env
+    restart: always
+    environment:
+      - ID=5
+      - LOG=dochaind.log
+    ports:
+      - "1322:1317"
+      - "9095:9090"
+      - "26667-26668:26656-26657"
+    volumes:
+      - ./build:/dochaind:Z
+    networks:
+      localnet:
+        ipv4_address: 192.168.10.7
+
+  dochainnode6:
+    platform: linux/amd64
+    container_name: dochainnode6
+    image: daviddochain/dochaind-env
+    restart: always
+    environment:
+      - ID=6
+      - LOG=dochaind.log
+    ports:
+      - "1323:1317"
+      - "9096:9090"
+      - "26669-26670:26656-26657"
+    volumes:
+      - ./build:/dochaind:Z
+    networks:
+      localnet:
+        ipv4_address: 192.168.10.8
+
+networks:
+  localnet:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+      -
+        subnet: 192.168.10.0/24
+
+
+
+
+
+
+

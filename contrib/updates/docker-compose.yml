@@ -1,0 +1,148 @@
+version: '3'
+
+services:
+  dochainnode0:
+    container_name: dochainnode0
+    platform: linux/amd64
+    image: "daviddochain/dochaind-upgrade-env"
+    ports:
+      - "9090:9090"
+      - "26656-26657:26656-26657"
+    environment:
+      - ID=0
+      - LOG=dochaind.log
+      - DAEMON_HOME=/dochaind/node0/dochaind
+      - DAEMON_NAME=dochaind
+      - DAEMON_RESTART_AFTER_UPGRADE=true
+    volumes:
+      - ../../build:/dochaind:Z
+    networks:
+      localnet:
+        ipv4_address: 192.168.10.2
+
+  dochainnode1:
+    container_name: dochainnode1
+    platform: linux/amd64
+    image: "daviddochain/dochaind-upgrade-env"
+    ports:
+      - "9091:9090"
+      - "26659-26660:26656-26657"
+    environment:
+      - ID=1
+      - LOG=dochaind.log
+      - DAEMON_HOME=/dochaind/node1/dochaind
+      - DAEMON_NAME=dochaind
+      - DAEMON_RESTART_AFTER_UPGRADE=true
+    volumes:
+      - ../../build:/dochaind:Z
+    networks:
+      localnet:
+        ipv4_address: 192.168.10.3
+
+  dochainnode2:
+    container_name: dochainnode2
+    platform: linux/amd64
+    image: "daviddochain/dochaind-upgrade-env"
+    environment:
+      - ID=2
+      - LOG=dochaind.log
+      - DAEMON_HOME=/dochaind/node2/dochaind
+      - DAEMON_NAME=dochaind
+      - DAEMON_RESTART_AFTER_UPGRADE=true
+    ports:
+      - "9092:9090"
+      - "26661-26662:26656-26657"
+    volumes:
+      - ../../build:/dochaind:Z
+    networks:
+      localnet:
+        ipv4_address: 192.168.10.4
+
+  dochainnode3:
+    container_name: dochainnode3
+    platform: linux/amd64
+    image: "daviddochain/dochaind-upgrade-env"
+    environment:
+      - ID=3
+      - LOG=dochaind.log
+      - DAEMON_HOME=/dochaind/node3/dochaind
+      - DAEMON_NAME=dochaind
+      - DAEMON_RESTART_AFTER_UPGRADE=true
+    ports:
+      - "9093:9090"
+      - "26663-26664:26656-26657"
+    volumes:
+      - ../../build:/dochaind:Z
+    networks:
+      localnet:
+        ipv4_address: 192.168.10.5
+  dochainnode4:
+    container_name: dochainnode4
+    platform: linux/amd64
+    image: "daviddochain/dochaind-upgrade-env"
+    environment:
+      - ID=4
+      - LOG=dochaind.log
+      - DAEMON_HOME=/dochaind/node4/dochaind
+      - DAEMON_NAME=dochaind
+      - DAEMON_RESTART_AFTER_UPGRADE=true
+    ports:
+      - "9094:9090"
+      - "26665-26666:26656-26657"
+    volumes:
+      - ../../build:/dochaind:Z
+    networks:
+      localnet:
+        ipv4_address: 192.168.10.6
+  
+  dochainnode5:
+    container_name: dochainnode5
+    platform: linux/amd64
+    image: "daviddochain/dochaind-upgrade-env"
+    environment:
+      - ID=5
+      - LOG=dochaind.log
+      - DAEMON_HOME=/dochaind/node5/dochaind
+      - DAEMON_NAME=dochaind
+      - DAEMON_RESTART_AFTER_UPGRADE=true
+    ports:
+      - "9095:9090"
+      - "26667-26668:26656-26657"
+    volumes:
+      - ../../build:/dochaind:Z
+    networks:
+      localnet:
+        ipv4_address: 192.168.10.7
+
+  dochainnode6:
+    container_name: dochainnode6
+    platform: linux/amd64
+    image: "daviddochain/dochaind-upgrade-env"
+    environment:
+      - ID=6
+      - LOG=dochaind.log
+      - DAEMON_HOME=/dochaind/node6/dochaind
+      - DAEMON_NAME=dochaind
+      - DAEMON_RESTART_AFTER_UPGRADE=true
+    ports:
+      - "9096:9090"
+      - "26669-26670:26656-26657"
+    volumes:
+      - ../../build:/dochaind:Z
+    networks:
+      localnet:
+        ipv4_address: 192.168.10.8
+networks:
+  localnet:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+      -
+        subnet: 192.168.10.0/24
+
+
+
+
+
+

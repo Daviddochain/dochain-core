@@ -1,0 +1,30 @@
+package forks
+
+import (
+	"github.com/Daviddochain/dochain-core/v4/app/upgrades"
+	"github.com/Daviddochain/dochain-core/v4/types/fork"
+)
+
+var DisableSwapFork = upgrades.Fork{
+	UpgradeName:    "v0.5.20",
+	UpgradeHeight:  fork.SwapDisableHeight,
+	BeginForkLogic: runForkLogicSwapDisable,
+}
+
+var IbcEnableFork = upgrades.Fork{
+	UpgradeName:    "v0.5.23",
+	UpgradeHeight:  fork.IbcEnableHeight,
+	BeginForkLogic: runForkLogicIbcEnable,
+}
+
+var VersionMapEnableFork = upgrades.Fork{
+	UpgradeName:    "v1.0.5",
+	UpgradeHeight:  fork.VersionMapEnableHeight,
+	BeginForkLogic: runForkLogicVersionMapEnable,
+}
+
+
+
+
+
+

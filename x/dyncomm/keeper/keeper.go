@@ -1,0 +1,51 @@
+package keeper
+
+import (
+	"fmt"
+
+	"cosmossdk.io/log"
+	storetypes "cosmossdk.io/store/types"
+	"github.com/Daviddochain/dochain-core/v4/x/dyncomm/types"
+	"github.com/cosmos/cosmos-sdk/codec"
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	paramstypes "github.com/cosmos/cosmos-sdk/x/params/types"
+)
+
+// Keeper of the market store
+type Keeper struct {
+	storeKey      storetypes.StoreKey
+	cdc           codec.BinaryCodec
+	paramSpace    paramstypes.Subspace
+	StakingKeeper types.StakingKeeper
+}
+
+// NewKeeper constructs a new keeper for oracle
+func NewKeeper(
+	cdc codec.BinaryCodec,
+	storeKey storetypes.StoreKey,
+	paramstore paramstypes.Subspace,
+	stakingKeeper types.StakingKeeper,
+) Keeper {
+	// set KeyTable if it has not already been set
+	if !paramstore.HasKeyTable() {
+		paramstore = paramstore.WithKeyTable(types.ParamKeyTable())
+	}
+
+	return Keeper{
+		cdc:           cdc,
+		storeKey:      storeKey,
+		paramSpace:    paramstore,
+		StakingKeeper: stakingKeeper,
+	}
+}
+
+// Logger returns a module-specific logger.
+func (k Keeper) Logger(ctx sdk.Context) log.Logger {
+	return ctx.Logger().With("module", fmt.Sprintf("x/%s", types.ModuleName))
+}
+
+
+
+
+
+

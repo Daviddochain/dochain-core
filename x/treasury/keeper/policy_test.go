@@ -1,0 +1,110 @@
+package keeper
+
+import (
+	"testing"
+
+	sdkmath "cosmossdk.io/math"
+	core "github.com/Daviddochain/dochain-core/v4/types"
+	oracletypes "github.com/Daviddochain/dochain-core/v4/x/oracle/types"
+	"github.com/Daviddochain/dochain-core/v4/x/treasury/types"
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	stakingkeeper "github.com/cosmos/cosmos-sdk/x/staking/keeper"
+	"github.com/stretchr/testify/require"
+)
+
+func TestUpdateTaxRate(t *testing.T) {
+	input := CreateTestInput(t)
+	stakingMsgSvr := stakingkeeper.NewMsgServerImpl(input.StakingKeeper)
+
+	// Create Validators
+	amt := sdk.TokensFromConsensusPower(1, sdk.DefaultPowerReduction)
+	addr, val := ValAddrs[0], ValPubKeys[0]
+	addr1, val1 := ValAddrs[1], ValPubKeys[1]
+	_, err := stakingMsgSvr.CreateValidator(input.Ctx, NewTestMsgCreateValidator(addr, val, amt))
+	require.NoError(t, err)
+	_, err = stakingMsgSvr.CreateValidator(input.Ctx, NewTestMsgCreateValidator(addr1, val1, amt))
+	require.NoError(t, err)
+	input.StakingKeeper.EndBlocker(input.Ctx)
+
+	windowLong := input.TreasuryKeeper.WindowLong(input.Ctx)
+	taxPolicy := input.TreasuryKeeper.TaxPolicy(input.Ctx)
+
+	// zero reward tax proceeds
+	for i := uint64(0); i < windowLong; i++ {
+		input.Ctx = input.Ctx.WithBlockHeight(int64(i * core.BlocksPerWeek))
+
+		taxProceeds := sdk.NewCoins(sdk.NewCoin(core.MicroSDRDenom, sdkmath.ZeroInt()))
+		input.TreasuryKeeper.RecordEpochTaxProceeds(input.Ctx, taxProceeds)
+		input.TreasuryKeeper.UpdateIndicators(input.Ctx)
+	}
+
+	input.TreasuryKeeper.UpdateTaxPolicy(input.Ctx)
+	taxRate := input.TreasuryKeeper.GetTaxRate(input.Ctx)
+	require.Equal(t, types.DefaultTaxRate.Add(taxPolicy.ChangeRateMax), taxRate)
+}
+
+func TestUpdateRewardWeight(t *testing.T) {
+	input := CreateTestInput(t)
+	input.OracleKeeper.SetDoExchangeRate(input.Ctx, core.MicroSDRDenom, sdkmath.LegacyOneDec())
+	stakingMsgSvr := stakingkeeper.NewMsgServerImpl(input.StakingKeeper)
+
+	// Create Validators
+	amt := sdk.TokensFromConsensusPower(1, sdk.DefaultPowerReduction)
+	addr, val := ValAddrs[0], ValPubKeys[0]
+	addr1, val1 := ValAddrs[1], ValPubKeys[1]
+	_, err := stakingMsgSvr.CreateValidator(input.Ctx, NewTestMsgCreateValidator(addr, val, amt))
+	require.NoError(t, err)
+	_, err = stakingMsgSvr.CreateValidator(input.Ctx, NewTestMsgCreateValidator(addr1, val1, amt))
+	require.NoError(t, err)
+	input.StakingKeeper.EndBlocker(input.Ctx)
+
+	input.TreasuryKeeper.UpdateIndicators(input.Ctx)
+
+	// Case 1: zero seigniorage will increase reward weight as much as possible
+	rewardPolicy := input.TreasuryKeeper.RewardPolicy(input.Ctx)
+	input.TreasuryKeeper.UpdateRewardPolicy(input.Ctx)
+	rewardWeight := input.TreasuryKeeper.GetRewardWeight(input.Ctx)
+	require.Equal(t, types.DefaultRewardWeight.Add(rewardPolicy.ChangeRateMax), rewardWeight)
+
+	// Case 2: huge seigniorage rewards will decrease reward weight by %types.DefaultSeigniorageBurdenTarget
+	input.TreasuryKeeper.SetEpochInitialIssuance(input.Ctx, sdk.NewCoins(sdk.NewCoin(core.MicroDoDenom, sdkmath.NewInt(1000000000000))))
+	input.TreasuryKeeper.UpdateIndicators(input.Ctx)
+	input.TreasuryKeeper.UpdateRewardPolicy(input.Ctx)
+	rewardWeight = input.TreasuryKeeper.GetRewardWeight(input.Ctx)
+	require.Equal(t, types.DefaultRewardWeight.Add(rewardPolicy.ChangeRateMax).Mul(types.DefaultSeigniorageBurdenTarget), rewardWeight)
+}
+
+func TestUpdateTaxCap(t *testing.T) {
+	input := CreateTestInput(t)
+	input.OracleKeeper.SetWhitelist(
+		input.Ctx,
+		oracletypes.DenomList{
+			{
+				Name: core.MicroDoDenom,
+			},
+			{
+				Name: core.MicroSDRDenom,
+			},
+			{
+				Name: core.MicroKRWDenom,
+			},
+		},
+	)
+
+	// Create Validators
+	sdrPrice := sdkmath.LegacyNewDecWithPrec(13, 1)
+	input.OracleKeeper.SetDoExchangeRate(input.Ctx, core.MicroSDRDenom, sdrPrice)
+	krwPrice := sdkmath.LegacyNewDecWithPrec(153412, 2)
+	input.OracleKeeper.SetDoExchangeRate(input.Ctx, core.MicroKRWDenom, krwPrice)
+	input.TreasuryKeeper.UpdateTaxCap(input.Ctx)
+
+	krwCap := input.TreasuryKeeper.GetTaxCap(input.Ctx, core.MicroKRWDenom)
+	sdrCapAmt := input.TreasuryKeeper.GetParams(input.Ctx).TaxPolicy.Cap.Amount
+	require.Equal(t, krwCap, krwPrice.Quo(sdrPrice).MulInt(sdrCapAmt).TruncateInt())
+}
+
+
+
+
+
+

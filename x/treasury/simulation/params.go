@@ -1,0 +1,63 @@
+package simulation
+
+// DONTCOVER
+
+import (
+	"encoding/json"
+	"fmt"
+	"math/rand"
+
+	"github.com/Daviddochain/dochain-core/v4/x/treasury/types"
+	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
+	"github.com/cosmos/cosmos-sdk/x/simulation"
+)
+
+// ParamChanges defines the parameters that can be modified by param change proposals
+// on the simulation
+func ParamChanges(*rand.Rand) []simtypes.LegacyParamChange {
+	return []simtypes.LegacyParamChange{
+		simulation.NewSimLegacyParamChange(types.ModuleName, string(types.KeyTaxPolicy),
+			func(r *rand.Rand) string {
+				bz, _ := json.Marshal(GenTaxPolicy(r))
+				return string(bz)
+			},
+		),
+		simulation.NewSimLegacyParamChange(types.ModuleName, string(types.KeyRewardPolicy),
+			func(r *rand.Rand) string {
+				bz, _ := json.Marshal(GenRewardPolicy(r))
+				return string(bz)
+			},
+		),
+		simulation.NewSimLegacyParamChange(types.ModuleName, string(types.KeySeigniorageBurdenTarget),
+			func(r *rand.Rand) string {
+				return fmt.Sprintf("\"%s\"", GenSeigniorageBurdenTarget(r))
+			},
+		),
+		simulation.NewSimLegacyParamChange(types.ModuleName, string(types.KeyMiningIncrement),
+			func(r *rand.Rand) string {
+				return fmt.Sprintf("\"%s\"", GenMiningIncrement(r))
+			},
+		),
+		simulation.NewSimLegacyParamChange(types.ModuleName, string(types.KeyWindowShort),
+			func(r *rand.Rand) string {
+				return fmt.Sprintf("\"%d\"", GenWindowShort(r))
+			},
+		),
+		simulation.NewSimLegacyParamChange(types.ModuleName, string(types.KeyWindowLong),
+			func(r *rand.Rand) string {
+				return fmt.Sprintf("\"%d\"", GenWindowLong(r))
+			},
+		),
+		simulation.NewSimLegacyParamChange(types.ModuleName, string(types.KeyWindowProbation),
+			func(r *rand.Rand) string {
+				return fmt.Sprintf("\"%d\"", GenWindowProbation(r))
+			},
+		),
+	}
+}
+
+
+
+
+
+

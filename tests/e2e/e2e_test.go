@@ -1,0 +1,387 @@
+package e2e
+
+import (
+	"fmt"
+	"strconv"
+	"time"
+
+	sdkmath "cosmossdk.io/math"
+	"github.com/Daviddochain/dochain-core/v4/tests/e2e/initialization"
+	sdk "github.com/cosmos/cosmos-sdk/types"
+)
+
+func (s *IntegrationTestSuite) TestIBCWasmHooks() {
+	if s.skipIBC {
+		s.T().Skip("Skipping IBC tests")
+	}
+	chainA := s.configurer.GetChainConfig(0)
+	chainB := s.configurer.GetChainConfig(1)
+
+	nodeA, err := chainA.GetDefaultNode()
+	s.NoError(err)
+	nodeB, err := chainB.GetDefaultNode()
+	s.NoError(err)
+
+	nodeA.StoreWasmCode("counter.wasm", initialization.ValidatorWalletName)
+	chainA.LatestCodeID = int(nodeA.QueryLatestWasmCodeID())
+	nodeA.InstantiateWasmContract(
+		strconv.Itoa(chainA.LatestCodeID),
+		`{"count": "0"}`, "",
+		initialization.ValidatorWalletName)
+
+	contracts, err := nodeA.QueryContractsFromID(chainA.LatestCodeID)
+	s.NoError(err)
+	s.Len(contracts, 1, "Wrong number of contracts for the counter")
+	contractAddr := contracts[0]
+
+	transferAmount := sdkmath.NewInt(10000000)
+	validatorAddr := nodeB.GetWallet(initialization.ValidatorWalletName)
+	nodeB.SendIBCTransfer(validatorAddr, contractAddr, fmt.Sprintf("%dudo", transferAmount.Int64()),
+		fmt.Sprintf(`{"wasm":{"contract":"%s","msg": {"increment": {}} }}`, contractAddr))
+
+	// check the balance of the contract
+	s.Eventually(func() bool {
+		balance, err := nodeA.QueryBalances(contractAddr)
+		s.Require().NoError(err)
+		if len(balance) == 0 {
+			return false
+		}
+		return balance[0].Amount.Equal(transferAmount)
+	},
+		initialization.OneMin,
+		10*time.Millisecond)
+
+	// sender wasm addr
+	// senderBech32, err := ibchookskeeper.DeriveIntermediateSender("channel-0", validatorAddr, "do")
+	var response interface{}
+	response, err = nodeA.QueryWasmSmart(contractAddr, `{"get_total_funds": {}}`)
+	s.Require().NoError(err)
+
+	s.Eventually(func() bool {
+		response, err = nodeA.QueryWasmSmart(contractAddr, `{"get_total_funds": {}}`)
+		if err != nil {
+			return false
+		}
+
+		totalFunds := response.([]interface{})[0]
+		amount, err := strconv.ParseInt(totalFunds.(map[string]interface{})["amount"].(string), 10, 64)
+		if err != nil {
+			return false
+		}
+		denom := totalFunds.(map[string]interface{})["denom"].(string)
+
+		response, err = nodeA.QueryWasmSmart(contractAddr, `{"get_count": {}}`)
+		if err != nil {
+			return false
+		}
+		count, err := strconv.ParseInt(response.(string), 10, 64)
+		if err != nil {
+			return false
+		}
+		// check if denom is udotest token ibc
+		return sdkmath.NewInt(amount).Equal(transferAmount) && denom == initialization.DoIBCDenom && count == 1
+	},
+		30*time.Second,
+		10*time.Millisecond,
+	)
+}
+
+func (s *IntegrationTestSuite) TestAddBurnTaxExemptionAddress() {
+	chain := s.configurer.GetChainConfig(0)
+	node, err := chain.GetDefaultNode()
+	s.Require().NoError(err)
+
+	whitelistAddr1 := node.CreateWallet("whitelist1")
+	whitelistAddr2 := node.CreateWallet("whitelist2")
+
+	chain.AddBurnTaxExemptionAddressProposal(node, whitelistAddr1, whitelistAddr2)
+
+	whitelistedAddresses, err := node.QueryBurnTaxExemptionList()
+	s.Require().NoError(err)
+	s.Require().Len(whitelistedAddresses, 2)
+	s.Require().Contains(whitelistedAddresses, whitelistAddr1)
+	s.Require().Contains(whitelistedAddresses, whitelistAddr2)
+}
+
+func (s *IntegrationTestSuite) TestFeeTax() {
+	// these tests have been adjusted to account for the reverse charge model
+
+	chain := s.configurer.GetChainConfig(0)
+	node, err := chain.GetDefaultNode()
+	s.Require().NoError(err)
+
+	transferAmount1 := sdkmath.NewInt(20000000)
+	transferCoin1 := sdk.NewCoin(initialization.DoDenom, transferAmount1)
+
+	validatorAddr := node.GetWallet(initialization.ValidatorWalletName)
+	s.Require().NotEqual(validatorAddr, "")
+
+	test1Addr := node.CreateWallet("test1")
+	s.Require().NotEqual(test1Addr, "")
+
+	// Test 1: banktypes.MsgSend
+	// burn tax with bank send
+	// Query balance right before the send to minimize time window for staking rewards
+	_, err = node.QuerySpecificBalance(validatorAddr, initialization.DoDenom)
+	s.Require().NoError(err)
+	node.BankSend(transferCoin1.String(), validatorAddr, test1Addr)
+
+	newValidatorBalance, err := node.QuerySpecificBalance(validatorAddr, initialization.DoDenom)
+	_ = newValidatorBalance // Not asserted due to staking rewards
+	s.Require().NoError(err)
+
+	balanceTest1, err := node.QuerySpecificBalance(test1Addr, initialization.DoDenom)
+	s.Require().NoError(err)
+
+	taxAmount := initialization.BurnTaxRate.MulInt(transferAmount1).TruncateInt()
+	receiveAmount1 := transferAmount1.Sub(taxAmount)
+	s.Require().Equal(balanceTest1.Amount, receiveAmount1)
+	// Note: Skip validator balance assertion due to staking rewards earned between queries
+
+	// Test 2: try bank send with grant
+	test2Addr := node.CreateWallet("test2")
+	s.Require().NotEqual(test2Addr, "")
+	transferAmount2 := sdkmath.NewInt(10000000)
+	transferCoin2 := sdk.NewCoin(initialization.DoDenom, transferAmount2)
+
+	receiveAmount2 := transferAmount2.Sub(initialization.BurnTaxRate.MulInt(transferAmount2).TruncateInt())
+	node.BankSend(transferCoin2.String(), validatorAddr, test2Addr)
+	node.GrantAddress(test2Addr, test1Addr, transferCoin2.String(), "test2")
+
+	node.BankSendFeeGrantWithWallet(transferCoin2.String(), test1Addr, validatorAddr, test2Addr, "test1")
+
+	balanceTest1, err = node.QuerySpecificBalance(test1Addr, initialization.DoDenom)
+	s.Require().NoError(err)
+
+	balanceTest2, err := node.QuerySpecificBalance(test2Addr, initialization.DoDenom)
+	s.Require().NoError(err)
+
+	s.Require().Equal(balanceTest1.Amount, receiveAmount1.Sub(transferAmount2))
+	// Skip validator balance assertion due to non-deterministic rewards/commission updates between queries.
+	s.Require().Equal(balanceTest2.Amount, receiveAmount2)
+
+	// Test 3: banktypes.MsgMultiSend
+	node.BankMultiSend(transferCoin1.String(), false, validatorAddr, test1Addr, test2Addr)
+
+	taxAmount = initialization.BurnTaxRate.MulInt(transferAmount1).TruncateInt()
+	receiveAmount := transferAmount1.Sub(taxAmount)
+	// Skip validator balance assertion due to non-deterministic rewards/commission updates between queries.
+
+	balanceTest1New, err := node.QuerySpecificBalance(test1Addr, initialization.DoDenom)
+	s.Require().NoError(err)
+	s.Require().Equal(balanceTest1New.Amount, balanceTest1.Amount.Add(receiveAmount))
+
+	balanceTest2New, err := node.QuerySpecificBalance(test2Addr, initialization.DoDenom)
+	s.Require().NoError(err)
+	s.Require().Equal(balanceTest2New.Amount, balanceTest2.Amount.Add(receiveAmount))
+}
+
+func (s *IntegrationTestSuite) TestAuthz() {
+	chain := s.configurer.GetChainConfig(0)
+	node, err := chain.GetDefaultNode()
+	s.Require().NoError(err)
+
+	transferAmount1 := sdkmath.NewInt(20000000)
+	transferCoin1 := sdk.NewCoin(initialization.DoDenom, transferAmount1)
+	test1WalletName := "authz1"
+	test2WalletName := "authz2"
+	test1Addr := node.CreateWallet(test1WalletName)
+	test2Addr := node.CreateWallet(test2WalletName)
+	validatorAddr := node.GetWallet(initialization.ValidatorWalletName)
+	s.Require().NotEqual(validatorAddr, "")
+
+	node.GrantBankSend(test1Addr, transferCoin1.String(), "val")
+
+	validatorBalance, err := node.QuerySpecificBalance(validatorAddr, initialization.DoDenom)
+	s.Require().NoError(err)
+	node.BankSendWithWallet(transferCoin1.String(), validatorAddr, test2Addr, test1WalletName)
+
+	newValidatorBalance, err := node.QuerySpecificBalance(validatorAddr, initialization.DoDenom)
+	s.Require().NoError(err)
+
+	taxAmount := initialization.BurnTaxRate.MulInt(transferAmount1).TruncateInt()
+	balanceTest2, err := node.QuerySpecificBalance(test2Addr, initialization.DoDenom)
+	s.Require().NoError(err)
+
+	s.Require().Equal(transferAmount1.Sub(taxAmount), balanceTest2.Amount)
+	// Use GTE to account for staking rewards accrued between balance queries
+	s.Require().True(newValidatorBalance.Amount.GTE(validatorBalance.Amount.Sub(transferAmount1)),
+		"expected validator balance >= %s, got %s", validatorBalance.Amount.Sub(transferAmount1), newValidatorBalance.Amount)
+}
+
+func (s *IntegrationTestSuite) TestFeeTaxWasm() {
+	chain := s.configurer.GetChainConfig(0)
+	node, err := chain.GetDefaultNode()
+	s.Require().NoError(err)
+
+	testAddr := node.CreateWallet("test")
+	transferAmount := sdkmath.NewInt(100000000)
+	transferCoin := sdk.NewCoin(initialization.DoDenom, transferAmount)
+	node.BankSend(fmt.Sprintf("%sudo", transferAmount.Mul(sdkmath.NewInt(4))), initialization.ValidatorWalletName, testAddr)
+	node.StoreWasmCode("counter.wasm", initialization.ValidatorWalletName)
+	chain.LatestCodeID = int(node.QueryLatestWasmCodeID())
+
+	balance0, err := node.QuerySpecificBalance(testAddr, initialization.DoDenom)
+	s.Require().NoError(err)
+	taxAmount := initialization.BurnTaxRate.MulInt(transferAmount.Mul(sdkmath.NewInt(4))).TruncateInt()
+	s.Require().Equal(balance0.Amount, transferAmount.Mul(sdkmath.NewInt(4)).Sub(taxAmount))
+
+	// instantiate contract and transfer 100000000udo
+	node.InstantiateWasmContract(
+		strconv.Itoa(chain.LatestCodeID),
+		`{"count": "0"}`, transferCoin.String(),
+		"test")
+
+	contracts, err := node.QueryContractsFromID(chain.LatestCodeID)
+	s.Require().NoError(err)
+	s.Require().Len(contracts, 1, "Wrong number of contracts for the counter")
+
+	balance1, err := node.QuerySpecificBalance(testAddr, initialization.DoDenom)
+	s.Require().NoError(err)
+	// 400000000 - (400000000 * TaxRate) - 100000000 = 392000000 - 100000000 = 292000000
+	// not taxed, taxAmount is accounting for the tax from the initial transfer to the wallet
+	s.Require().Equal(balance1.Amount, transferAmount.Mul(sdkmath.NewInt(3)).Sub(taxAmount))
+
+	stabilityFee := sdkmath.LegacyNewDecWithPrec(2, 2).MulInt(transferAmount)
+
+	node.Instantiate2WasmContract(
+		strconv.Itoa(chain.LatestCodeID),
+		`{"count": "0"}`, "salt",
+		transferCoin.String(),
+		fmt.Sprintf("%dudo", stabilityFee), "300000", "test")
+
+	contracts, err = node.QueryContractsFromID(chain.LatestCodeID)
+	s.Require().NoError(err)
+	s.Require().Len(contracts, 2, "Wrong number of contracts for the counter")
+
+	balance2, err := node.QuerySpecificBalance(testAddr, initialization.DoDenom)
+	s.Require().NoError(err)
+	// balance1 - 100000000 - 100000000 * TaxRate
+	// taxAmount = initialization.BurnTaxRate.MulInt(transferAmount).TruncateInt()
+	// s.Require().Equal(balance2.Amount, balance1.Amount.Sub(transferAmount).Sub(taxAmount))
+	// no longer taxed
+	s.Require().Equal(balance2.Amount, balance1.Amount.Sub(transferAmount))
+
+	contractAddr := contracts[0]
+	node.WasmExecute(contractAddr, `{"donate": {}}`, transferCoin.String(), fmt.Sprintf("%dudo", stabilityFee), "test")
+
+	balance3, err := node.QuerySpecificBalance(testAddr, initialization.DoDenom)
+	s.Require().NoError(err)
+	// balance2 - 100000000 - 100000000 * TaxRate
+	// taxAmount = initialization.BurnTaxRate.MulInt(transferAmount).TruncateInt()
+	// s.Require().Equal(balance3.Amount, balance2.Amount.Sub(transferAmount).Sub(taxAmount))
+	// no longer taxed
+	s.Require().Equal(balance3.Amount, balance2.Amount.Sub(transferAmount))
+}
+
+// TestOracleDelegateFeedConsent verifies that MsgDelegateFeedConsent can be
+// simulated and broadcast without the bech32 prefix mismatch error:
+// "hrp does not match bech32 prefix: expected 'do' got 'dovaloper'"
+func (s *IntegrationTestSuite) TestOracleDelegateFeedConsent() {
+	chain := s.configurer.GetChainConfig(0)
+	node, err := chain.GetDefaultNode()
+	s.Require().NoError(err)
+
+	// The validator's operator address (dovaloper...) is the signer of MsgDelegateFeedConsent.
+	// Before the fix, x/tx signer extraction would fail to decode it using the account codec.
+	operatorAddr := node.OperatorAddress
+	s.Require().NotEmpty(operatorAddr, "validator operator address must be set")
+
+	// Create a new feeder wallet to delegate oracle voting rights to.
+	feederAddr := node.CreateWallet("oracleFeeder")
+
+	// Submit the tx — this would previously fail with code 2 (internal logic error).
+	node.DelegateFeedConsent(feederAddr, initialization.ValidatorWalletName)
+
+	// Verify the delegation was recorded on-chain.
+	delegated, err := node.QueryFeederDelegation(operatorAddr)
+	s.Require().NoError(err)
+	s.Require().Equal(feederAddr, delegated)
+}
+
+// TestSlashingUnjail verifies that a jailed validator can be unjailed via
+// "tx slashing unjail", which is only exposed through AutoCLI in SDK v0.53+.
+// The test stops a non-default validator to trigger downtime jailing, then
+// restarts it and submits the unjail transaction, confirming that
+// jailed_until is cleared.
+func (s *IntegrationTestSuite) TestSlashingUnjail() {
+	chain := s.configurer.GetChainConfig(0)
+
+	// nodeToJail is the second validator; stopping it keeps chain consensus
+	// alive (3 of 4 validators remain, well above the 2/3 threshold).
+	nodeToJail := chain.NodeConfigs[1]
+	// defaultNode stays running and is used for signing-info queries.
+	defaultNode, err := chain.GetDefaultNode()
+	s.Require().NoError(err)
+
+	s.Require().NotEmpty(nodeToJail.ConsensusAddress,
+		"consensus address must be extracted at startup")
+
+	// --- jail phase ---
+	s.T().Log("stopping validator to trigger downtime jailing")
+	s.Require().NoError(nodeToJail.Stop())
+
+	// Wait until the signing info shows jailed_until in the future, meaning
+	// the slashing module has processed the downtime and jailed the validator.
+	// The REST API serialises the zero protobuf Timestamp as Unix epoch
+	// ("1970-01-01T00:00:00Z"), not Go's zero time ("0001-01-01T00:00:00Z").
+	const notJailed = "1970-01-01T00:00:00Z"
+	s.Require().Eventually(func() bool {
+		jailedUntil, err := defaultNode.QuerySigningInfo(nodeToJail.ConsensusAddress)
+		if err != nil {
+			return false
+		}
+		return jailedUntil != notJailed
+	}, initialization.FiveMin, 5*time.Second,
+		"validator was not jailed within the timeout")
+
+	// --- unjail phase ---
+	s.T().Log("restarting validator")
+	s.Require().NoError(nodeToJail.Run())
+
+	// Wait until the real clock has passed jailed_until by at least 5 seconds.
+	// Submitting the unjail tx while jailed_until is still in the future causes
+	// DeliverTx to fail even though CheckTx (mempool) accepts it, leaving the
+	// validator permanently jailed. The 5-second buffer accounts for BFT clock
+	// drift: the block's BFT timestamp can be a few seconds behind real time,
+	// so waiting until time.Now() > jailed_until+5s ensures the next committed
+	// block's BFT time is also definitively past jailed_until.
+	s.Require().Eventually(func() bool {
+		jailedUntil, err := defaultNode.QuerySigningInfo(nodeToJail.ConsensusAddress)
+		if err != nil || jailedUntil == notJailed {
+			return false
+		}
+		jailTime, err := time.Parse(time.RFC3339Nano, jailedUntil)
+		if err != nil {
+			jailTime, err = time.Parse(time.RFC3339, jailedUntil)
+			if err != nil {
+				return false
+			}
+		}
+		return time.Now().UTC().After(jailTime.Add(5 * time.Second))
+	}, initialization.TwoMin, time.Second, "jail period did not expire within timeout")
+
+	// Retry the unjail tx every poll interval until signing info confirms success.
+	// A single broadcast is insufficient: if the committed block's BFT timestamp
+	// is still before jailed_until (BFT clock can lag real time in CI), DeliverTx
+	// returns a non-zero code and the validator stays jailed. Re-broadcasting every
+	// 5 seconds lets BFT time catch up without manual timing tuning.
+	s.T().Log("jail period expired, entering unjail retry loop")
+	s.Require().Eventually(func() bool {
+		jailedUntil, err := defaultNode.QuerySigningInfo(nodeToJail.ConsensusAddress)
+		if err == nil && jailedUntil == notJailed {
+			return true
+		}
+		// Ignore broadcast errors; on-chain delivery is checked via signing info.
+		_ = nodeToJail.Unjail(initialization.ValidatorWalletName)
+		return false
+	}, initialization.FiveMin, 5*time.Second,
+		"jailed_until should be cleared after unjail")
+}
+
+
+
+
+
+
+

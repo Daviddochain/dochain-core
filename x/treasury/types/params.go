@@ -1,0 +1,298 @@
+package types
+
+import (
+	"fmt"
+
+	sdkmath "cosmossdk.io/math"
+	core "github.com/Daviddochain/dochain-core/v4/types"
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	paramstypes "github.com/cosmos/cosmos-sdk/x/params/types"
+	"gopkg.in/yaml.v2"
+)
+
+// Parameter keys
+var (
+	KeyTaxPolicy               = []byte("TaxPolicy")
+	KeyRewardPolicy            = []byte("RewardPolicy")
+	KeySeigniorageBurdenTarget = []byte("SeigniorageBurdenTarget")
+	KeyMiningIncrement         = []byte("MiningIncrement")
+	KeyWindowShort             = []byte("WindowShort")
+	KeyWindowLong              = []byte("WindowLong")
+	KeyWindowProbation         = []byte("WindowProbation")
+	KeyBurnTaxSplit            = []byte("BurnTaxSplit")
+	KeyMinInitialDepositRatio  = []byte("MinInitialDepositRatio")
+	KeyOracleSplit             = []byte("OracleSplit")
+)
+
+// Default parameter values
+var (
+	DefaultTaxPolicy = PolicyConstraints{
+		RateMin:       sdkmath.LegacyNewDecWithPrec(5, 4),                                      // 0.05%
+		RateMax:       sdkmath.LegacyNewDecWithPrec(1, 2),                                      // 1%
+		Cap:           sdk.NewCoin(core.MicroDoDenom, sdkmath.OneInt().MulRaw(core.MicroUnit)), // 1 DO tax cap
+		ChangeRateMax: sdkmath.LegacyNewDecWithPrec(25, 5),                                     // 0.025%
+	}
+	DefaultRewardPolicy = PolicyConstraints{
+		RateMin:       sdkmath.LegacyNewDecWithPrec(5, 2),                // 5%
+		RateMax:       sdkmath.LegacyNewDecWithPrec(50, 2),               // 50%
+		ChangeRateMax: sdkmath.LegacyNewDecWithPrec(25, 3),               // 2.5%
+		Cap:           sdk.NewCoin(core.MicroDoDenom, sdkmath.ZeroInt()), // default 0 udo cap
+	}
+	DefaultSeigniorageBurdenTarget = sdkmath.LegacyNewDecWithPrec(67, 2) // 67%
+	DefaultMiningIncrement         = sdkmath.LegacyNewDecWithPrec(107, 2) // 1.07 mining increment; exponential growth
+	DefaultWindowShort             = uint64(4)                            // a month
+	DefaultWindowLong              = uint64(52)                           // a year
+	DefaultWindowProbation         = uint64(12)                           // 3 month
+	DefaultTaxRate                 = sdkmath.LegacyNewDecWithPrec(1, 3)   // 0.1%
+	DefaultRewardWeight            = sdkmath.LegacyNewDecWithPrec(5, 2)   // 5%
+	DefaultBurnTaxSplit            = sdkmath.LegacyNewDecWithPrec(1, 1)   // 10% goes to community pool, 90% burn
+	DefaultMinInitialDepositRatio  = sdkmath.LegacyZeroDec()              // 0% min initial deposit
+	DefaultOracleSplit             = sdkmath.LegacyOneDec()               // 100% oracle, community tax (CP) is deducted before oracle split
+)
+
+var _ paramstypes.ParamSet = &Params{}
+
+// DefaultParams creates default treasury module parameters
+func DefaultParams() Params {
+	return Params{
+		TaxPolicy:               DefaultTaxPolicy,
+		RewardPolicy:            DefaultRewardPolicy,
+		SeigniorageBurdenTarget: DefaultSeigniorageBurdenTarget,
+		MiningIncrement:         DefaultMiningIncrement,
+		WindowShort:             DefaultWindowShort,
+		WindowLong:              DefaultWindowLong,
+		WindowProbation:         DefaultWindowProbation,
+		BurnTaxSplit:            DefaultBurnTaxSplit,
+		MinInitialDepositRatio:  DefaultMinInitialDepositRatio,
+		OracleSplit:             DefaultOracleSplit,
+	}
+}
+
+// ParamKeyTable returns the parameter key table.
+func ParamKeyTable() paramstypes.KeyTable {
+	return paramstypes.NewKeyTable().RegisterParamSet(&Params{})
+}
+
+// String implements fmt.Stringer interface
+func (p Params) String() string {
+	out, _ := yaml.Marshal(p)
+	return string(out)
+}
+
+// ParamSetPairs implements the ParamSet interface and returns all the key/value pairs
+// pairs of treasury module's parameters.
+func (p *Params) ParamSetPairs() paramstypes.ParamSetPairs {
+	return paramstypes.ParamSetPairs{
+		paramstypes.NewParamSetPair(KeyTaxPolicy, &p.TaxPolicy, validateTaxPolicy),
+		paramstypes.NewParamSetPair(KeyRewardPolicy, &p.RewardPolicy, validateRewardPolicy),
+		paramstypes.NewParamSetPair(KeySeigniorageBurdenTarget, &p.SeigniorageBurdenTarget, validateSeigniorageBurdenTarget),
+		paramstypes.NewParamSetPair(KeyMiningIncrement, &p.MiningIncrement, validateMiningIncrement),
+		paramstypes.NewParamSetPair(KeyWindowShort, &p.WindowShort, validateWindowShort),
+		paramstypes.NewParamSetPair(KeyWindowLong, &p.WindowLong, validateWindowLong),
+		paramstypes.NewParamSetPair(KeyWindowProbation, &p.WindowProbation, validateWindowProbation),
+		paramstypes.NewParamSetPair(KeyBurnTaxSplit, &p.BurnTaxSplit, validateBurnTaxSplit),
+		paramstypes.NewParamSetPair(KeyMinInitialDepositRatio, &p.MinInitialDepositRatio, validateMinInitialDepositRatio),
+		paramstypes.NewParamSetPair(KeyOracleSplit, &p.OracleSplit, validateOraceSplit),
+	}
+}
+
+// Validate performs basic validation on treasury parameters.
+func (p Params) Validate() error {
+	if p.TaxPolicy.RateMax.LT(p.TaxPolicy.RateMin) {
+		return fmt.Errorf("treasury TaxPolicy.RateMax %s must be greater than TaxPolicy.RateMin %s",
+			p.TaxPolicy.RateMax, p.TaxPolicy.RateMin)
+	}
+
+	if p.TaxPolicy.RateMin.IsNegative() {
+		return fmt.Errorf("treasury parameter TaxPolicy.RateMin must be zero or positive: %s", p.TaxPolicy.RateMin)
+	}
+
+	if !p.TaxPolicy.Cap.IsValid() {
+		return fmt.Errorf("treasury parameter TaxPolicy.Cap is invalid")
+	}
+
+	if p.TaxPolicy.ChangeRateMax.IsNegative() {
+		return fmt.Errorf("treasury parameter TaxPolicy.ChangeRateMax must be positive: %s", p.TaxPolicy.ChangeRateMax)
+	}
+
+	if p.RewardPolicy.RateMax.LT(p.RewardPolicy.RateMin) {
+		return fmt.Errorf("treasury RewardPolicy.RateMax %s must be greater than RewardPolicy.RateMin %s",
+			p.RewardPolicy.RateMax, p.RewardPolicy.RateMin)
+	}
+
+	if p.RewardPolicy.RateMin.IsNegative() {
+		return fmt.Errorf("treasury parameter RewardPolicy.RateMin must be positive: %s", p.RewardPolicy.RateMin)
+	}
+
+	if p.RewardPolicy.ChangeRateMax.IsNegative() {
+		return fmt.Errorf("treasury parameter RewardPolicy.ChangeRateMax must be positive: %s", p.RewardPolicy.ChangeRateMax)
+	}
+
+	if p.SeigniorageBurdenTarget.IsNegative() {
+		return fmt.Errorf("treasury parameter SeigniorageBurdenTarget must be positive: %s", p.SeigniorageBurdenTarget)
+	}
+
+	if p.MiningIncrement.IsNegative() {
+		return fmt.Errorf("treasury parameter MiningIncrement must be positive: %s", p.MiningIncrement)
+	}
+
+	if p.WindowLong <= p.WindowShort {
+		return fmt.Errorf("treasury parameter WindowLong must be bigger than WindowShort: (%d, %d)", p.WindowLong, p.WindowShort)
+	}
+
+	if p.OracleSplit.IsNegative() {
+		return fmt.Errorf("treasury parameter OracleSplit must be positive: %s", p.OracleSplit)
+	}
+
+	if p.OracleSplit.GT(sdkmath.LegacyOneDec()) {
+		return fmt.Errorf("treasury parameter OracleSplit must be less than or equal to 1.0: %s", p.OracleSplit)
+	}
+
+	return nil
+}
+
+func validateTaxPolicy(i interface{}) error {
+	v, ok := i.(PolicyConstraints)
+	if !ok {
+		return fmt.Errorf("invalid parameter type: %T", i)
+	}
+
+	if v.RateMin.IsNegative() {
+		return fmt.Errorf("rate min must be positive: %s", v)
+	}
+
+	if v.RateMax.LT(v.RateMin) {
+		return fmt.Errorf("rate max must be bigger than rate min: %s", v)
+	}
+
+	if !v.Cap.IsValid() {
+		return fmt.Errorf("cap is invalid: %s", v)
+	}
+
+	if v.ChangeRateMax.IsNegative() {
+		return fmt.Errorf("max change rate must be positive: %s", v)
+	}
+
+	return nil
+}
+
+func validateRewardPolicy(i interface{}) error {
+	v, ok := i.(PolicyConstraints)
+	if !ok {
+		return fmt.Errorf("invalid parameter type: %T", i)
+	}
+
+	if v.RateMin.IsNegative() {
+		return fmt.Errorf("rate min must be positive: %s", v)
+	}
+
+	if v.RateMax.LT(v.RateMin) {
+		return fmt.Errorf("rate max must be bigger than rate min: %s", v)
+	}
+
+	if v.ChangeRateMax.IsNegative() {
+		return fmt.Errorf("max change rate must be positive: %s", v)
+	}
+
+	return nil
+}
+
+func validateSeigniorageBurdenTarget(i interface{}) error {
+	v, ok := i.(sdkmath.LegacyDec)
+	if !ok {
+		return fmt.Errorf("invalid parameter type: %T", i)
+	}
+
+	if v.IsNegative() {
+		return fmt.Errorf("seigniorage burden target must be positive: %s", v)
+	}
+
+	return nil
+}
+
+func validateMiningIncrement(i interface{}) error {
+	v, ok := i.(sdkmath.LegacyDec)
+	if !ok {
+		return fmt.Errorf("invalid parameter type: %T", i)
+	}
+
+	if v.IsNegative() {
+		return fmt.Errorf("mining increment must be positive: %s", v)
+	}
+
+	return nil
+}
+
+func validateWindowShort(i interface{}) error {
+	_, ok := i.(uint64)
+	if !ok {
+		return fmt.Errorf("invalid parameter type: %T", i)
+	}
+
+	return nil
+}
+
+func validateWindowLong(i interface{}) error {
+	_, ok := i.(uint64)
+	if !ok {
+		return fmt.Errorf("invalid parameter type: %T", i)
+	}
+
+	return nil
+}
+
+func validateWindowProbation(i interface{}) error {
+	_, ok := i.(uint64)
+	if !ok {
+		return fmt.Errorf("invalid parameter type: %T", i)
+	}
+
+	return nil
+}
+
+func validateBurnTaxSplit(i interface{}) error {
+	v, ok := i.(sdkmath.LegacyDec)
+	if !ok {
+		return fmt.Errorf("invalid parameter type: %T", i)
+	}
+
+	if v.IsNegative() {
+		return fmt.Errorf("burn tax split must be positive: %s", v)
+	}
+
+	return nil
+}
+
+func validateMinInitialDepositRatio(i interface{}) error {
+	v, ok := i.(sdkmath.LegacyDec)
+	if !ok {
+		return fmt.Errorf("invalid paramater type: %T", i)
+	}
+
+	if v.IsNegative() {
+		return fmt.Errorf("min initial deposit ratio must be positive: %s", v)
+	}
+
+	if v.GT(sdkmath.LegacyOneDec()) {
+		return fmt.Errorf("min initial deposit ratio must less than or equal 1.0: %s", v)
+	}
+
+	return nil
+}
+
+func validateOraceSplit(i interface{}) error {
+	v, ok := i.(sdkmath.LegacyDec)
+	if !ok {
+		return fmt.Errorf("invalid paramater type: %T", i)
+	}
+
+	if v.IsNegative() {
+		return fmt.Errorf("oracle split must be positive: %s", v)
+	}
+
+	if v.GT(sdkmath.LegacyOneDec()) {
+		return fmt.Errorf("oracle split must be less than or equal to 1.0: %s", v)
+	}
+
+	return nil
+}

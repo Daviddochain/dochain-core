@@ -1,0 +1,79 @@
+package types
+
+import (
+	"testing"
+
+	sdkmath "cosmossdk.io/math"
+	core "github.com/Daviddochain/dochain-core/v4/types"
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/stretchr/testify/require"
+)
+
+func TestMsgSwap(t *testing.T) {
+	addrs := []sdk.AccAddress{
+		sdk.AccAddress([]byte("addr1_______________")),
+	}
+
+	overflowOfferAmt, _ := sdkmath.NewIntFromString("100000000000000000000000000000000000000000000000000000000")
+
+	tests := []struct {
+		trader      sdk.AccAddress
+		offerCoin   sdk.Coin
+		askDenom    string
+		expectedErr string
+	}{
+		{addrs[0], sdk.NewCoin(core.MicroDoDenom, sdkmath.OneInt()), core.MicroSDRDenom, ""},
+		{sdk.AccAddress{}, sdk.NewCoin(core.MicroDoDenom, sdkmath.OneInt()), core.MicroSDRDenom, "Invalid trader address (empty address string is not allowed): invalid address"},
+		{addrs[0], sdk.NewCoin(core.MicroDoDenom, sdkmath.ZeroInt()), core.MicroSDRDenom, "0udo: invalid coins"},
+		{addrs[0], sdk.NewCoin(core.MicroDoDenom, overflowOfferAmt), core.MicroSDRDenom, "100000000000000000000000000000000000000000000000000000000udo: invalid coins"},
+		{addrs[0], sdk.NewCoin(core.MicroDoDenom, sdkmath.OneInt()), core.MicroDoDenom, "udo: recursive swap"},
+	}
+
+	for _, tc := range tests {
+		msg := NewMsgSwap(tc.trader, tc.offerCoin, tc.askDenom)
+		if tc.expectedErr == "" {
+			require.Nil(t, msg.ValidateBasic())
+		} else {
+			require.EqualError(t, msg.ValidateBasic(), tc.expectedErr)
+		}
+	}
+}
+
+func TestMsgSwapSend(t *testing.T) {
+	addrs := []sdk.AccAddress{
+		sdk.AccAddress([]byte("addr1_______________")),
+		sdk.AccAddress([]byte("addr2_______________")),
+	}
+
+	overflowOfferAmt, _ := sdkmath.NewIntFromString("100000000000000000000000000000000000000000000000000000000")
+
+	tests := []struct {
+		fromAddress sdk.AccAddress
+		toAddress   sdk.AccAddress
+		offerCoin   sdk.Coin
+		askDenom    string
+		expectedErr string
+	}{
+		{addrs[0], addrs[0], sdk.NewCoin(core.MicroDoDenom, sdkmath.OneInt()), core.MicroSDRDenom, ""},
+		{addrs[0], sdk.AccAddress{}, sdk.NewCoin(core.MicroDoDenom, sdkmath.OneInt()), core.MicroSDRDenom, "Invalid to address (empty address string is not allowed): invalid address"},
+		{sdk.AccAddress{}, addrs[0], sdk.NewCoin(core.MicroDoDenom, sdkmath.OneInt()), core.MicroSDRDenom, "Invalid from address (empty address string is not allowed): invalid address"},
+		{addrs[0], addrs[0], sdk.NewCoin(core.MicroDoDenom, sdkmath.ZeroInt()), core.MicroSDRDenom, "0udo: invalid coins"},
+		{addrs[0], addrs[0], sdk.NewCoin(core.MicroDoDenom, overflowOfferAmt), core.MicroSDRDenom, "100000000000000000000000000000000000000000000000000000000udo: invalid coins"},
+		{addrs[0], addrs[0], sdk.NewCoin(core.MicroDoDenom, sdkmath.OneInt()), core.MicroDoDenom, "udo: recursive swap"},
+	}
+
+	for _, tc := range tests {
+		msg := NewMsgSwapSend(tc.fromAddress, tc.toAddress, tc.offerCoin, tc.askDenom)
+		if tc.expectedErr == "" {
+			require.Nil(t, msg.ValidateBasic())
+		} else {
+			require.EqualError(t, msg.ValidateBasic(), tc.expectedErr)
+		}
+	}
+}
+
+
+
+
+
+

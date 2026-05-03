@@ -1,0 +1,80 @@
+package v8
+
+import (
+	"context"
+
+	upgradetypes "cosmossdk.io/x/upgrade/types"
+	wasmmigration "github.com/CosmWasm/wasmd/x/wasm/migrations/v2"
+	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
+	"github.com/Daviddochain/dochain-core/v4/app/keepers"
+	"github.com/Daviddochain/dochain-core/v4/app/upgrades"
+	"github.com/cosmos/cosmos-sdk/baseapp"
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/cosmos/cosmos-sdk/types/module"
+	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
+	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
+	crisistypes "github.com/cosmos/cosmos-sdk/x/crisis/types"
+	distrtypes "github.com/cosmos/cosmos-sdk/x/distribution/types"
+	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
+	govv1 "github.com/cosmos/cosmos-sdk/x/gov/types/v1"
+	paramstypes "github.com/cosmos/cosmos-sdk/x/params/types"
+	slashingtypes "github.com/cosmos/cosmos-sdk/x/slashing/types"
+	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
+	"github.com/cosmos/ibc-go/v10/modules/core/exported"
+)
+
+func CreateV8UpgradeHandler(
+	mm *module.Manager,
+	cfg module.Configurator,
+	_ upgrades.BaseAppParamManager,
+	keepers *keepers.AppKeepers,
+) upgradetypes.UpgradeHandler {
+	return func(ctx context.Context, _ upgradetypes.Plan, fromVM module.VersionMap) (module.VersionMap, error) {
+		sdkCtx := sdk.UnwrapSDKContext(ctx)
+
+		// Set param key table for params module migration
+		for _, subspace := range keepers.ParamsKeeper.GetSubspaces() {
+			subspace := subspace
+
+			var keyTable paramstypes.KeyTable
+			switch subspace.Name() {
+			case authtypes.ModuleName:
+				keyTable = authtypes.ParamKeyTable()
+			case banktypes.ModuleName:
+				keyTable = banktypes.ParamKeyTable()
+			case stakingtypes.ModuleName:
+				keyTable = stakingtypes.ParamKeyTable()
+			case distrtypes.ModuleName:
+				keyTable = distrtypes.ParamKeyTable()
+			case slashingtypes.ModuleName:
+				keyTable = slashingtypes.ParamKeyTable()
+			case govtypes.ModuleName:
+				keyTable = govv1.ParamKeyTable()
+			case wasmtypes.ModuleName:
+				keyTable = wasmmigration.ParamKeyTable()
+			case crisistypes.ModuleName:
+				keyTable = crisistypes.ParamKeyTable()
+			}
+
+			if !subspace.HasKeyTable() {
+				subspace.WithKeyTable(keyTable)
+			}
+		}
+
+		legacyBaseAppSubspace := keepers.ParamsKeeper.Subspace(baseapp.Paramspace).WithKeyTable(paramstypes.ConsensusParamsKeyTable())
+		if err := baseapp.MigrateParams(sdkCtx, legacyBaseAppSubspace, keepers.ConsensusParamsKeeper.ParamsStore); err != nil {
+			return nil, err
+		}
+
+		params := keepers.IBCKeeper.ClientKeeper.GetParams(sdkCtx)
+		params.AllowedClients = append(params.AllowedClients, exported.Localhost)
+		keepers.IBCKeeper.ClientKeeper.SetParams(sdkCtx, params)
+		return mm.RunMigrations(ctx, cfg, fromVM)
+	}
+}
+
+
+
+
+
+

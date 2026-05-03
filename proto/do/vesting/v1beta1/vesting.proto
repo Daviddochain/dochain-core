@@ -1,0 +1,56 @@
+syntax = "proto3";
+package do.vesting.v1beta1;
+
+import "cosmos/vesting/v1beta1/vesting.proto";
+import "cosmos_proto/cosmos.proto";
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/Daviddochain/dochain-core/v4/x/vesting/types";
+
+// LazyGradedVestingAccount implements the LazyGradedVestingAccount interface. It vests all
+// coins according to a predefined schedule.
+message LazyGradedVestingAccount {
+  option (gogoproto.goproto_getters)  = false;
+  option (gogoproto.goproto_stringer) = false;
+
+  cosmos.vesting.v1beta1.BaseVestingAccount base_vesting_account = 1 [(gogoproto.embed) = true];
+  repeated VestingSchedule                  vesting_schedules    = 2 [
+    (gogoproto.moretags)     = "yaml:\"vesting_schedules\"",
+    (gogoproto.castrepeated) = "VestingSchedules",
+    (gogoproto.nullable)     = false
+  ];
+}
+
+// Schedule - represent single schedule data for a vesting schedule
+message Schedule {
+  option (gogoproto.goproto_getters) = false;
+
+  int64  start_time = 1 [(gogoproto.moretags) = "yaml:\"start_time\""];
+  int64  end_time   = 2 [(gogoproto.moretags) = "yaml:\"end_time\""];
+  string ratio      = 3 [
+    (cosmos_proto.scalar)  = "cosmos.Dec",
+    (gogoproto.moretags)   = "yaml:\"ratio\"",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable)   = false
+  ];
+}
+
+// VestingSchedule defines vesting schedule for a denom
+message VestingSchedule {
+  option (gogoproto.goproto_getters) = false;
+
+  string            denom     = 1 [(gogoproto.moretags) = "yaml:\"start_time\""];
+  repeated Schedule schedules = 2 [
+    (gogoproto.moretags)     = "yaml:\"schedules\"",
+    (gogoproto.castrepeated) = "Schedules",
+    (gogoproto.nullable)     = false
+  ];
+}
+
+
+
+
+
+
+
+

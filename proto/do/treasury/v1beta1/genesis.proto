@@ -1,0 +1,69 @@
+syntax = "proto3";
+package do.treasury.v1beta1;
+
+import "cosmos/base/v1beta1/coin.proto";
+import "cosmos_proto/cosmos.proto";
+import "gogoproto/gogo.proto";
+
+import "do/treasury/v1beta1/treasury.proto";
+
+option go_package = "github.com/Daviddochain/dochain-core/v4/x/treasury/types";
+
+// GenesisState defines the oracle module's genesis state.
+message GenesisState {
+  Params params   = 1 [(gogoproto.nullable) = false];
+  string tax_rate = 2 [
+    (cosmos_proto.scalar)  = "cosmos.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable)   = false
+  ];
+  string reward_weight = 3 [
+    (cosmos_proto.scalar)  = "cosmos.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable)   = false
+  ];
+  repeated TaxCap tax_caps                       = 4 [(gogoproto.nullable) = false];
+  repeated cosmos.base.v1beta1.Coin tax_proceeds = 5
+      [(gogoproto.nullable) = false, (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"];
+  repeated cosmos.base.v1beta1.Coin epoch_initial_issuance = 6
+      [(gogoproto.nullable) = false, (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"];
+  repeated EpochState epoch_states = 7 [(gogoproto.nullable) = false];
+}
+
+// TaxCap is the max tax amount can be charged for the given denom
+message TaxCap {
+  string denom   = 1;
+  string tax_cap = 2 [
+    (cosmos_proto.scalar)  = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable)   = false
+  ];
+}
+
+// EpochState is the record for each epoch state
+message EpochState {
+  uint64 epoch      = 1;
+  string tax_reward = 2 [
+    (cosmos_proto.scalar)  = "cosmos.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable)   = false
+  ];
+  string seigniorage_reward = 3 [
+    (cosmos_proto.scalar)  = "cosmos.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable)   = false
+  ];
+  string total_staked_do = 4 [
+    (cosmos_proto.scalar)  = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable)   = false
+  ];
+}
+
+
+
+
+
+
+
+

@@ -1,0 +1,33 @@
+syntax = "proto3";
+package do.dyncomm.v1beta1;
+
+import "cosmos_proto/cosmos.proto";
+import "gogoproto/gogo.proto";
+import "do/dyncomm/v1beta1/dyncomm.proto";
+
+option go_package = "github.com/Daviddochain/dochain-core/v4/x/dyncomm/types";
+
+// GenesisState defines the dyncomm module's genesis state.
+message GenesisState {
+  // params defines all the paramaters of the module.
+  Params                           params                     = 1 [(gogoproto.nullable) = false];
+  repeated ValidatorCommissionRate validator_commission_rates = 2 [(gogoproto.nullable) = false];
+}
+
+// MinDynCommission defines a validator - min commission rate
+// pair to be enforced by the blockchain
+message ValidatorCommissionRate {
+  string validator_address   = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string min_commission_rate = 2
+      [(cosmos_proto.scalar) = "cosmos.Dec", (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec"];
+  string target_commission_rate = 3
+      [(cosmos_proto.scalar) = "cosmos.Dec", (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec"];
+}
+
+
+
+
+
+
+
+

@@ -1,0 +1,49 @@
+syntax = "proto3";
+package do.dyncomm.v1beta1;
+
+import "cosmos_proto/cosmos.proto";
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/Daviddochain/dochain-core/v4/x/dyncomm/types";
+
+// Params defines the parameters for the dyncomm module.
+message Params {
+  option (gogoproto.equal)            = true;
+  option (gogoproto.goproto_stringer) = false;
+
+  string max_zero = 1 [
+    (cosmos_proto.scalar)  = "cosmos.Dec",
+    (gogoproto.moretags)   = "yaml:\"max_zero\"",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable)   = false
+  ];
+
+  string slope_base = 2 [
+    (cosmos_proto.scalar)  = "cosmos.Dec",
+    (gogoproto.moretags)   = "yaml:\"slope_base\"",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable)   = false
+  ];
+
+  string slope_vp_impact = 3 [
+    (cosmos_proto.scalar)  = "cosmos.Dec",
+    (gogoproto.moretags)   = "yaml:\"slope_vp_impact\"",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable)   = false
+  ];
+
+  string cap = 4 [
+    (cosmos_proto.scalar)  = "cosmos.Dec",
+    (gogoproto.moretags)   = "yaml:\"cap\"",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable)   = false
+  ];
+}
+
+
+
+
+
+
+
+

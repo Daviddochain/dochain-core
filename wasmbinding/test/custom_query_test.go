@@ -1,0 +1,239 @@
+package wasmbinding_test
+
+import (
+	"encoding/json"
+
+	sdkmath "cosmossdk.io/math"
+	wasmvmtypes "github.com/CosmWasm/wasmvm/v3/types"
+	core "github.com/Daviddochain/dochain-core/v4/types"
+	"github.com/Daviddochain/dochain-core/v4/wasmbinding/bindings"
+	markettypes "github.com/Daviddochain/dochain-core/v4/x/market/types"
+	treasurytypes "github.com/Daviddochain/dochain-core/v4/x/treasury/types"
+	sdk "github.com/cosmos/cosmos-sdk/types"
+)
+
+// go test -v -run ^TestQuerySwap$ github.com/Daviddochain/dochain-core/v4/wasmbinding/test
+// oracle rate: 1 udotest = 1.7 usdr
+// 1000 udotest from trader goes to contract
+// 1666 usdr (after 2% tax) is swapped into
+func (s *WasmTestSuite) QuerySwap(contractPath string, queryFunc func(contract sdk.AccAddress, request bindings.DoQuery, response interface{})) {
+	s.SetupTest()
+	actor := s.RandomAccountAddresses(1)[0]
+
+	// fund
+	s.FundAcc(actor, sdk.NewCoins(sdk.NewInt64Coin(core.MicroDoDenom, 1000000000)))
+
+	// instantiate reflect contract
+	contractAddr := s.InstantiateContract(actor, contractPath)
+	s.Require().NotEmpty(contractAddr)
+
+	// setup swap environment
+	// Set Oracle Price
+	doPriceInSDR := sdkmath.LegacyNewDecWithPrec(17, 1)
+	s.App.OracleKeeper.SetDoExchangeRate(s.Ctx, core.MicroSDRDenom, doPriceInSDR)
+
+	// Calculate expected swapped SDR
+	expectedSwappedSDR := sdkmath.LegacyNewDec(1000).Mul(doPriceInSDR)
+	tax := markettypes.DefaultMinStabilitySpread.Mul(expectedSwappedSDR)
+	expectedSwappedSDR = expectedSwappedSDR.Sub(tax)
+
+	// query swap
+	query := bindings.DoQuery{
+		Swap: &markettypes.QuerySwapParams{
+			OfferCoin: sdk.NewCoin(core.MicroDoDenom, sdkmath.NewInt(1000)),
+			AskDenom:  core.MicroSDRDenom,
+		},
+	}
+
+	resp := bindings.SwapQueryResponse{}
+	queryFunc(contractAddr, query, &resp)
+
+	s.Require().Equal(expectedSwappedSDR.TruncateInt().String(), resp.Receive.Amount)
+}
+
+// go test -v -run ^TestQueryExchangeRates$ github.com/Daviddochain/dochain-core/v4/wasmbinding/test
+func (s *WasmTestSuite) QueryExchangeRates(contractPath string, queryFunc func(contract sdk.AccAddress, request bindings.DoQuery, response interface{})) {
+	s.SetupTest()
+	actor := s.RandomAccountAddresses(1)[0]
+
+	// fund
+	s.FundAcc(actor, sdk.NewCoins(sdk.NewInt64Coin(core.MicroDoDenom, 1000000000)))
+
+	// instantiate reflect contract
+	contractAddr := s.InstantiateContract(actor, contractPath)
+	s.Require().NotEmpty(contractAddr)
+
+	doPriceInSDR := sdkmath.LegacyNewDecWithPrec(17, 1)
+	s.App.OracleKeeper.SetDoExchangeRate(s.Ctx, core.MicroSDRDenom, doPriceInSDR)
+
+	query := bindings.DoQuery{
+		ExchangeRates: &bindings.ExchangeRateQueryParams{
+			BaseDenom:   core.MicroDoDenom,
+			QuoteDenoms: []string{core.MicroSDRDenom},
+		},
+	}
+
+	resp := bindings.ExchangeRatesQueryResponse{}
+	queryFunc(contractAddr, query, &resp)
+
+	s.Require().Equal(doPriceInSDR, sdkmath.LegacyMustNewDecFromStr(resp.ExchangeRates[0].ExchangeRate))
+}
+
+// go test -v -run ^TestQueryTaxRate$ github.com/Daviddochain/dochain-core/v4/wasmbinding/test
+func (s *WasmTestSuite) QueryTaxRate(contractPath string, queryFunc func(contract sdk.AccAddress, request bindings.DoQuery, response interface{})) {
+	s.SetupTest()
+	actor := s.RandomAccountAddresses(1)[0]
+
+	// fund
+	s.FundAcc(actor, sdk.NewCoins(sdk.NewInt64Coin(core.MicroDoDenom, 1000000000)))
+
+	// instantiate reflect contract
+	contractAddr := s.InstantiateContract(actor, contractPath)
+	s.Require().NotEmpty(contractAddr)
+
+	query := bindings.DoQuery{
+		TaxRate: &struct{}{},
+	}
+
+	resp := bindings.TaxRateQueryResponse{}
+	queryFunc(contractAddr, query, &resp)
+
+	s.Require().Equal(treasurytypes.DefaultTaxRate, sdkmath.LegacyMustNewDecFromStr(resp.Rate))
+}
+
+// go test -v -run ^TestQueryTaxCap$ github.com/Daviddochain/dochain-core/v4/wasmbinding/test
+func (s *WasmTestSuite) QueryTaxCap(contractPath string, queryFunc func(contract sdk.AccAddress, request bindings.DoQuery, response interface{})) {
+	s.SetupTest()
+	actor := s.RandomAccountAddresses(1)[0]
+
+	// fund
+	s.FundAcc(actor, sdk.NewCoins(sdk.NewInt64Coin(core.MicroDoDenom, 1000000000)))
+
+	// instantiate reflect contract
+	contractAddr := s.InstantiateContract(actor, contractPath)
+	s.Require().NotEmpty(contractAddr)
+
+	query := bindings.DoQuery{
+		TaxCap: &treasurytypes.QueryTaxCapParams{
+			Denom: core.MicroSDRDenom,
+		},
+	}
+
+	resp := bindings.TaxCapQueryResponse{}
+	queryFunc(contractAddr, query, &resp)
+
+	s.Require().Equal(treasurytypes.DefaultTaxPolicy.Cap.Amount.String(), resp.Cap)
+}
+
+type ReflectQuery struct {
+	Chain *ChainRequest `json:"chain,omitempty"`
+}
+
+type ChainRequest struct {
+	Request wasmvmtypes.QueryRequest `json:"request"`
+}
+
+type ChainResponse struct {
+	Data []byte `json:"data"`
+}
+
+func (s *WasmTestSuite) queryCustom(contract sdk.AccAddress, request bindings.DoQuery, response interface{}) {
+	msgBz, err := json.Marshal(request)
+	s.Require().NoError(err)
+
+	query := ReflectQuery{
+		Chain: &ChainRequest{
+			Request: wasmvmtypes.QueryRequest{Custom: msgBz},
+		},
+	}
+	queryBz, err := json.Marshal(query)
+	s.Require().NoError(err)
+
+	resBz, err := s.App.WasmKeeper.QuerySmart(s.Ctx, contract, queryBz)
+	s.Require().NoError(err)
+	var resp ChainResponse
+	err = json.Unmarshal(resBz, &resp)
+	s.Require().NoError(err)
+	err = json.Unmarshal(resp.Data, response)
+	s.Require().NoError(err)
+}
+
+// old bindings contract query
+// Binding query messages
+type bindingsTesterSwapQueryMsg struct {
+	Swap swapQueryMsg `json:"swap"`
+}
+type bindingsTesterTaxRateQueryMsg struct {
+	TaxRate struct{} `json:"tax_rate"`
+}
+type bindingsTesterTaxCapQueryMsg struct {
+	TaxCap *treasurytypes.QueryTaxCapParams `json:"tax_cap"`
+}
+type bindingsTesterExchangeRatesQueryMsg struct {
+	ExchangeRates *bindings.ExchangeRateQueryParams `json:"exchange_rates"`
+}
+type swapQueryMsg struct {
+	OfferCoin wasmvmtypes.Coin `json:"offer_coin"`
+	AskDenom  string           `json:"ask_denom"`
+}
+
+func (s *WasmTestSuite) queryOldBindings(contract sdk.AccAddress, request bindings.DoQuery, response interface{}) {
+	var msgBz []byte
+	switch {
+	case request.Swap != nil:
+		query := bindingsTesterSwapQueryMsg{
+			Swap: swapQueryMsg{
+				OfferCoin: wasmvmtypes.Coin{
+					Denom:  request.Swap.OfferCoin.Denom,
+					Amount: request.Swap.OfferCoin.Amount.String(),
+				},
+				AskDenom: request.Swap.AskDenom,
+			},
+		}
+		var err error
+		msgBz, err = json.Marshal(query)
+		s.Require().NoError(err)
+	case request.ExchangeRates != nil:
+		query := bindingsTesterExchangeRatesQueryMsg{
+			ExchangeRates: request.ExchangeRates,
+		}
+		var err error
+		msgBz, err = json.Marshal(query)
+		s.Require().NoError(err)
+	case request.TaxRate != nil:
+		query := bindingsTesterTaxRateQueryMsg{
+			TaxRate: struct{}{},
+		}
+		var err error
+		msgBz, err = json.Marshal(query)
+		s.Require().NoError(err)
+	case request.TaxCap != nil:
+		query := bindingsTesterTaxCapQueryMsg{
+			TaxCap: request.TaxCap,
+		}
+		var err error
+		msgBz, err = json.Marshal(query)
+		s.Require().NoError(err)
+	}
+
+	resBz, err := s.App.WasmKeeper.QuerySmart(s.Ctx, contract, msgBz)
+	s.Require().NoError(err)
+	err = json.Unmarshal(resBz, response)
+	s.Require().NoError(err)
+}
+
+func (s *WasmTestSuite) queryStargate(contract sdk.AccAddress, request bindings.DoQuery, response interface{}) {
+	queryBz, err := json.Marshal(request)
+	s.Require().NoError(err)
+
+	resBz, err := s.App.WasmKeeper.QuerySmart(s.Ctx, contract, queryBz)
+	s.Require().NoError(err)
+	err = json.Unmarshal(resBz, response)
+	s.Require().NoError(err)
+}
+
+
+
+
+
+

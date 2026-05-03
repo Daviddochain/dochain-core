@@ -1,0 +1,419 @@
+package keeper
+
+import (
+	"fmt"
+
+	"cosmossdk.io/log"
+	"cosmossdk.io/math"
+	sdkmath "cosmossdk.io/math"
+	"cosmossdk.io/store/prefix"
+	storetypes "cosmossdk.io/store/types"
+	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
+	core "github.com/Daviddochain/dochain-core/v4/types"
+	"github.com/Daviddochain/dochain-core/v4/x/treasury/types"
+	"github.com/cosmos/cosmos-sdk/codec"
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	distrkeeper "github.com/cosmos/cosmos-sdk/x/distribution/keeper"
+	paramstypes "github.com/cosmos/cosmos-sdk/x/params/types"
+)
+
+// Keeper of the treasury store
+type Keeper struct {
+	storeKey   storetypes.StoreKey
+	cdc        codec.BinaryCodec
+	paramSpace paramstypes.Subspace
+
+	accountKeeper types.AccountKeeper
+	bankKeeper    types.BankKeeper
+	marketKeeper  types.MarketKeeper
+	stakingKeeper types.StakingKeeper
+	distrKeeper   distrkeeper.Keeper
+	oracleKeeper  types.OracleKeeper
+	wasmKeeper    *wasmkeeper.Keeper
+
+	distributionModuleName string
+}
+
+// NewKeeper creates a new treasury Keeper instance
+func NewKeeper(
+	cdc codec.BinaryCodec,
+	storeKey storetypes.StoreKey,
+	paramSpace paramstypes.Subspace,
+	accountKeeper types.AccountKeeper,
+	bankKeeper types.BankKeeper,
+	marketKeeper types.MarketKeeper,
+	oracleKeeper types.OracleKeeper,
+	stakingKeeper types.StakingKeeper,
+	distrKeeper distrkeeper.Keeper,
+	wasmKeeper *wasmkeeper.Keeper,
+	distributionModuleName string,
+) Keeper {
+	// ensure treasury module account is set
+	if addr := accountKeeper.GetModuleAddress(types.ModuleName); addr == nil {
+		panic(fmt.Sprintf("%s module account has not been set", types.ModuleName))
+	}
+
+	// ensure burn module account is set
+	if addr := accountKeeper.GetModuleAddress(types.BurnModuleName); addr == nil {
+		panic(fmt.Sprintf("%s module account has not been set", types.BurnModuleName))
+	}
+
+	// set KeyTable if it has not already been set
+	if !paramSpace.HasKeyTable() {
+		paramSpace = paramSpace.WithKeyTable(types.ParamKeyTable())
+	}
+
+	return Keeper{
+		cdc:                    cdc,
+		storeKey:               storeKey,
+		paramSpace:             paramSpace,
+		accountKeeper:          accountKeeper,
+		bankKeeper:             bankKeeper,
+		marketKeeper:           marketKeeper,
+		oracleKeeper:           oracleKeeper,
+		stakingKeeper:          stakingKeeper,
+		distrKeeper:            distrKeeper,
+		wasmKeeper:             wasmKeeper,
+		distributionModuleName: distributionModuleName,
+	}
+}
+
+// Logger returns a module-specific logger.
+func (k Keeper) Logger(ctx sdk.Context) log.Logger {
+	return ctx.Logger().With("module", fmt.Sprintf("x/%s", types.ModuleName))
+}
+
+// GetTaxRate loads the tax rate
+func (k Keeper) GetTaxRate(ctx sdk.Context) sdkmath.LegacyDec {
+	store := ctx.KVStore(k.storeKey)
+	b := store.Get(types.TaxRateKey)
+	if b == nil {
+		return types.DefaultTaxRate
+	}
+
+	dp := sdk.DecProto{}
+	k.cdc.MustUnmarshal(b, &dp)
+	return dp.Dec
+}
+
+// SetTaxRate sets the tax rate
+func (k Keeper) SetTaxRate(ctx sdk.Context, taxRate sdkmath.LegacyDec) {
+	store := ctx.KVStore(k.storeKey)
+	b := k.cdc.MustMarshal(&sdk.DecProto{Dec: taxRate})
+	store.Set(types.TaxRateKey, b)
+}
+
+// GetRewardWeight loads the reward weight
+func (k Keeper) GetRewardWeight(ctx sdk.Context) sdkmath.LegacyDec {
+	store := ctx.KVStore(k.storeKey)
+	b := store.Get(types.RewardWeightKey)
+	if b == nil {
+		return types.DefaultRewardWeight
+	}
+
+	dp := sdk.DecProto{}
+	k.cdc.MustUnmarshal(b, &dp)
+	return dp.Dec
+}
+
+// SetRewardWeight sets the reward weight
+func (k Keeper) SetRewardWeight(ctx sdk.Context, rewardWeight math.LegacyDec) {
+	store := ctx.KVStore(k.storeKey)
+	b := k.cdc.MustMarshal(&sdk.DecProto{Dec: rewardWeight})
+	store.Set(types.RewardWeightKey, b)
+}
+
+// SetTaxCap sets the tax cap denominated in integer units of the reference {denom}
+func (k Keeper) SetTaxCap(ctx sdk.Context, denom string, cap math.Int) {
+	store := ctx.KVStore(k.storeKey)
+	bz := k.cdc.MustMarshal(&sdk.IntProto{Int: cap})
+	store.Set(types.GetTaxCapKey(denom), bz)
+}
+
+// GetTaxCap gets the tax cap denominated in integer units of the reference {denom}
+func (k Keeper) GetTaxCap(ctx sdk.Context, denom string) math.Int {
+	store := ctx.KVStore(k.storeKey)
+	bz := store.Get(types.GetTaxCapKey(denom))
+	if bz == nil {
+		// if no tax-cap registered, return SDR tax-cap
+		return k.TaxPolicy(ctx).Cap.Amount
+	}
+
+	ip := sdk.IntProto{}
+	k.cdc.MustUnmarshal(bz, &ip)
+	return ip.Int
+}
+
+// IterateTaxCap iterates all tax cap
+func (k Keeper) IterateTaxCap(ctx sdk.Context, handler func(denom string, taxCap math.Int) (stop bool)) {
+	store := ctx.KVStore(k.storeKey)
+	sub := prefix.NewStore(store, types.TaxCapKey)
+	iter := sub.Iterator(nil, nil)
+
+	defer iter.Close()
+	for ; iter.Valid(); iter.Next() {
+		denom := string(iter.Key())
+		var ip sdk.IntProto
+		k.cdc.MustUnmarshal(iter.Value(), &ip)
+
+		if handler(denom, ip.Int) {
+			break
+		}
+	}
+}
+
+// RecordEpochTaxProceeds adds tax proceeds that have been added this epoch
+func (k Keeper) RecordEpochTaxProceeds(ctx sdk.Context, delta sdk.Coins) {
+	if delta.IsZero() {
+		return
+	}
+
+	proceeds := k.PeekEpochTaxProceeds(ctx)
+	proceeds = proceeds.Add(delta...)
+
+	k.SetEpochTaxProceeds(ctx, proceeds)
+}
+
+// SetEpochTaxProceeds stores tax proceeds for the given epoch
+func (k Keeper) SetEpochTaxProceeds(ctx sdk.Context, taxProceeds sdk.Coins) {
+	store := ctx.KVStore(k.storeKey)
+
+	bz := k.cdc.MustMarshal(&types.EpochTaxProceeds{TaxProceeds: taxProceeds})
+	store.Set(types.TaxProceedsKey, bz)
+}
+
+// PeekEpochTaxProceeds peeks the total amount of taxes that have been collected in the given epoch.
+func (k Keeper) PeekEpochTaxProceeds(ctx sdk.Context) sdk.Coins {
+	store := ctx.KVStore(k.storeKey)
+	bz := store.Get(types.TaxProceedsKey)
+	taxProceeds := types.EpochTaxProceeds{}
+	if bz == nil {
+		taxProceeds.TaxProceeds = sdk.Coins{}
+	} else {
+		k.cdc.MustUnmarshal(bz, &taxProceeds)
+	}
+
+	return taxProceeds.TaxProceeds
+}
+
+// RecordEpochInitialIssuance updates epoch initial issuance from supply keeper
+func (k Keeper) RecordEpochInitialIssuance(ctx sdk.Context) {
+	whitelist := k.oracleKeeper.Whitelist(ctx)
+
+	totalSupply := make(sdk.Coins, len(whitelist)+1)
+	totalSupply[0] = k.bankKeeper.GetSupply(ctx, core.MicroDoDenom)
+
+	for i, denom := range whitelist {
+		totalSupply[i+1] = k.bankKeeper.GetSupply(ctx, denom.Name)
+	}
+
+	k.SetEpochInitialIssuance(ctx, totalSupply.Sort())
+}
+
+// SetEpochInitialIssuance stores epoch initial issuance
+func (k Keeper) SetEpochInitialIssuance(ctx sdk.Context, issuance sdk.Coins) {
+	store := ctx.KVStore(k.storeKey)
+
+	bz := k.cdc.MustMarshal(&types.EpochInitialIssuance{Issuance: issuance})
+	store.Set(types.EpochInitialIssuanceKey, bz)
+}
+
+// GetEpochInitialIssuance returns epoch initial issuance
+func (k Keeper) GetEpochInitialIssuance(ctx sdk.Context) sdk.Coins {
+	store := ctx.KVStore(k.storeKey)
+	bz := store.Get(types.EpochInitialIssuanceKey)
+
+	initialIssuance := types.EpochInitialIssuance{}
+	if bz == nil {
+		initialIssuance.Issuance = sdk.Coins{}
+	} else {
+		k.cdc.MustUnmarshal(bz, &initialIssuance)
+	}
+
+	return initialIssuance.Issuance
+}
+
+// PeekEpochSeigniorage returns epoch seigniorage
+func (k Keeper) PeekEpochSeigniorage(ctx sdk.Context) math.Int {
+	epochIssuance := k.bankKeeper.GetSupply(ctx, core.MicroDoDenom).Amount
+	preEpochIssuance := k.GetEpochInitialIssuance(ctx).AmountOf(core.MicroDoDenom)
+	epochSeigniorage := preEpochIssuance.Sub(epochIssuance)
+
+	if epochSeigniorage.IsNegative() {
+		return sdkmath.ZeroInt()
+	}
+
+	return epochSeigniorage
+}
+
+// GetTR returns the tax rewards for the epoch
+func (k Keeper) GetTR(ctx sdk.Context, epoch int64) sdkmath.LegacyDec {
+	store := ctx.KVStore(k.storeKey)
+	bz := store.Get(types.GetTRKey(epoch))
+
+	dp := sdk.DecProto{}
+	if bz == nil {
+		dp.Dec = sdkmath.LegacyZeroDec()
+	} else {
+		k.cdc.MustUnmarshal(bz, &dp)
+	}
+
+	return dp.Dec
+}
+
+// SetTR stores the tax rewards for the epoch
+func (k Keeper) SetTR(ctx sdk.Context, epoch int64, tr sdkmath.LegacyDec) {
+	store := ctx.KVStore(k.storeKey)
+
+	bz := k.cdc.MustMarshal(&sdk.DecProto{Dec: tr})
+	store.Set(types.GetTRKey(epoch), bz)
+}
+
+// ClearTRs delete all tax rewards from the store
+func (k Keeper) ClearTRs(ctx sdk.Context) {
+	store := ctx.KVStore(k.storeKey)
+
+	sub := prefix.NewStore(store, types.TRKey)
+	iter := sub.Iterator(nil, nil)
+	defer iter.Close()
+	for ; iter.Valid(); iter.Next() {
+		sub.Delete(iter.Key())
+	}
+}
+
+// GetSR returns the seigniorage rewards for the epoch
+func (k Keeper) GetSR(ctx sdk.Context, epoch int64) sdkmath.LegacyDec {
+	store := ctx.KVStore(k.storeKey)
+	bz := store.Get(types.GetSRKey(epoch))
+
+	dp := sdk.DecProto{}
+	if bz == nil {
+		dp.Dec = sdkmath.LegacyZeroDec()
+	} else {
+		k.cdc.MustUnmarshal(bz, &dp)
+	}
+
+	return dp.Dec
+}
+
+// SetSR stores the seigniorage rewards for the epoch
+func (k Keeper) SetSR(ctx sdk.Context, epoch int64, sr sdkmath.LegacyDec) {
+	store := ctx.KVStore(k.storeKey)
+
+	bz := k.cdc.MustMarshal(&sdk.DecProto{Dec: sr})
+	store.Set(types.GetSRKey(epoch), bz)
+}
+
+// ClearSRs delete all seigniorage rewards from the store
+func (k Keeper) ClearSRs(ctx sdk.Context) {
+	store := ctx.KVStore(k.storeKey)
+
+	sub := prefix.NewStore(store, types.SRKey)
+	iter := sub.Iterator(nil, nil)
+	defer iter.Close()
+	for ; iter.Valid(); iter.Next() {
+		sub.Delete(iter.Key())
+	}
+}
+
+// GetTSL returns the total staked do for the epoch
+func (k Keeper) GetTSL(ctx sdk.Context, epoch int64) math.Int {
+	store := ctx.KVStore(k.storeKey)
+	bz := store.Get(types.GetTSLKey(epoch))
+
+	ip := sdk.IntProto{}
+	if bz == nil {
+		ip.Int = math.ZeroInt()
+	} else {
+		k.cdc.MustUnmarshal(bz, &ip)
+	}
+
+	return ip.Int
+}
+
+// SetTSL stores the total staked do for the epoch
+func (k Keeper) SetTSL(ctx sdk.Context, epoch int64, tsl math.Int) {
+	store := ctx.KVStore(k.storeKey)
+
+	bz := k.cdc.MustMarshal(&sdk.IntProto{Int: tsl})
+	store.Set(types.GetTSLKey(epoch), bz)
+}
+
+// ClearTSLs delete all the total staked do from the store
+func (k Keeper) ClearTSLs(ctx sdk.Context) {
+	store := ctx.KVStore(k.storeKey)
+
+	sub := prefix.NewStore(store, types.TSLKey)
+	iter := sub.Iterator(nil, nil)
+	defer iter.Close()
+	for ; iter.Valid(); iter.Next() {
+		sub.Delete(iter.Key())
+	}
+}
+
+// Burn tax exemption list
+func (k Keeper) AddBurnTaxExemptionAddress(ctx sdk.Context, address string) {
+	if _, err := sdk.AccAddressFromBech32(address); err != nil {
+		panic(err)
+	}
+
+	sub := prefix.NewStore(ctx.KVStore(k.storeKey), types.BurnTaxExemptionListPrefix)
+	sub.Set([]byte(address), []byte{0x01})
+}
+
+func (k Keeper) RemoveBurnTaxExemptionAddress(ctx sdk.Context, address string) error {
+	if _, err := sdk.AccAddressFromBech32(address); err != nil {
+		panic(err)
+	}
+
+	sub := prefix.NewStore(ctx.KVStore(k.storeKey), types.BurnTaxExemptionListPrefix)
+
+	if !sub.Has([]byte(address)) {
+		return types.ErrNoSuchBurnTaxExemptionAddress.Wrapf("address = %s", address)
+	}
+
+	sub.Delete([]byte(address))
+	return nil
+}
+
+func (k Keeper) GetStoreKey() storetypes.StoreKey {
+	return k.storeKey
+}
+
+/*
+// HasBurnTaxExemptionAddress returns true if all provided addresses are in the
+// tax exemption whitelist
+func (k Keeper) HasBurnTaxExemptionAddress(ctx sdk.Context, addresses ...string) bool {
+	sub := prefix.NewStore(ctx.KVStore(k.storeKey), types.BurnTaxExemptionListPrefix)
+
+	for _, address := range addresses {
+		if !sub.Has([]byte(address)) {
+			return false
+		}
+	}
+
+	return true
+}
+
+// HasBurnTaxExemptionContract returns true if a provided address is a
+// smart contract AND is in the tax exemption list
+func (k Keeper) HasBurnTaxExemptionContract(ctx sdk.Context, address string) bool {
+	contractAddr, err := sdk.AccAddressFromBech32(address)
+	if err != nil {
+		return false
+	}
+
+	info := k.wasmKeeper.GetContractInfo(ctx, contractAddr)
+	if info == nil {
+		return false
+	}
+
+	return k.HasBurnTaxExemptionAddress(ctx, address)
+}
+*/
+
+
+
+
+
+

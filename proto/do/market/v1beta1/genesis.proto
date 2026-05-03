@@ -1,0 +1,30 @@
+syntax = "proto3";
+package do.market.v1beta1;
+
+import "cosmos_proto/cosmos.proto";
+import "gogoproto/gogo.proto";
+import "do/market/v1beta1/market.proto";
+
+option go_package = "github.com/Daviddochain/dochain-core/v4/x/market/types";
+
+// GenesisState defines the market module's genesis state.
+message GenesisState {
+  // params defines all the paramaters of the module.
+  Params params = 1 [(gogoproto.nullable) = false];
+
+  // the gap between the DoPool and the BasePool
+  bytes do_pool_delta = 2 [
+    (cosmos_proto.scalar)  = "cosmos.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable)   = false
+  ];
+}
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,76 @@
+package simulation
+
+import (
+	"fmt"
+	"testing"
+
+	sdkmath "cosmossdk.io/math"
+	core "github.com/Daviddochain/dochain-core/v4/types"
+	"github.com/Daviddochain/dochain-core/v4/x/treasury/keeper"
+	"github.com/Daviddochain/dochain-core/v4/x/treasury/types"
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/cosmos/cosmos-sdk/types/kv"
+	"github.com/stretchr/testify/require"
+)
+
+func TestDecodeDistributionStore(t *testing.T) {
+	cdc := keeper.MakeTestCodec(t)
+	dec := NewDecodeStore(cdc)
+
+	taxRate := sdkmath.LegacyNewDecWithPrec(123, 2)
+	rewardWeight := sdkmath.LegacyNewDecWithPrec(532, 2)
+	taxCap := sdkmath.NewInt(1600)
+	taxProceeds := sdk.NewCoins(sdk.NewInt64Coin(core.MicroKRWDenom, 123124), sdk.NewInt64Coin(core.MicroSDRDenom, 123124))
+	epochInitialIssuance := sdk.NewCoins(sdk.NewInt64Coin(core.MicroKRWDenom, 645352342))
+
+	TR := sdkmath.LegacyNewDecWithPrec(123, 2)
+	SR := sdkmath.LegacyNewDecWithPrec(43523, 4)
+	TSL := sdkmath.NewInt(1245213)
+
+	kvPairs := kv.Pairs{
+		Pairs: []kv.Pair{
+			{Key: types.TaxRateKey, Value: cdc.MustMarshal(&sdk.DecProto{Dec: taxRate})},
+			{Key: types.RewardWeightKey, Value: cdc.MustMarshal(&sdk.DecProto{Dec: rewardWeight})},
+			{Key: types.TaxCapKey, Value: cdc.MustMarshal(&sdk.IntProto{Int: taxCap})},
+			{Key: types.TaxProceedsKey, Value: cdc.MustMarshal(&types.EpochTaxProceeds{TaxProceeds: taxProceeds})},
+			{Key: types.EpochInitialIssuanceKey, Value: cdc.MustMarshal(&types.EpochInitialIssuance{Issuance: epochInitialIssuance})},
+			{Key: types.TRKey, Value: cdc.MustMarshal(&sdk.DecProto{Dec: TR})},
+			{Key: types.SRKey, Value: cdc.MustMarshal(&sdk.DecProto{Dec: SR})},
+			{Key: types.TSLKey, Value: cdc.MustMarshal(&sdk.IntProto{Int: TSL})},
+			{Key: []byte{0x99}, Value: []byte{0x99}},
+		},
+	}
+
+	tests := []struct {
+		name        string
+		expectedLog string
+	}{
+		{"TaxRate", fmt.Sprintf("%v\n%v", taxRate, taxRate)},
+		{"RewardWeight", fmt.Sprintf("%v\n%v", rewardWeight, rewardWeight)},
+		{"TaxCap", fmt.Sprintf("%v\n%v", taxCap, taxCap)},
+		{"TaxProceeds", fmt.Sprintf("%v\n%v", taxProceeds, taxProceeds)},
+		{"EpochInitialIssuance", fmt.Sprintf("%v\n%v", epochInitialIssuance, epochInitialIssuance)},
+		{"TR", fmt.Sprintf("%v\n%v", TR, TR)},
+		{"SR", fmt.Sprintf("%v\n%v", SR, SR)},
+		{"TSL", fmt.Sprintf("%v\n%v", TSL, TSL)},
+		{"other", ""},
+	}
+
+	for i, tt := range tests {
+		i, tt := i, tt
+		t.Run(tt.name, func(t *testing.T) {
+			switch i {
+			case len(tests) - 1:
+				require.Panics(t, func() { dec(kvPairs.Pairs[i], kvPairs.Pairs[i]) }, tt.name)
+			default:
+				require.Equal(t, tt.expectedLog, dec(kvPairs.Pairs[i], kvPairs.Pairs[i]), tt.name)
+			}
+		})
+	}
+}
+
+
+
+
+
+

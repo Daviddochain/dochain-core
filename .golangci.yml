@@ -1,0 +1,65 @@
+version: "2"
+run:
+  tests: true
+  timeout: 5m
+linters:
+  default: none
+  enable:
+    - dogsled
+    # - errcheck
+    - goconst
+    - gocritic
+    - govet
+    - ineffassign
+    - misspell
+    - nakedret
+    - nolintlint
+    # - revive
+    # - staticcheck
+    # - thelper
+    - unconvert
+    # - unparam
+    - unused
+  settings:
+    dogsled:
+      max-blank-identifiers: 3
+    nolintlint:
+      require-explanation: false
+      require-specific: false
+      allow-unused: false
+  exclusions:
+    generated: lax
+    presets:
+      - comments
+      - common-false-positives
+      - legacy
+      - std-error-handling
+    rules:
+      - linters:
+          - golint
+        text: comment on exported var
+      - linters:
+          - golint
+        text: don't use an underscore in package name
+      - linters:
+          - staticcheck
+        text: 'ST1003:'
+      - linters:
+          - staticcheck
+        text: 'ST1016:'
+      - linters:
+          - staticcheck
+        path: migrations
+        text: 'SA1019:'
+issues:
+  max-issues-per-linter: 10000
+  max-same-issues: 10000
+formatters:
+  enable:
+    - gci
+    - gofumpt
+
+
+
+
+

@@ -1,0 +1,117 @@
+package types
+
+import (
+	"fmt"
+
+	"cosmossdk.io/math"
+	core "github.com/Daviddochain/dochain-core/v4/types"
+	paramstypes "github.com/cosmos/cosmos-sdk/x/params/types"
+	"gopkg.in/yaml.v2"
+)
+
+// Parameter keys
+var (
+	// Base pool made available per pool recovery period, expressed in micro DO units.
+	KeyBasePool = []byte("BasePool")
+	// The period required to recover BasePool.
+	KeyPoolRecoveryPeriod = []byte("PoolRecoveryPeriod")
+	// Minimum stability spread.
+	KeyMinStabilitySpread = []byte("MinStabilitySpread")
+)
+
+// Default parameter values
+var (
+	DefaultBasePool           = math.LegacyNewDec(1000000 * core.MicroUnit) // 1,000,000 DO in micro units
+	DefaultPoolRecoveryPeriod = core.BlocksPerDay                           // 14,400
+	DefaultMinStabilitySpread = math.LegacyNewDecWithPrec(2, 2)             // 2%
+)
+
+var _ paramstypes.ParamSet = &Params{}
+
+// DefaultParams creates default market module parameters.
+func DefaultParams() Params {
+	return Params{
+		BasePool:           DefaultBasePool,
+		PoolRecoveryPeriod: DefaultPoolRecoveryPeriod,
+		MinStabilitySpread: DefaultMinStabilitySpread,
+	}
+}
+
+// ParamKeyTable returns the parameter key table.
+func ParamKeyTable() paramstypes.KeyTable {
+	return paramstypes.NewKeyTable().RegisterParamSet(&Params{})
+}
+
+// String implements fmt.Stringer interface.
+func (p Params) String() string {
+	out, _ := yaml.Marshal(p)
+	return string(out)
+}
+
+// ParamSetPairs implements the ParamSet interface and returns all the key/value pairs
+// pairs of market module's parameters.
+func (p *Params) ParamSetPairs() paramstypes.ParamSetPairs {
+	return paramstypes.ParamSetPairs{
+		paramstypes.NewParamSetPair(KeyBasePool, &p.BasePool, validateBasePool),
+		paramstypes.NewParamSetPair(KeyPoolRecoveryPeriod, &p.PoolRecoveryPeriod, validatePoolRecoveryPeriod),
+		paramstypes.NewParamSetPair(KeyMinStabilitySpread, &p.MinStabilitySpread, validateMinStabilitySpread),
+	}
+}
+
+// Validate validates the parameter set.
+func (p Params) Validate() error {
+	if p.BasePool.IsNegative() {
+		return fmt.Errorf("market base pool should be positive or zero, is %s", p.BasePool)
+	}
+	if p.PoolRecoveryPeriod == 0 {
+		return fmt.Errorf("pool recovery period should be positive, is %d", p.PoolRecoveryPeriod)
+	}
+	if p.MinStabilitySpread.IsNegative() || p.MinStabilitySpread.GT(math.LegacyOneDec()) {
+		return fmt.Errorf("market minimum stability spread should be a value between [0,1], is %s", p.MinStabilitySpread)
+	}
+
+	return nil
+}
+
+func validateBasePool(i interface{}) error {
+	v, ok := i.(math.LegacyDec)
+	if !ok {
+		return fmt.Errorf("invalid parameter type: %T", i)
+	}
+
+	if v.IsNegative() {
+		return fmt.Errorf("market base pool must be positive or zero: %s", v)
+	}
+
+	return nil
+}
+
+func validatePoolRecoveryPeriod(i interface{}) error {
+	v, ok := i.(uint64)
+	if !ok {
+		return fmt.Errorf("invalid parameter type: %T", i)
+	}
+
+	if v == 0 {
+		return fmt.Errorf("pool recovery period must be positive: %d", v)
+	}
+
+	return nil
+}
+
+func validateMinStabilitySpread(i interface{}) error {
+	v, ok := i.(math.LegacyDec)
+	if !ok {
+		return fmt.Errorf("invalid parameter type: %T", i)
+	}
+
+	if v.IsNegative() {
+		return fmt.Errorf("min spread must be positive or zero: %s", v)
+	}
+
+	if v.GT(math.LegacyOneDec()) {
+		return fmt.Errorf("min spread is too large: %s", v)
+	}
+
+	return nil
+}

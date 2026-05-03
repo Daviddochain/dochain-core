@@ -1,0 +1,189 @@
+package wasmbinding_test
+
+import (
+	"encoding/json"
+
+	sdkmath "cosmossdk.io/math"
+	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
+	wasmvmtypes "github.com/CosmWasm/wasmvm/v3/types"
+	core "github.com/Daviddochain/dochain-core/v4/types"
+	"github.com/Daviddochain/dochain-core/v4/wasmbinding/bindings"
+	markettypes "github.com/Daviddochain/dochain-core/v4/x/market/types"
+	sdk "github.com/cosmos/cosmos-sdk/types"
+)
+
+// go test -v -run ^TestSwap$ github.com/Daviddochain/dochain-core/v4/wasmbinding/test
+// oracle rate: 1 udotest = 1.7 usdr
+// 1000 udotest from trader goes to contract
+// 1666 usdr (after 2% tax) is swapped into which goes back to contract
+func (s *WasmTestSuite) Swap(contractPath string, executeFunc func(contract sdk.AccAddress, sender sdk.AccAddress, msg bindings.DoMsg, funds sdk.Coin) error) {
+	s.SetupTest()
+	actor := s.RandomAccountAddresses(1)[0]
+
+	// fund
+	s.FundAcc(actor, sdk.NewCoins(sdk.NewInt64Coin(core.MicroDoDenom, 1000000000)))
+
+	// instantiate reflect contract
+	contractAddr := s.InstantiateContract(actor, contractPath)
+	s.Require().NotEmpty(contractAddr)
+
+	// setup swap environment
+	// Set Oracle Price
+	doPriceInSDR := sdkmath.LegacyNewDecWithPrec(17, 1)
+	s.App.OracleKeeper.SetDoExchangeRate(s.Ctx, core.MicroSDRDenom, doPriceInSDR)
+
+	actorBeforeSwap := s.App.BankKeeper.GetAllBalances(s.Ctx, actor)
+	contractBeforeSwap := s.App.BankKeeper.GetAllBalances(s.Ctx, contractAddr)
+
+	// Calculate expected swapped SDR
+	expectedSwappedSDR := sdkmath.LegacyNewDec(1000).Mul(doPriceInSDR)
+	tax := markettypes.DefaultMinStabilitySpread.Mul(expectedSwappedSDR)
+	expectedSwappedSDR = expectedSwappedSDR.Sub(tax)
+
+	// execute custom Msg
+	msg := bindings.DoMsg{
+		Swap: &bindings.Swap{
+			OfferCoin: sdk.NewCoin(core.MicroDoDenom, sdkmath.NewInt(1000)),
+			AskDenom:  core.MicroSDRDenom,
+		},
+	}
+
+	err := executeFunc(contractAddr, actor, msg, sdk.NewCoin(core.MicroDoDenom, sdkmath.NewInt(1000)))
+	s.Require().NoError(err)
+
+	// check result after swap
+	actorAfterSwap := s.App.BankKeeper.GetAllBalances(s.Ctx, actor)
+	contractAfterSwap := s.App.BankKeeper.GetAllBalances(s.Ctx, contractAddr)
+
+	s.Require().Equal(actorBeforeSwap.AmountOf(core.MicroDoDenom).Sub(sdkmath.NewInt(1000)), actorAfterSwap.AmountOf(core.MicroDoDenom))
+	s.Require().Equal(contractBeforeSwap.AmountOf(core.MicroSDRDenom).Add(expectedSwappedSDR.TruncateInt()), contractAfterSwap.AmountOf(core.MicroSDRDenom))
+}
+
+// go test -v -run ^TestSwapSend$ github.com/Daviddochain/dochain-core/v4/wasmbinding/test
+// oracle rate: 1 udotest = 1.7 usdr
+// 1000 udotest from trader goes to contract
+// 1666 usdr (after 2% tax) is swapped into which goes back to contract
+// 1666 usdr is sent to trader
+func (s *WasmTestSuite) SwapSend(contractPath string, executeFunc func(contract sdk.AccAddress, sender sdk.AccAddress, msg bindings.DoMsg, funds sdk.Coin) error) {
+	s.SetupTest()
+	actor := s.RandomAccountAddresses(1)[0]
+
+	// fund
+	s.FundAcc(actor, sdk.NewCoins(sdk.NewInt64Coin(core.MicroDoDenom, 1000000000)))
+
+	// instantiate reflect contract
+	contractAddr := s.InstantiateContract(actor, contractPath)
+	s.Require().NotEmpty(contractAddr)
+
+	// setup swap environment
+	// Set Oracle Price
+	doPriceInSDR := sdkmath.LegacyNewDecWithPrec(17, 1)
+	s.App.OracleKeeper.SetDoExchangeRate(s.Ctx, core.MicroSDRDenom, doPriceInSDR)
+
+	actorBeforeSwap := s.App.BankKeeper.GetAllBalances(s.Ctx, actor)
+
+	// Calculate expected swapped SDR
+	expectedSwappedSDR := sdkmath.LegacyNewDec(1000).Mul(doPriceInSDR)
+	tax := markettypes.DefaultMinStabilitySpread.Mul(expectedSwappedSDR)
+	expectedSwappedSDR = expectedSwappedSDR.Sub(tax)
+
+	// execute custom Msg
+	msg := bindings.DoMsg{
+		SwapSend: &bindings.SwapSend{
+			ToAddress: actor.String(),
+			OfferCoin: sdk.NewCoin(core.MicroDoDenom, sdkmath.NewInt(1000)),
+			AskDenom:  core.MicroSDRDenom,
+		},
+	}
+
+	err := executeFunc(contractAddr, actor, msg, sdk.NewCoin(core.MicroDoDenom, sdkmath.NewInt(1000)))
+	s.Require().NoError(err)
+
+	// check result after swap
+	actorAfterSwap := s.App.BankKeeper.GetAllBalances(s.Ctx, actor)
+	expectedActorAfterSwap := actorBeforeSwap.Sub(sdk.NewCoins(sdk.NewInt64Coin(core.MicroDoDenom, 1000))...)
+	expectedActorAfterSwap = expectedActorAfterSwap.Add(sdk.NewCoin(core.MicroSDRDenom, expectedSwappedSDR.TruncateInt()))
+
+	s.Require().Equal(expectedActorAfterSwap, actorAfterSwap)
+}
+
+type ReflectExec struct {
+	ReflectMsg    *ReflectMsgs    `json:"reflect_msg,omitempty"`
+	ReflectSubMsg *ReflectSubMsgs `json:"reflect_sub_msg,omitempty"`
+}
+
+type ReflectMsgs struct {
+	Msgs []wasmvmtypes.CosmosMsg `json:"msgs"`
+}
+
+type ReflectSubMsgs struct {
+	Msgs []wasmvmtypes.SubMsg `json:"msgs"`
+}
+
+func (s *WasmTestSuite) executeCustom(contract sdk.AccAddress, sender sdk.AccAddress, msg bindings.DoMsg, funds sdk.Coin) error {
+	customBz, err := json.Marshal(msg)
+	s.Require().NoError(err)
+	reflectMsg := ReflectExec{
+		ReflectMsg: &ReflectMsgs{
+			Msgs: []wasmvmtypes.CosmosMsg{{
+				Custom: customBz,
+			}},
+		},
+	}
+	reflectBz, err := json.Marshal(reflectMsg)
+	s.Require().NoError(err)
+
+	// no funds sent if amount is 0
+	var coins sdk.Coins
+	if !funds.Amount.IsNil() {
+		coins = sdk.Coins{funds}
+	}
+
+	contractKeeper := wasmkeeper.NewDefaultPermissionKeeper(s.App.WasmKeeper)
+	_, err = contractKeeper.Execute(s.Ctx, contract, sender, reflectBz, coins)
+	return err
+}
+
+type customSwap struct {
+	Swap *bindings.Swap `json:"swap"`
+}
+
+type customSwapSend struct {
+	SwapSend *bindings.SwapSend `json:"swap_send"`
+}
+
+func (s *WasmTestSuite) executeOldBindings(contract sdk.AccAddress, sender sdk.AccAddress, msg bindings.DoMsg, funds sdk.Coin) error {
+	var reflectBz []byte
+	switch {
+	case msg.Swap != nil:
+		customSwap := customSwap{
+			Swap: msg.Swap,
+		}
+		var err error
+		reflectBz, err = json.Marshal(customSwap)
+		s.Require().NoError(err)
+	case msg.SwapSend != nil:
+		customSwapSend := customSwapSend{
+			SwapSend: msg.SwapSend,
+		}
+		var err error
+		reflectBz, err = json.Marshal(customSwapSend)
+		s.Require().NoError(err)
+	}
+
+	// no funds sent if amount is 0
+	var coins sdk.Coins
+	if !funds.Amount.IsNil() {
+		coins = sdk.Coins{funds}
+	}
+
+	contractKeeper := wasmkeeper.NewDefaultPermissionKeeper(s.App.WasmKeeper)
+	_, err := contractKeeper.Execute(s.Ctx, contract, sender, reflectBz, coins)
+	return err
+}
+
+
+
+
+
+

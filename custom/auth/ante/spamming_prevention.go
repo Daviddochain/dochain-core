@@ -1,0 +1,136 @@
+package ante
+
+import (
+	"sync"
+
+	errorsmod "cosmossdk.io/errors"
+	oracleexported "github.com/Daviddochain/dochain-core/v4/x/oracle/exported"
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+)
+
+const MaxOracleGasLimit = 1_000_000
+
+// SpammingPreventionDecorator will check if the transaction's gas is smaller than
+// configured hard cap
+type SpammingPreventionDecorator struct {
+	oracleKeeper     OracleKeeper
+	oraclePrevoteMap map[string]int64
+	oracleVoteMap    map[string]int64
+	mu               *sync.Mutex
+}
+
+// NewSpammingPreventionDecorator returns new spamming prevention decorator instance
+func NewSpammingPreventionDecorator(oracleKeeper OracleKeeper) SpammingPreventionDecorator {
+	return SpammingPreventionDecorator{
+		oracleKeeper:     oracleKeeper,
+		oraclePrevoteMap: make(map[string]int64),
+		oracleVoteMap:    make(map[string]int64),
+		mu:               &sync.Mutex{},
+	}
+}
+
+// AnteHandle handles msg tax fee checking
+func (spd SpammingPreventionDecorator) AnteHandle(ctx sdk.Context, tx sdk.Tx, simulate bool, next sdk.AnteHandler) (newCtx sdk.Context, err error) {
+	if ctx.IsReCheckTx() {
+		return next(ctx, tx, simulate)
+	}
+
+	if !simulate && ctx.IsCheckTx() {
+		msgs := tx.GetMsgs()
+		if containsOracleMsg(msgs) {
+			feeTx, ok := tx.(sdk.FeeTx)
+			if !ok {
+				return ctx, sdkerrors.ErrTxDecode.Wrap("oracle tx must be a FeeTx")
+			}
+
+			if feeTx.GetGas() > MaxOracleGasLimit {
+				return ctx, sdkerrors.ErrInvalidGasLimit.Wrapf("oracle tx gas limit %d exceeds maximum %d", feeTx.GetGas(), MaxOracleGasLimit)
+			}
+		}
+
+		err := spd.CheckOracleSpamming(ctx, msgs)
+		if err != nil {
+			return ctx, err
+		}
+	}
+
+	return next(ctx, tx, simulate)
+}
+
+// CheckOracleSpamming check whether the msgs are spamming purpose or not
+func (spd SpammingPreventionDecorator) CheckOracleSpamming(ctx sdk.Context, msgs []sdk.Msg) error {
+	spd.mu.Lock()
+	defer spd.mu.Unlock()
+
+	curHeight := ctx.BlockHeight()
+	for _, msg := range msgs {
+		switch msg := msg.(type) {
+		case *oracleexported.MsgAggregateDoRatePrevote:
+			feederAddr, err := sdk.AccAddressFromBech32(msg.Feeder)
+			if err != nil {
+				return err
+			}
+
+			valAddr, err := sdk.ValAddressFromBech32(msg.Validator)
+			if err != nil {
+				return err
+			}
+
+			err = spd.oracleKeeper.ValidateFeeder(ctx, feederAddr, valAddr)
+			if err != nil {
+				return err
+			}
+
+			if lastSubmittedHeight, ok := spd.oraclePrevoteMap[msg.Validator]; ok && lastSubmittedHeight == curHeight {
+				return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "the validator has already been submitted prevote at the current height")
+			}
+
+			spd.oraclePrevoteMap[msg.Validator] = curHeight
+			continue
+		case *oracleexported.MsgAggregateDoRateVote:
+			feederAddr, err := sdk.AccAddressFromBech32(msg.Feeder)
+			if err != nil {
+				return err
+			}
+
+			valAddr, err := sdk.ValAddressFromBech32(msg.Validator)
+			if err != nil {
+				return err
+			}
+
+			err = spd.oracleKeeper.ValidateFeeder(ctx, feederAddr, valAddr)
+			if err != nil {
+				return err
+			}
+
+			if lastSubmittedHeight, ok := spd.oracleVoteMap[msg.Validator]; ok && lastSubmittedHeight == curHeight {
+				return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "the validator has already been submitted vote at the current height")
+			}
+
+			spd.oracleVoteMap[msg.Validator] = curHeight
+			continue
+		default:
+			return nil
+		}
+	}
+
+	return nil
+}
+
+func containsOracleMsg(msgs []sdk.Msg) bool {
+	for _, msg := range msgs {
+		switch msg.(type) {
+		case *oracleexported.MsgAggregateDoRatePrevote, *oracleexported.MsgAggregateDoRateVote:
+			return true
+		}
+	}
+
+	return false
+}
+
+
+
+
+
+

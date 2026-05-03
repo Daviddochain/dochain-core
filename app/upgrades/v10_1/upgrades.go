@@ -1,0 +1,31 @@
+package v10_1
+
+import (
+    "context"
+
+    sdkmath "cosmossdk.io/math"
+    upgradetypes "cosmossdk.io/x/upgrade/types"
+    "github.com/Daviddochain/dochain-core/v4/app/keepers"
+    "github.com/Daviddochain/dochain-core/v4/app/upgrades"
+    sdk "github.com/cosmos/cosmos-sdk/types"
+    "github.com/cosmos/cosmos-sdk/types/module"
+)
+
+func CreateV101UpgradeHandler(
+    mm *module.Manager,
+    cfg module.Configurator,
+    _ upgrades.BaseAppParamManager,
+    keepers *keepers.AppKeepers,
+) upgradetypes.UpgradeHandler {
+    return func(ctx context.Context, _ upgradetypes.Plan, fromVM module.VersionMap) (module.VersionMap, error) {
+        sdkCtx := sdk.UnwrapSDKContext(ctx)
+
+        keepers.TreasuryKeeper.SetTaxRate(sdkCtx, sdkmath.LegacyZeroDec())
+        params := keepers.TreasuryKeeper.GetParams(sdkCtx)
+        params.TaxPolicy.RateMax = sdkmath.LegacyZeroDec()
+        params.TaxPolicy.RateMin = sdkmath.LegacyZeroDec()
+        keepers.TreasuryKeeper.SetParams(sdkCtx, params)
+
+        return mm.RunMigrations(ctx, cfg, fromVM)
+    }
+}

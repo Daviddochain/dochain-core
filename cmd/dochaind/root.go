@@ -1,0 +1,413 @@
+package main
+
+import (
+	"errors"
+	"io"
+	"os"
+	"path/filepath"
+	"time"
+
+	"cosmossdk.io/client/v2/autocli"
+	"cosmossdk.io/core/appmodule"
+	log "cosmossdk.io/log"
+	sdklog "cosmossdk.io/log"
+	store "cosmossdk.io/store"
+	snapshots "cosmossdk.io/store/snapshots"
+	snapshottypes "cosmossdk.io/store/snapshots/types"
+	storetypes "cosmossdk.io/store/types"
+	"github.com/CosmWasm/wasmd/x/wasm"
+	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
+	doapp "github.com/Daviddochain/dochain-core/v4/app"
+	dochainlegacy "github.com/Daviddochain/dochain-core/v4/app/legacy"
+	"github.com/Daviddochain/dochain-core/v4/app/params"
+	authcustomcli "github.com/Daviddochain/dochain-core/v4/custom/auth/client/cli"
+	core "github.com/Daviddochain/dochain-core/v4/types"
+	tmcfg "github.com/cometbft/cometbft/config"
+	tmcli "github.com/cometbft/cometbft/libs/cli"
+	dbm "github.com/cosmos/cosmos-db"
+	"github.com/cosmos/cosmos-sdk/baseapp"
+	"github.com/cosmos/cosmos-sdk/client"
+	"github.com/cosmos/cosmos-sdk/client/config"
+	"github.com/cosmos/cosmos-sdk/client/debug"
+	"github.com/cosmos/cosmos-sdk/client/flags"
+	"github.com/cosmos/cosmos-sdk/client/keys"
+	"github.com/cosmos/cosmos-sdk/client/pruning"
+	snapshot "github.com/cosmos/cosmos-sdk/client/snapshot"
+	addresscodec "github.com/cosmos/cosmos-sdk/codec/address"
+	"github.com/cosmos/cosmos-sdk/server"
+	servertypes "github.com/cosmos/cosmos-sdk/server/types"
+	simtestutil "github.com/cosmos/cosmos-sdk/testutil/sims"
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/cosmos/cosmos-sdk/types/module"
+	"github.com/cosmos/cosmos-sdk/types/tx/signing"
+	authcmd "github.com/cosmos/cosmos-sdk/x/auth/client/cli"
+	"github.com/cosmos/cosmos-sdk/x/auth/tx"
+	authtxconfig "github.com/cosmos/cosmos-sdk/x/auth/tx/config"
+	"github.com/cosmos/cosmos-sdk/x/auth/types"
+	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
+	"github.com/cosmos/cosmos-sdk/x/crisis"
+	"github.com/cosmos/cosmos-sdk/x/genutil"
+	genutilcli "github.com/cosmos/cosmos-sdk/x/genutil/client/cli"
+	genutiltypes "github.com/cosmos/cosmos-sdk/x/genutil/types"
+	"github.com/spf13/cast"
+	"github.com/spf13/cobra"
+)
+
+// NewRootCmd creates a new root command for dochaind. It is called once in the
+// main function.
+func NewRootCmd() (*cobra.Command, params.EncodingConfig) {
+	// Set SDK config FIRST before creating any apps
+	sdkConfig := sdk.GetConfig()
+	sdkConfig.SetCoinType(core.CoinType)
+	sdkConfig.SetPurpose(core.Purpose)
+	sdkConfig.SetBech32PrefixForAccount(core.Bech32PrefixAccAddr, core.Bech32PrefixAccPub)
+	sdkConfig.SetBech32PrefixForValidator(core.Bech32PrefixValAddr, core.Bech32PrefixValPub)
+	sdkConfig.SetBech32PrefixForConsensusNode(core.Bech32PrefixConsAddr, core.Bech32PrefixConsPub)
+	sdkConfig.SetAddressVerifier(wasmtypes.VerifyAddressLen())
+	sdkConfig.Seal()
+
+	// Create temporary directory for CLI setup
+	tempDir, err := os.MkdirTemp("", "dochaind")
+	if err != nil {
+		panic(err)
+	}
+	defer os.RemoveAll(tempDir)
+
+	encodingConfig := doapp.MakeEncodingConfig()
+
+	// Create a temporary app for CLI command setup
+	// this is needed to initialize the app for the CLI command setup
+	// the same method is used in the official wasmd sample app
+	tempApp := doapp.NewDoApp(
+		sdklog.NewNopLogger(),
+		dbm.NewMemDB(),
+		nil,
+		true,
+		map[int64]bool{},
+		tempDir,
+		encodingConfig,
+		simtestutil.EmptyAppOptions{},
+		[]wasm.Option{}, // empty wasm options
+	)
+
+	initClientCtx := client.Context{}.
+		WithCodec(encodingConfig.Marshaler).
+		WithInterfaceRegistry(encodingConfig.InterfaceRegistry).
+		WithTxConfig(encodingConfig.TxConfig).
+		WithLegacyAmino(encodingConfig.Amino).
+		WithInput(os.Stdin).
+		WithAccountRetriever(types.AccountRetriever{}).
+		WithHomeDir(doapp.DefaultNodeHome).
+		WithViper("do")
+
+	rootCmd := &cobra.Command{
+		Use:   "dochaind",
+		Short: "Stargate do App",
+		PersistentPreRunE: func(cmd *cobra.Command, _ []string) error {
+			// set the default command outputs
+			cmd.SetOut(cmd.OutOrStdout())
+			cmd.SetErr(cmd.ErrOrStderr())
+
+			// attach command context (SDK 0.50 pattern)
+			initClientCtx = initClientCtx.WithCmdContext(cmd.Context())
+
+			initClientCtx, err := client.ReadPersistentCommandFlags(initClientCtx, cmd.Flags())
+			if err != nil {
+				return err
+			}
+
+			initClientCtx, err = config.ReadFromClientConfig(initClientCtx)
+			if err != nil {
+				return err
+			}
+
+			// Enable SIGN_MODE_TEXTUAL when online (SDK 0.50 pattern)
+			if !initClientCtx.Offline {
+				enabledSignModes := tx.DefaultSignModes
+				enabledSignModes = append(enabledSignModes, signing.SignMode_SIGN_MODE_TEXTUAL)
+				txConfigOpts := tx.ConfigOptions{
+					EnabledSignModes:           enabledSignModes,
+					TextualCoinMetadataQueryFn: authtxconfig.NewGRPCCoinMetadataQueryFn(initClientCtx),
+				}
+				txCfg, err := tx.NewTxConfigWithOptions(initClientCtx.Codec, txConfigOpts)
+				if err != nil {
+					return err
+				}
+				initClientCtx = initClientCtx.WithTxConfig(txCfg)
+			}
+
+			if err := client.SetCmdClientContextHandler(initClientCtx, cmd); err != nil {
+				return err
+			}
+
+			doAppTemplate, doAppConfig := initAppConfig()
+			customTMConfig := initTendermintConfig()
+
+			return server.InterceptConfigsPreRunHandler(cmd, doAppTemplate, doAppConfig, customTMConfig)
+		},
+	}
+
+	initRootCmd(rootCmd, encodingConfig, doapp.ModuleBasics, tempApp.BasicModuleManager())
+
+	// Enhance CLI with AutoCLI for modules that don't expose manual GetTxCmd/GetQueryCmd.
+	// This adds missing upstream module commands (e.g., staking, distribution, gov) under query/tx.
+	{
+		sc := encodingConfig.InterfaceRegistry.SigningContext()
+		modules := make(map[string]appmodule.AppModule)
+
+		for _, m := range tempApp.Modules() {
+			if moduleWithName, ok := m.(module.HasName); ok {
+				moduleName := moduleWithName.Name()
+				if appModule, ok := moduleWithName.(appmodule.AppModule); ok {
+					modules[moduleName] = appModule
+				}
+			}
+		}
+		autoOpts := autocli.AppOptions{
+			Modules:               modules,
+			AddressCodec:          sc.AddressCodec(),
+			ValidatorAddressCodec: sc.ValidatorAddressCodec(),
+			ConsensusAddressCodec: addresscodec.NewBech32Codec(sdk.GetConfig().GetBech32ConsensusAddrPrefix()),
+			ClientCtx:             initClientCtx,
+		}
+		if err := autoOpts.EnhanceRootCommand(rootCmd); err != nil {
+			panic(err)
+		}
+	}
+
+	return rootCmd, encodingConfig
+}
+
+// initTendermintConfig helps to override default Tendermint Config values.
+// These values are baked into config.toml for newly initialized nodes.
+func initTendermintConfig() *tmcfg.Config {
+	cfg := tmcfg.DefaultConfig()
+
+	// Consensus timings aimed at an approximately 1-second chain on healthy
+	// infrastructure and a small validator set.
+	cfg.Consensus.TimeoutPropose = 300 * time.Millisecond
+	cfg.Consensus.TimeoutProposeDelta = 100 * time.Millisecond
+	cfg.Consensus.TimeoutPrevote = 300 * time.Millisecond
+	cfg.Consensus.TimeoutPrevoteDelta = 100 * time.Millisecond
+	cfg.Consensus.TimeoutPrecommit = 300 * time.Millisecond
+	cfg.Consensus.TimeoutPrecommitDelta = 100 * time.Millisecond
+	cfg.Consensus.TimeoutCommit = 200 * time.Millisecond
+
+	// Slightly higher peer defaults for better connectivity on fresh nodes.
+	cfg.P2P.MaxNumInboundPeers = 100
+	cfg.P2P.MaxNumOutboundPeers = 40
+
+	return cfg
+}
+
+func initRootCmd(rootCmd *cobra.Command, encodingConfig params.EncodingConfig, genesisBasicMgr module.BasicManager, cliBasicMgr module.BasicManager) {
+	a := appCreator{encodingConfig}
+
+	gentxModule := doapp.ModuleBasics[genutiltypes.ModuleName].(genutil.AppModuleBasic)
+
+	// Use the app's TxConfig for genutil CLI
+	txEnc := encodingConfig.TxConfig
+
+	// Wrap app creator/exporter into the explicit types expected by helpers
+	appCreatorFn := servertypes.AppCreator(func(_ sdklog.Logger, db dbm.DB, traceStore io.Writer, appOpts servertypes.AppOptions) servertypes.Application {
+		// adapt SDK logger to Comet logger by using a Nop logger
+		return a.newApp(log.NewNopLogger(), db, traceStore, appOpts)
+	})
+	appExporterFn := servertypes.AppExporter(func(_ sdklog.Logger, db dbm.DB, traceStore io.Writer, height int64, forZeroHeight bool, jailAllowedAddrs []string, appOpts servertypes.AppOptions, modulesToExport []string) (servertypes.ExportedApp, error) {
+		return a.appExport(log.NewNopLogger(), db, traceStore, height, forZeroHeight, jailAllowedAddrs, appOpts, modulesToExport)
+	})
+
+	rootCmd.AddCommand(
+		InitCmd(genesisBasicMgr, doapp.DefaultNodeHome),
+		genutilcli.CollectGenTxsCmd(banktypes.GenesisBalancesIterator{}, doapp.DefaultNodeHome, gentxModule.GenTxValidator, addresscodec.NewBech32Codec(sdk.GetConfig().GetBech32ValidatorAddrPrefix())),
+		dochainlegacy.MigrateGenesisCmd(),
+		GenTxCmd(genesisBasicMgr, txEnc),
+		genutilcli.ValidateGenesisCmd(genesisBasicMgr),
+		AddGenesisAccountCmd(doapp.DefaultNodeHome),
+		tmcli.NewCompletionCmd(rootCmd, true),
+		testnetCmd(genesisBasicMgr, banktypes.GenesisBalancesIterator{}),
+		debug.Cmd(),
+		pruning.Cmd(appCreatorFn, doapp.DefaultNodeHome),
+		snapshot.Cmd(appCreatorFn),
+	)
+
+	server.AddCommands(rootCmd, doapp.DefaultNodeHome, appCreatorFn, appExporterFn, addModuleInitFlags)
+
+	// add keybase, auxiliary status, query, and tx child commands
+	rootCmd.AddCommand(
+		server.StatusCommand(),
+		queryCommand(cliBasicMgr),
+		txCommand(cliBasicMgr),
+		keys.Commands(),
+	)
+}
+
+func addModuleInitFlags(startCmd *cobra.Command) {
+	crisis.AddModuleInitFlags(startCmd)
+	wasm.AddModuleInitFlags(startCmd)
+}
+
+func queryCommand(basicMgr module.BasicManager) *cobra.Command {
+	cmd := &cobra.Command{
+		Use:                        "query",
+		Aliases:                    []string{"q"},
+		Short:                      "Querying subcommands",
+		DisableFlagParsing:         true,
+		SuggestionsMinimumDistance: 2,
+		RunE:                       client.ValidateCmd,
+	}
+
+	cmd.AddCommand(
+		server.ShowAddressCmd(),
+		server.ShowValidatorCmd(),
+		server.QueryBlockCmd(),
+		authcmd.QueryTxsByEventsCmd(),
+		authcmd.QueryTxCmd(),
+		authcustomcli.GetTxFeesEstimateCommand(),
+	)
+
+	basicMgr.AddQueryCommands(cmd)
+	// expose common query flags (node, height, etc.) so that AutoCLI commands
+	// like staking queries receive --height and perform historic queries
+	flags.AddQueryFlagsToCmd(cmd)
+	cmd.PersistentFlags().String(flags.FlagChainID, "", "The network chain ID")
+
+	return cmd
+}
+
+func txCommand(basicMgr module.BasicManager) *cobra.Command {
+	cmd := &cobra.Command{
+		Use:                        "tx",
+		Short:                      "Transactions subcommands",
+		DisableFlagParsing:         true,
+		SuggestionsMinimumDistance: 2,
+		RunE:                       client.ValidateCmd,
+	}
+
+	cmd.AddCommand(
+		authcmd.GetSignCommand(),
+		authcmd.GetSignBatchCommand(),
+		authcmd.GetMultiSignCommand(),
+		authcmd.GetMultiSignBatchCmd(),
+		authcmd.GetValidateSignaturesCommand(),
+		flags.LineBreak,
+		authcmd.GetBroadcastCommand(),
+		authcmd.GetEncodeCommand(),
+		authcmd.GetDecodeCommand(),
+		flags.LineBreak,
+	)
+
+	// Add module transaction commands from module basics
+	basicMgr.AddTxCommands(cmd)
+	cmd.PersistentFlags().String(flags.FlagChainID, "", "The network chain ID")
+
+	return cmd
+}
+
+type appCreator struct {
+	encodingConfig params.EncodingConfig
+}
+
+// newApp is an AppCreator
+func (a appCreator) newApp(logger log.Logger, db dbm.DB, traceStore io.Writer, appOpts servertypes.AppOptions) servertypes.Application {
+	var cache storetypes.MultiStorePersistentCache
+
+	if cast.ToBool(appOpts.Get(server.FlagInterBlockCache)) {
+		cache = store.NewCommitKVStoreCacheManager()
+	}
+
+	skipUpgradeHeights := make(map[int64]bool)
+	for _, h := range cast.ToIntSlice(appOpts.Get(server.FlagUnsafeSkipUpgrades)) {
+		skipUpgradeHeights[int64(h)] = true
+	}
+
+	pruningOpts, err := server.GetPruningOptionsFromFlags(appOpts)
+	if err != nil {
+		panic(err)
+	}
+
+	homeDir := cast.ToString(appOpts.Get(flags.FlagHome))
+	if homeDir == "" {
+		homeDir = doapp.DefaultNodeHome
+	}
+	chainID := cast.ToString(appOpts.Get(flags.FlagChainID))
+	if chainID == "" {
+		// Try to read chain-id from genesis.json if it exists; otherwise fall back to a safe default
+		genDocFile := filepath.Join(homeDir, "config", "genesis.json")
+		if fi, statErr := os.Stat(genDocFile); statErr == nil && !fi.IsDir() {
+			appGenesis, gErr := genutiltypes.AppGenesisFromFile(genDocFile)
+			if gErr == nil {
+				chainID = appGenesis.ChainID
+			}
+		}
+		// If still empty (e.g., when running CLI help without an initialized home), use a benign default
+		if chainID == "" {
+			chainID = "do-local"
+		}
+	}
+
+	snapshotDir := filepath.Join(homeDir, "data", "snapshots")
+	err = os.MkdirAll(snapshotDir, os.ModePerm)
+	if err != nil {
+		panic(err)
+	}
+	snapshotDB, err := dbm.NewDB("metadata", server.GetAppDBBackend(appOpts), snapshotDir)
+	if err != nil {
+		panic(err)
+	}
+	snapshotStore, err := snapshots.NewStore(snapshotDB, snapshotDir)
+	if err != nil {
+		panic(err)
+	}
+
+	snapshotOptions := snapshottypes.NewSnapshotOptions(
+		cast.ToUint64(appOpts.Get(server.FlagStateSyncSnapshotInterval)),
+		cast.ToUint32(appOpts.Get(server.FlagStateSyncSnapshotKeepRecent)),
+	)
+
+	app := doapp.NewDoApp(
+		logger, db, traceStore, true, skipUpgradeHeights,
+		homeDir,
+		a.encodingConfig,
+		appOpts,
+		nil,
+		baseapp.SetChainID(chainID),
+		baseapp.SetPruning(pruningOpts),
+		baseapp.SetMinGasPrices(cast.ToString(appOpts.Get(server.FlagMinGasPrices))),
+		baseapp.SetHaltHeight(cast.ToUint64(appOpts.Get(server.FlagHaltHeight))),
+		baseapp.SetHaltTime(cast.ToUint64(appOpts.Get(server.FlagHaltTime))),
+		baseapp.SetMinRetainBlocks(cast.ToUint64(appOpts.Get(server.FlagMinRetainBlocks))),
+		baseapp.SetInterBlockCache(cache),
+		baseapp.SetTrace(cast.ToBool(appOpts.Get(server.FlagTrace))),
+		baseapp.SetIndexEvents(cast.ToStringSlice(appOpts.Get(server.FlagIndexEvents))),
+		baseapp.SetSnapshot(snapshotStore, snapshotOptions),
+		baseapp.SetIAVLCacheSize(cast.ToInt(appOpts.Get(server.FlagIAVLCacheSize))),
+		baseapp.SetIAVLDisableFastNode(cast.ToBool(appOpts.Get(server.FlagDisableIAVLFastNode))),
+		// baseapp.SetIAVLLazyLoading(cast.ToBool(appOpts.Get(server.FlagIAVLLazyLoading))),
+	)
+
+	return app
+}
+
+func (a appCreator) appExport(
+	logger log.Logger, db dbm.DB, traceStore io.Writer, height int64, forZeroHeight bool, jailAllowedAddrs []string,
+	appOpts servertypes.AppOptions, modulesToExport []string,
+) (servertypes.ExportedApp, error) {
+	homePath, ok := appOpts.Get(flags.FlagHome).(string)
+	if !ok || homePath == "" {
+		return servertypes.ExportedApp{}, errors.New("application home not set")
+	}
+
+	var doApp *doapp.DoApp
+	if height != -1 {
+		doApp = doapp.NewDoApp(logger, db, traceStore, false, map[int64]bool{}, homePath, a.encodingConfig, appOpts, nil)
+
+		if err := doApp.LoadHeight(height); err != nil {
+			return servertypes.ExportedApp{}, err
+		}
+	} else {
+		doApp = doapp.NewDoApp(logger, db, traceStore, true, map[int64]bool{}, homePath, a.encodingConfig, appOpts, nil)
+	}
+
+	return doApp.ExportAppStateAndValidators(forZeroHeight, jailAllowedAddrs, modulesToExport)
+}

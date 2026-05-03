@@ -1,0 +1,82 @@
+package simulation_test
+
+import (
+	"fmt"
+	"testing"
+
+	sdkmath "cosmossdk.io/math"
+	core "github.com/Daviddochain/dochain-core/v4/types"
+	"github.com/Daviddochain/dochain-core/v4/x/oracle/keeper"
+	sim "github.com/Daviddochain/dochain-core/v4/x/oracle/simulation"
+	"github.com/Daviddochain/dochain-core/v4/x/oracle/types"
+	"github.com/cometbft/cometbft/crypto/ed25519"
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/cosmos/cosmos-sdk/types/kv"
+	gogotypes "github.com/gogo/protobuf/types"
+	"github.com/stretchr/testify/require"
+)
+
+var (
+	delPk      = ed25519.GenPrivKey().PubKey()
+	feederAddr = sdk.AccAddress(delPk.Address())
+	valAddr    = sdk.ValAddress(delPk.Address())
+)
+
+func TestDecodeDistributionStore(t *testing.T) {
+	cdc := keeper.MakeTestCodec(t)
+	dec := sim.NewDecodeStore(cdc)
+
+	exchangeRate := sdkmath.LegacyNewDecWithPrec(1234, 1)
+	missCounter := uint64(23)
+
+	aggregatePrevote := types.NewAggregateDoRatePrevote(types.AggregateVoteHash([]byte("12345")), valAddr, 123)
+	aggregateVote := types.NewAggregateDoRateVote(types.DoRateTuples{
+		{Denom: core.MicroKRWDenom, ExchangeRate: sdkmath.LegacyNewDecWithPrec(1234, 1)},
+		{Denom: core.MicroKRWDenom, ExchangeRate: sdkmath.LegacyNewDecWithPrec(4321, 1)},
+	}, valAddr)
+
+	tobinTax := sdkmath.LegacyNewDecWithPrec(2, 2)
+
+	kvPairs := kv.Pairs{
+		Pairs: []kv.Pair{
+			{Key: types.ExchangeRateKey, Value: cdc.MustMarshal(&sdk.DecProto{Dec: exchangeRate})},
+			{Key: types.FeederDelegationKey, Value: feederAddr.Bytes()},
+			{Key: types.MissCounterKey, Value: cdc.MustMarshal(&gogotypes.UInt64Value{Value: missCounter})},
+			{Key: types.AggregateDoRatePrevoteKey, Value: cdc.MustMarshal(&aggregatePrevote)},
+			{Key: types.AggregateDoRateVoteKey, Value: cdc.MustMarshal(&aggregateVote)},
+			{Key: types.TobinTaxKey, Value: cdc.MustMarshal(&sdk.DecProto{Dec: tobinTax})},
+			{Key: []byte{0x99}, Value: []byte{0x99}},
+		},
+	}
+
+	tests := []struct {
+		name        string
+		expectedLog string
+	}{
+		{"ExchangeRate", fmt.Sprintf("%v\n%v", exchangeRate, exchangeRate)},
+		{"FeederDelegation", fmt.Sprintf("%v\n%v", feederAddr, feederAddr)},
+		{"MissCounter", fmt.Sprintf("%v\n%v", missCounter, missCounter)},
+		{"AggregatePrevote", fmt.Sprintf("%v\n%v", aggregatePrevote, aggregatePrevote)},
+		{"AggregateVote", fmt.Sprintf("%v\n%v", aggregateVote, aggregateVote)},
+		{"TobinTax", fmt.Sprintf("%v\n%v", tobinTax, tobinTax)},
+		{"other", ""},
+	}
+
+	for i, tt := range tests {
+		i, tt := i, tt
+		t.Run(tt.name, func(t *testing.T) {
+			switch i {
+			case len(tests) - 1:
+				require.Panics(t, func() { dec(kvPairs.Pairs[i], kvPairs.Pairs[i]) }, tt.name)
+			default:
+				require.Equal(t, tt.expectedLog, dec(kvPairs.Pairs[i], kvPairs.Pairs[i]), tt.name)
+			}
+		})
+	}
+}
+
+
+
+
+
+
